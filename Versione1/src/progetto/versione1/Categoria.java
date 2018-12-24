@@ -27,6 +27,4 @@ public abstract class Categoria {
 		return ContenitoreCampi.visualizzaStruttura(ContenitoreCampi.generaCampiComuni());
 	}
 	
-	//rpova
-	
 }
