@@ -23,36 +23,45 @@ public class Main {
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
 	
-	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto";
+	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non ï¿½ stato riconosciuto";
 
 	public static void main(String[] args) {
+		
 		//condizione d'uscita
 		boolean exit = false;
+		
 		//inizializzazione cache categorie
 		CategoryCache cache = CategoryCache.getInstance();
+		
 		//protocollo(modo per riconoscere i comandi)
 		HashMap <String,Runnable> protocollo = new HashMap<>();
+		
 		//inizializzazione protocollo(ci inserisco i comandi)
 		//comando help
 		protocollo.put(COMANDO_HELP,()->{
 			System.out.println(COMANDI_DISPONIBILI);
 		});
+		
 		//comando categoria ( visualizza la categoria)
 		protocollo.put(COMANDO_CATEGORIA,()->{
 			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
 			System.out.println(p.getDescription());
 		});
+		
 		//comando caratteristiche ( visualizza le caratteristiche della categoria
 		protocollo.put(COMANDO_DESCRIZIONE,()->{
 			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
 			System.out.println(p.toString());
 		});
 		// fine inizializzazione protocollo
+		
 		//definizione scanner
 		Scanner in = new Scanner(System.in);
+		
 		//benvenuto
 		System.out.println(MESSAGGIO_BENVENUTO);
 		String comando;
+		
 		//duty cycle
 		do {
 			System.out.print(ATTESA_COMANDO);
@@ -69,6 +78,8 @@ public class Main {
 				//comando non riconosciuto
 				System.out.println(ERRORE_COMANDO_NONRICONOSCIUTO);
 		}while(!exit);
+		
+	
 		//uscita
 		System.out.println(MESSAGGIO_USCITA);	
 		//chiusura risorse

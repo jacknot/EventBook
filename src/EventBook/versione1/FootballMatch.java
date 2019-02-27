@@ -5,11 +5,11 @@ package EventBook.versione1;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class PartitaDiCalcio extends Category{
+public class FootballMatch extends Category{
 	/**
 	 * Costruttore
 	 */
-	public PartitaDiCalcio() {
+	public FootballMatch() {
 		super();
 		heading = Heading.PARTITADICALCIO;
 		fields = FieldSetFactory.getInstance()

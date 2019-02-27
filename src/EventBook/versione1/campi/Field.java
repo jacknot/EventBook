@@ -1,8 +1,8 @@
 package EventBook.versione1.campi;
 
 /**La classe Campo ha il compito di fornire una struttura adatta a contenere una descrizione ed un valore.<br>
- * Il valore che contiene può essere di diversi tipi, per ogni campo questo deve essere specificato.<br>
- * @param <T> Il tipo di valore che un campo può contenere.
+ * Il valore che contiene puï¿½ essere di diversi tipi, per ogni campo questo deve essere specificato.<br>
+ * @param <T> Il tipo di valore che un campo puï¿½ contenere.
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
 public class Field <T>{
@@ -52,14 +52,14 @@ public class Field <T>{
 	public String getName() {
 		return heading.getName();
 	}
-	/**Restituisce il tipo con il quale il campo è stato parametrizzato
-	 * @return il tipo di dati che il campo può contenere
+	/**Restituisce il tipo con il quale il campo ï¿½ stato parametrizzato
+	 * @return il tipo di dati che il campo puï¿½ contenere
 	 */
 	public Class<T> getType(){
 		return type;
 	}
-	/**Restituisce se il campo è obbligatorio
-	 * @return True - è obbligatorio \n False - non è obbligatorio
+	/**Restituisce se il campo ï¿½ obbligatorio
+	 * @return True - ï¿½ obbligatorio \n False - non ï¿½ obbligatorio
 	 */
 	public boolean isBinding() {
 		return heading.isBinding();
@@ -71,15 +71,15 @@ public class Field <T>{
 		return value;
 	}
 	/**Imposta il valore del campo sovrascrivendo il suo vecchio valore.<br>
-	 * Se il tipo del valore non è appropriato il vecchio valore non viene aggiornato
+	 * Se il tipo del valore non ï¿½ appropriato il vecchio valore non viene aggiornato
 	 * @param nValue Il nuovo valore del campo
 	 */
 	public void setValue(Object nValue){
 		if(type.isAssignableFrom(nValue.getClass()))
 			this.value = type.cast(nValue);	
 	}
-	/**Controlla se non è stato assegnato un valore al campo
-	 * @return True - non è ancora stato dato un valore al campo<br>False - è già stato dato un valore al campo
+	/**Controlla se non ï¿½ stato assegnato un valore al campo
+	 * @return True - non ï¿½ ancora stato dato un valore al campo<br>False - ï¿½ giï¿½ stato dato un valore al campo
 	 */
 	public boolean isEmpty() {
 		return value == null;
@@ -97,6 +97,6 @@ public class Field <T>{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return String.format(FORMAT_TO_STRING, heading.getName(), type.getName(), value!=null?value.toString():"");
+		return String.format(FORMAT_TO_STRING, heading.getName(), type.getSimpleName(), value!=null?value.toString():"");
 	}
 }

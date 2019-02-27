@@ -38,13 +38,13 @@ public class CategoryCache {
 	 * Carica le istanze predefinite da clonare
 	 */
 	private static void loadCache() {
-		PartitaDiCalcio p = new PartitaDiCalcio();
+		FootballMatch p = new FootballMatch();
 		set.put(Heading.PARTITADICALCIO.getName(), p);
 	}
 	
 	/**Restituisce il clone di una particolare istanza di categoria
 	 * @param name il nome della categoria di cui si vuole l'istanza
-	 * @return l'istanza della categoria di cui si è inserito il nome
+	 * @return l'istanza della categoria di cui si ï¿½ inserito il nome
 	 */
 	public Category getCategory(String name) {
 		Category cached = set.get(name);

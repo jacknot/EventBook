@@ -43,4 +43,8 @@ public class Proposta {
 	}
 	
 	public void send(Messaggio msg) {}
+	public void cambia(String nome, String valore) {
+		// TODO Auto-generated method stub
+		
+	}
 }
