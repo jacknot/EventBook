@@ -1,2 +1,2 @@
 # EventBook
-DIO CANE JACOPO BISOGNA SOLO PUBBLICARE LA CARTELLA "SRC" NON ANCHE IL ".PROJECT" orco dio
+j bisogna sistemare qualcosa qua
