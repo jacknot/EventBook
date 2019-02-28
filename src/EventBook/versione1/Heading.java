@@ -6,7 +6,7 @@ package EventBook.versione1;
  */
 public enum Heading {	
 
-	PARTITADICALCIO("Partita di Calcio", "Una partita di calcio tra vari generi e et‡†");
+	PARTITADICALCIO("Partita di Calcio", "Una partita di calcio tra vari generi e et√†");
 	
 	/**
 	 * Definisce un formato per la visualizzazione sottoforma di stringa del contenuto dell'oggetto
@@ -18,6 +18,7 @@ public enum Heading {
 	 * Contiene un nome
 	 */
 	private String name;
+	
 	/**
 	 * Contiene una descrizione
 	 */
