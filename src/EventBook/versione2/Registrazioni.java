@@ -13,7 +13,6 @@ import EventBook.versione2.fruitore.Messaggio;
 
 /**Classe che contiene la lista di tutti i Fruitori registrati al programma.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
- *
  */
 public class Registrazioni implements Serializable{
 
