@@ -35,4 +35,5 @@ public class Proposta {
 	public boolean sameState(Stato s) {
 		return true;
 	}
+	public void pubblica() {}
 }

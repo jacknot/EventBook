@@ -12,8 +12,19 @@ import EventBook.versione2.fruitore.Stato;
  */
 public class InsiemeProposte extends ArrayList<Proposta>{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2744536594935868510L;
+	/**
+	 * Lo stato che desidero tutte le proste nella lista abbiano
+	 */
 	private final Stato univoco;
 	
+	/**
+	 * Costruttore
+	 * @param nState lo stato in cui devono essere tutte le proposte inserite
+	 */
 	public InsiemeProposte(Stato nState) {
 		super();
 		univoco = nState;
@@ -22,12 +33,13 @@ public class InsiemeProposte extends ArrayList<Proposta>{
 	/* (non-Javadoc)
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
-	//precondizione: La proposta sia nello stato corretto quando inserita
 	public boolean add(Proposta p) {
 		if(!contains(p.getValue(ExpandedHeading.TITOLO.getName()))) {
-			super.add(p);
-			p.aggiornaStato();
-			return true;
+			p.pubblica();
+			if(p.sameState(univoco)) {
+				super.add(p);
+				return true;
+			}
 		}
 		return false;
 	}
