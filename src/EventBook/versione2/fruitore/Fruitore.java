@@ -2,9 +2,7 @@ package EventBook.versione2.fruitore;
 
 import java.io.Serializable;
 
-import EventBook.versione2.Notificabile;
-
-public class Fruitore implements Serializable, Notificabile{
+public class Fruitore extends Notificabile implements Serializable{
 
 	private String nome;
 

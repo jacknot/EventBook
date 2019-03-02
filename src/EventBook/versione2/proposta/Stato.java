@@ -1,8 +1,8 @@
-package EventBook.versione2.fruitore;
+package EventBook.versione2.proposta;
 
 import java.time.LocalDate;
 import EventBook.versione1.campi.ExpandedHeading;
-import EventBook.versione2.Proposta;
+import EventBook.versione2.proposta.Proposta;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare

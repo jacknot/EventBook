@@ -1,9 +1,10 @@
-package EventBook.versione2;
+package EventBook.versione2.proposta;
 
 import java.util.ArrayList;
 
 import EventBook.versione1.campi.ExpandedHeading;
-import EventBook.versione2.fruitore.Stato;
+import EventBook.versione2.fruitore.Notificabile;
+import EventBook.versione2.proposta.Stato;
 
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato

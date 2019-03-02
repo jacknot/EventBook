@@ -1,11 +1,11 @@
-package EventBook.versione2;
+package EventBook.versione2.proposta;
 
 import java.util.ArrayList;
-
 import EventBook.versione1.Category;
 import EventBook.versione1.campi.ExpandedHeading;
 import EventBook.versione2.fruitore.Messaggio;
-import EventBook.versione2.fruitore.Stato;
+import EventBook.versione2.proposta.Stato;
+import EventBook.versione2.fruitore.Notificabile;
 
 /**
  * Una proposta fa riferimento ad un particolare evento e consente di potersi iscrivere ad essa
@@ -30,7 +30,17 @@ public class Proposta {
 	 * Gli iscritti alla proposta
 	 */
 	private ArrayList<Notificabile> iscritti;
-	
+	/**
+	 * Costruttore di una proposta
+	 * @param c L'evento a cui farà riferimento la proposta
+	 * @param u Il proprietario della proposta
+	 */
+	public Proposta(Category c, Notificabile u) {
+		this.evento = c;
+		this.proprietario = u;
+		this.aState = Stato.INVALIDA;
+		this.iscritti = new ArrayList<Notificabile>();
+	}
 	/**
 	 * Fa cambiare stato alla proposta
 	 */
