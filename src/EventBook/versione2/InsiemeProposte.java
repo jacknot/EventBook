@@ -41,30 +41,22 @@ public class InsiemeProposte extends ArrayList<Proposta>{
 		return remove(find(title));
 	}
 	//pulire dalle proposte che non piacciono : OK
-	public void clean() {
+	/**
+	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
+	 */
+	private void clean() {
 		this.stream()
 				.filter(( p ) -> !p.sameState(univoco))
 				.forEach(( p ) -> remove(p));
-	}
-	//refresh di singola proposta : OK
-	/**
-	 * Effettua il refresh solo sulla proposta di cui si è inserito il titolo
-	 * @param title il titolo della proposta su cui fare refresh
-	 */ 
-	public void refresh(String title) {
-		if(contains(title))
-			this.stream()
-					.filter(( p ) -> p.getValue(ExpandedHeading.TITOLO.getName()).equals(title))
-					.findFirst()
-					.get().aggiornaStato();
 	}
 	//refreshAll : OK
 	/**
 	 * Effettua un refresh su tutte le proposte
 	 */
-	public void refreshAll() {
+	public void refresh() {
 		this.stream()
 				.forEach(( p ) -> p.aggiornaStato());
+		clean();
 	}
 	//iscrivi un Notificabile ad una proposta : OK
 	/**
