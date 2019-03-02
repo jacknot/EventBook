@@ -43,15 +43,6 @@ public class InsiemeProposte extends ArrayList<Proposta>{
 		}
 		return false;
 	}
-	//rimuovere proposta : remove(String) : OK
-	/**
-	 * Rimuove la proposta di cui si è inserito il titolo, se presente
-	 * @param title il titolo della proposta da eliminare
-	 * @return l'esito della rimozione
-	 */
-	public boolean remove(String title) {
-		return remove(find(title));
-	}
 	//pulire dalle proposte che non piacciono : OK
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
