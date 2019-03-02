@@ -19,6 +19,9 @@ public enum Stato {
 	public void avvisa() {}
 	public void transiziona() {}
 	public boolean canSet() {
-		return true;
+		return 
+	}
+	public boolean canSubscribe() {
+		return
 	}
 }
