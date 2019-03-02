@@ -35,7 +35,7 @@ public class Proposta {
 	 * Fa cambiare stato alla proposta
 	 */
 	public void aggiornaStato() {
-		aState.transiziona();
+		aState.transiziona(this);
 	}
 	/**
 	 * Imposta un nuovo stato alla proposta
@@ -76,7 +76,7 @@ public class Proposta {
 	 * @param user il fruitore da iscrivere
 	 */
 	public boolean iscrivi(Notificabile user) {
-		if(aState.canSubscribe()){
+		if(aState.canSubscribe(this)){
 			iscritti.add(user);
 			aggiornaStato();
 			return true;
@@ -95,7 +95,7 @@ public class Proposta {
 	 * Avvisa la proposta che è stata resa pubblica
 	 */
 	public void pubblica() {
-		aState.pubblica();
+		aState.pubblica(this);
 	}
 	/**
 	 * Invia un messaggio a tutti gli iscritti e al proprietario della risposta
@@ -105,5 +105,19 @@ public class Proposta {
 		proprietario.ricevi(msg);
 		iscritti.stream()
 					.forEach(( i )-> i.ricevi(msg));
+	}
+	/**
+	 * Restituisce il numero di iscritti alla proposta
+	 * @return il numero di iscritti alla proposta
+	 */
+	public int subNumber() {
+		return iscritti.size();
+	}
+	/**
+	 * Verifica se la proposta è valida
+	 * @return True - la proposta è valida<br>False - la proposta è invalida
+	 */
+	public boolean isValida() {
+		return evento.isValid();
 	}
 }
