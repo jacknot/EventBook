@@ -1,50 +1,38 @@
 package EventBook.versione2;
 
-import EventBook.versione1.*;
-import EventBook.versione2.stati.*;
-import EventBook.versione2.fruitore.*;
+import EventBook.versione1.Category;
+import EventBook.versione2.fruitore.Stato;
 
-/**
- * 
- * @author Matteo
- *
- */
 public class Proposta {
-	/**
-	 * Contiene un evento
-	 */
 	private Category evento;
-	/**
-	 * Lo stato in cui si trova la proposta
-	 */
-	private Stato stato;
+	private Stato aState;
 	
-	/**
-	 * Costruttore di una proposta
-	 * @param c l'evento alla quale fa riferimento
-	 */
-	public Proposta(Category c) {
-		evento = c;
-		stato = new Invalido();
+	public void aggiornaStato() {	}
+	public boolean isValida() {
+		return aState.isValido();
+	}
+	public void cambia(String name, Object value) {
+		if(aState.canSet()) {
+			evento.setValue(name, value);
+			aggiornaStato();
+		}
 	}
 	/**
-	 * Restituisce lo stato della proposta
-	 * @return Lo stato attuale della proposta
+	 * Restituisce il contenuto del campo di cui si è inserito il nome
+	 * @param name il nome del campo 
+	 * @return il contenuto del campo
 	 */
-	public Stato getState() {
-		return stato;
+	public Object getValue(String name) {
+		return evento.getValue(name);
 	}
 	/**
-	 * Imposta lo stato della proposta con un nuovo stato
-	 * @param nS	Il nuovo stato da far assumere dalla proposta
+	 * Iscrive un fruitore alla proposta 
+	 * @param user il fruitore da iscrivere
 	 */
-	public void setState(Stato nS) {
-		stato = nS;
+	public boolean iscrivi(Notificabile user) {
+		return true;
 	}
-	
-	public void send(Messaggio msg) {}
-	public void cambia(String nome, String valore) {
-		// TODO Auto-generated method stub
-		
+	public boolean sameState(Stato s) {
+		return true;
 	}
 }

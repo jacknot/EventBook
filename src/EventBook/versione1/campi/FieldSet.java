@@ -45,6 +45,16 @@ public class FieldSet extends ArrayList<Field<?>>{
 		return getField(name).getValue();
 	}
 	/**
+	 * Restituisce il tipo del campo di cui si è inserito il nome
+	 * @param name il nome del campo di cui si vuole il tipo
+	 * @return il tipo del campo. Restituisce null se il campo non esiste
+	 */
+	public Class<?> getType(String name){
+		if(!contains(name))
+			return null;
+		return getField(name).getType();		
+	}
+	/**
 	 * Imposta il valore del campo di cui si è inserito il nome.<br>
 	 * Se il nuovo valore non è del tipo appropriato non viene fatta alcuna modifica
 	 * @param name il nome del campo di cui modificare il valore

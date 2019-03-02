@@ -47,6 +47,22 @@ public abstract class Category implements Cloneable{
 		fields.setValue(name, nValue);
 	}
 	/**
+	 * Restituisce il valore del campo di cui si è inserito il nome
+	 * @param name il nome del campo di cui si vuole il valore
+	 * @return Il valore del campo inserito. Restituisce null se il campo non esiste
+	 */
+	public Object getValue(String name) {
+		return fields.getValue(name);
+	}
+	/**
+	 * Restituisce il tipo del campo di cui si è inserito il nome
+	 * @param name il nome del campo di cui si vuole il tipo
+	 * @return Il tipo del campo inserito. Restituisce null se il campo non esiste
+	 */
+	public Class<?> getType(String name){
+		return fields.getType(name);
+	}
+	/**
 	 * Controlla se un evento è valido
 	 * @return True - se l'evento è valido<br>False - se l'evento non è valido
 	 */
