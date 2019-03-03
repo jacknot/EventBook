@@ -70,7 +70,7 @@ public class Sessione {
 	 * @param proposta Proposta da pubblicare
 	 */
 	public void pubblica(Proposta proposta) {
-		//bacheca.aggiungi(proposta)
+		GestoreProposte.getInstance().add(proposta);
 	}
 	
 }

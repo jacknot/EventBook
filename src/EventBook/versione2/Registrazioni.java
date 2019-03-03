@@ -46,7 +46,7 @@ public class Registrazioni implements Serializable{
 	}
 	
 	/**
-	 * Controlla se il fruitore Ã¨ registrato
+	 * Controlla se il fruitore è registrato
 	 * @param name Il nome del fruitore da cercare
 	 * @return True - se esiste un fruitore con tale nome <br>False - se il fruitore non esiste
 	 */

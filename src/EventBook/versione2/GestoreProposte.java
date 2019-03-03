@@ -17,7 +17,7 @@ public class GestoreProposte{
 	/**
 	 * Directory ed estensione del file in cui vengono salvate le risorse in modo consistente
 	 */
-	private static final String NAMEFORMAT = "resource/%s.txt";
+	private static final String NAMEFORMAT = "resource/%s.ser";
 	/**
 	 * Il nome di default del file in cui sono inserite le proposte
 	 */
@@ -39,21 +39,24 @@ public class GestoreProposte{
 	 * Il set che deve contenere le istanze delle proposte
 	 */
 	private InsiemeProposte set;
-	
-	/**
-	 * Costruttore
-	 */
-	public GestoreProposte() {
-		this.f = new File(String.format(NAMEFORMAT, DEFAULTFILE));
-		set = new InsiemeProposte(Stato.APERTA);
-	}
+	private static GestoreProposte instance;
+
 	/**
 	 * Costruttore
 	 * @param fileName il nome del file in cui destinare le informazioni
 	 */
-	public GestoreProposte(String fileName) {
+	private GestoreProposte(String fileName) {
 		this.f = new File(String.format(NAMEFORMAT, fileName));
 		set = new InsiemeProposte(Stato.APERTA);
+	}
+	/**
+	 * Restituisce un'istanza della classe
+	 * @return l'istanza della classe
+	 */
+	public static GestoreProposte getInstance() {
+		if(instance == null)
+			instance = new GestoreProposte(DEFAULTFILE);
+		return instance;
 	}
 	
 	/**
@@ -89,24 +92,27 @@ public class GestoreProposte{
 	}
 	/**
 	 * Carica il contenuto di sessioni precedenti
+	 * @throws IOException per imprevisti con la formazione dello stream
+	 * @throws ClassNotFoundException per imprevisti nel caricamento dei dati
 	 */
-	public void load() {
+	public void load() throws IOException, ClassNotFoundException{
 		if(f.exists() && f.canRead()){
 			try {
 				in = new ObjectInputStream(new FileInputStream(f));
 				set = (InsiemeProposte) in.readObject();
 				in.close();
 			}catch(IOException e) {
-				e.printStackTrace();
+				throw e;
 			}catch(ClassNotFoundException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
 	/**
 	 * Carica il contenuto nel file di destinazione
+	 * @throws IOException per imprevisti con la creazione dello stream
 	 */
-	public void save() {
+	public void save() throws IOException{
 		try {
 			if(!f.exists() || !f.canWrite())
 				f.createNewFile();
@@ -114,7 +120,7 @@ public class GestoreProposte{
 			out.writeObject(set);
 			out.close();
 		}catch(IOException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 	/**
@@ -136,5 +142,10 @@ public class GestoreProposte{
 			e.printStackTrace();
 		}
 		return String.format(NAMEFORMAT, DEFAULTFILE);
+	}
+	public static void main(String[] args) {
+		System.out.println(GestoreProposte.getInstance().getFileName());
+		GestoreProposte.getInstance().setFile("prova");
+		System.out.println(GestoreProposte.getInstance().getFileName());
 	}
 }
