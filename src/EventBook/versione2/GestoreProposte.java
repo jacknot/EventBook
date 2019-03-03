@@ -129,7 +129,7 @@ public class GestoreProposte{
 	 * @return l'esito dell'operazione
 	 */
 	public boolean setFile(String nFileName) {
-		return this.f.renameTo(new File(String.format(NAMEFORMAT, DEFAULTFILE)));
+		return f.renameTo(new File(String.format(NAMEFORMAT, nFileName)));
 	}
 	/**
 	 * Restituisce il nome del file in cui sono salvate in modo permanente le informazioni
