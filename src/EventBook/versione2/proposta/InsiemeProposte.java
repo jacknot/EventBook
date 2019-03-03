@@ -1,6 +1,7 @@
 package EventBook.versione2.proposta;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.HashSet;
 
 import EventBook.versione1.campi.ExpandedHeading;
 import EventBook.versione2.fruitore.Notificabile;
@@ -11,7 +12,7 @@ import EventBook.versione2.proposta.Stato;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class InsiemeProposte extends ArrayList<Proposta>{
+public class InsiemeProposte extends HashSet<Proposta> implements Serializable{
 	//occhio a metodi non voluti/pericolosi
 	//definisci interfaccia per limitarli
 	/**
@@ -56,7 +57,7 @@ public class InsiemeProposte extends ArrayList<Proposta>{
 	}
 	//refreshAll : OK
 	/**
-	 * Effettua un refresh su tutte le proposte
+	 * Effettua un refresh delle proposte nel set
 	 */
 	public void refresh() {
 		this.stream()
