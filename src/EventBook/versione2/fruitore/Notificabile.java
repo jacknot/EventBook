@@ -4,7 +4,7 @@ import EventBook.versione2.fruitore.Messaggio;
 
 /**
  * Quest'interfaccia definisce il comportamento di oggetti in grado di ricevere un messaggio
- * @author Matteo Salvalai [715827]
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public abstract class Notificabile {

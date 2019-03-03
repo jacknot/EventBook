@@ -8,7 +8,7 @@ import EventBook.versione2.proposta.Stato;
 
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato
- * @author Matteo Salvalai[715827]
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public class InsiemeProposte extends ArrayList<Proposta>{

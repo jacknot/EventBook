@@ -2,6 +2,8 @@ package EventBook.versione2;
 
 import java.util.ArrayList;
 
+import EventBook.versione2.proposta.Proposta;
+
 /**Classe che consente di tenere in meomoria le proposte di un fruitore non ancora pubblicate, in modo da consentirne una modifica futura<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *

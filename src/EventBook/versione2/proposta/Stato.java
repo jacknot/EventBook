@@ -6,7 +6,7 @@ import EventBook.versione2.proposta.Proposta;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare
- * @author Matteo
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public enum Stato{

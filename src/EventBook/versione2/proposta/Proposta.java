@@ -9,7 +9,7 @@ import EventBook.versione2.fruitore.Notificabile;
 
 /**
  * Una proposta fa riferimento ad un particolare evento e consente di potersi iscrivere ad essa
- * @author Matteo
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public class Proposta {
