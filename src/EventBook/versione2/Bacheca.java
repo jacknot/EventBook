@@ -9,5 +9,5 @@ import EventBook.versione2.proposta.InsiemePropostePersistente;
  *
  */
 public class Bacheca extends InsiemePropostePersistente{
-//Si può eventualmente imporre un interfaccia (GestoreProposte) se sono presenti operazioni pericolose
+	//Si può eventualmente imporre un interfaccia (GestoreProposte) se sono presenti operazioni pericolose
 }

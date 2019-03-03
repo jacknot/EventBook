@@ -12,7 +12,8 @@ import EventBook.versione2.proposta.Stato;
  *
  */
 public class InsiemeProposte extends ArrayList<Proposta>{
-	
+	//occhio a metodi non voluti/pericolosi
+	//definisci interfaccia per limitarli
 	/**
 	 * 
 	 */
