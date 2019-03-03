@@ -46,8 +46,15 @@ public class GestoreProposte{
 	 * @param fileName il nome del file in cui destinare le informazioni
 	 */
 	private GestoreProposte(String fileName) {
-		this.f = new File(String.format(NAMEFORMAT, fileName));
+		f = new File(String.format(NAMEFORMAT, fileName));
 		set = new InsiemeProposte(Stato.APERTA);
+		if(!f.exists())
+			try {
+				f.getParentFile().mkdirs();
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 	/**
 	 * Restituisce un'istanza della classe
@@ -126,26 +133,16 @@ public class GestoreProposte{
 	/**
 	 * Imposta il nome del file in cui salvare le risorse
 	 * @param nFileName il nome del file in cui salvare le risorse
-	 * @return l'esito dell'operazione
 	 */
-	public boolean setFile(String nFileName) {
-		return f.renameTo(new File(String.format(NAMEFORMAT, nFileName)));
+	public void setFile(String nFileName) {
+		//PROBLEMI DI GENERAZIONE FILE
+		f = new File(String.format(NAMEFORMAT, nFileName));
 	}
 	/**
 	 * Restituisce il nome del file in cui sono salvate in modo permanente le informazioni
 	 * @return il nome del file
 	 */ 
 	public String getFileName() {
-		try {
-			return f.getCanonicalPath();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-		return String.format(NAMEFORMAT, DEFAULTFILE);
-	}
-	public static void main(String[] args) {
-		System.out.println(GestoreProposte.getInstance().getFileName());
-		GestoreProposte.getInstance().setFile("prova");
-		System.out.println(GestoreProposte.getInstance().getFileName());
+			return f.getPath();
 	}
 }
