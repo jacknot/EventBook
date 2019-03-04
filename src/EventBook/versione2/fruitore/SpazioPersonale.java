@@ -1,11 +1,12 @@
 package EventBook.versione2.fruitore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**La classe PrivateSpace ha il compito di fornire una struttura adatta a contenere e gestire un insieme di messaggi.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class SpazioPersonale {
+public class SpazioPersonale implements Serializable{
 	
 	private ArrayList <Messaggio> messageList;
 	

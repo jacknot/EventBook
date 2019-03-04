@@ -1,10 +1,12 @@
 package EventBook.versione2.fruitore;
 
+import java.io.Serializable;
+
 /**La classe Message ha il compito di fornire una struttura adatta a contenere un messaggio.<br>
  * Il messaggio è composto da tre attributi: mittente, oggetto e destinatario.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Messaggio {
+public class Messaggio implements Serializable{
 	
 	private String addresser;
 	private String object;

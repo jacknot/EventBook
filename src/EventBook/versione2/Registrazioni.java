@@ -52,7 +52,7 @@ public class Registrazioni implements Serializable{
 	 */
 	public boolean contains(String nome) {
 		for(Fruitore fruitore: fruitori) {
-			if(fruitore.getNome().equals(nome))
+			if(fruitore.getName().equals(nome))
 				return true;
 		}
 		return false;
@@ -73,7 +73,7 @@ public class Registrazioni implements Serializable{
 	 */
 	public void ricevi(String nome, Messaggio messaggio) {
 		for(Fruitore fruitore: fruitori) {
-			if(fruitore.getNome().equals(nome))
+			if(fruitore.getName().equals(nome))
 				fruitore.ricevi(messaggio);
 		}
 	}
