@@ -17,7 +17,7 @@ public class Main {
 														+ "\n\tcategoria\tMostra la categoria disponibile"
 														+ "\n\tdesc\t\tMostra le caratteristiche della categoria disponibile"
 														+ "\n\texit\t\tEsce dal programma"
-														+ "\n\tregistra\t\tRegistra un fruitore";
+														+ "\n\tregistra\tRegistra un fruitore";
 	private static final String COMANDO_HELP = "help";
 	private static final String COMANDO_DESCRIZIONE = "desc";
 	private static final String COMANDO_CATEGORIA = "categoria";
@@ -28,7 +28,7 @@ public class Main {
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
 	
-	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto";
+	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non Ã¨ stato riconosciuto";
 
 	public static void main(String[] args) {
 		
@@ -61,14 +61,14 @@ public class Main {
 		//comando per registrare un nuovo utente, usa notazione UNIX command line
 		protocollo.put(COMANDO_REGISTRA, ()->{
 			try {
-				System.out.println("Inserisci il nome");
+				System.out.print("Inserisci il nome: ");
 				Scanner in = new Scanner(System.in);
 				String nome = in.nextLine();
 				Registrazioni.getInstance().registra(nome);
 				Registrazioni.getInstance().save();
+				in.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("Impossibile salvare i dati di registrazione!");
 			}
 		});
 		// fine inizializzazione protocollo
