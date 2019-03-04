@@ -11,6 +11,7 @@ import EventBook.versione2.proposta.Proposta;
  *
  */
 public enum Stato{
+	
 	INVALIDA{
 			/* (non-Javadoc)
 			 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
@@ -70,15 +71,29 @@ public enum Stato{
 			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
 			//todayDate <= lastSubDate && subs == full
 			if(tDate.compareTo(lastSubDate) <= 0 & 
-					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))) {
+					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
+					) {
 				p.setState(CHIUSA);
-				p.send(new Messaggio());//messaggio che avvisa che la proposta è chiusa
+				p.send(new Messaggio(	//messaggio che avvisa che la proposta è chiusa
+						String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),
+						CONFIRMOBJ,															
+						String.format(CONFIRMFORMAT, String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),
+													String.class.cast(p.getValue(ExpandedHeading.DATA.getName())),
+													String.class.cast(p.getValue(ExpandedHeading.ORA.getName())),
+													String.class.cast(p.getValue(ExpandedHeading.LUOGO.getName())),
+													String.class.cast(p.getValue(ExpandedHeading.QUOTAINDIVIDUALE.getName())))									
+						));
 				return true;
 			//todayDate == lastSubDate && subs < full
 			}else if(tDate.compareTo(lastSubDate) == 0 &
-					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))) {
+					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
+					) {
 				p.setState(FALLITA);
-				p.send(new Messaggio());//messaggio che avvisa che la proposta è fallita
+				p.send(new Messaggio(	//messaggio che avvisa che la proposta è fallita
+						String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),	
+						FAILUREOBJ,
+						String.format(FAILUREFORMAT, String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())))
+						));
 				return true;
 			}
 			return false;
@@ -123,6 +138,13 @@ public enum Stato{
 		}
 	};
 	
+	private static final String CONFIRMOBJ = "Conferma evento";
+	private static final String FAILUREOBJ = "Fallimento evento";
+	//data ora luogo importo
+	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
+													+ "\nSi ricorda di portare %s € per l'orgazzazione";
+	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
+													+ "\nL'evento è quindi annullato.";
 	/**
 	 * Modifica lo stato della proposta in modo da poterla rendere adatta al pubblico
 	 * @param p la proposta a cui fare cambiare stato
