@@ -7,10 +7,10 @@ import EventBook.versione2.fruitore.Messaggio;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public abstract class Notificabile {
+public interface Notificabile {
 	/**
 	 * L'oggetto che implementa questa interfaccia deve poter gestire la ricezione di un messaggio
 	 * @param msg
 	 */
-	public abstract void ricevi(Messaggio msg);
+	public void ricevi(Messaggio msg);
 }

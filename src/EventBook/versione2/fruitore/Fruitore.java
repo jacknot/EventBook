@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Ad ogni fruitore è associato, oltre al nome, uno spazio personale inizialmente vuoto<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Fruitore extends Notificabile implements Serializable{
+public class Fruitore implements Serializable, Notificabile{
 
 	private String name;
 	private SpazioPersonale privateSpace;
