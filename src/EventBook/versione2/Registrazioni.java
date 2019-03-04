@@ -16,7 +16,7 @@ import EventBook.versione2.fruitore.Messaggio;
  */
 public class Registrazioni implements Serializable{
 
-	private static final String NOMEFILE = "Registrazioni.ser";
+	private static final String NOMEFILE = "resource/registrazioni.ser";
 	
 	/**
 	 * Lista contenente i fruitori registrati
@@ -83,7 +83,7 @@ public class Registrazioni implements Serializable{
 	 * @throws IOException errore di I/O
 	 */
 	public void save() throws IOException {
-		FileOutputStream fileOut = new FileOutputStream(NOMEFILE);
+		FileOutputStream fileOut = new FileOutputStream(NOMEFILE, false);
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
 		out.writeObject(instance);
 		out.close();

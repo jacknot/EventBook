@@ -1,5 +1,6 @@
 package EventBook.versione2;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -15,11 +16,13 @@ public class Main {
 														+ "\n\thelp\t\tComunica i comandi a disposizione"
 														+ "\n\tcategoria\tMostra la categoria disponibile"
 														+ "\n\tdesc\t\tMostra le caratteristiche della categoria disponibile"
-														+ "\n\texit\t\tEsce dal programma";
+														+ "\n\texit\t\tEsce dal programma"
+														+ "\n\tregistra\t\tRegistra un fruitore";
 	private static final String COMANDO_HELP = "help";
 	private static final String COMANDO_DESCRIZIONE = "desc";
 	private static final String COMANDO_CATEGORIA = "categoria";
 	private static final String COMANDO_USCITA = "exit";
+	private static final String COMANDO_REGISTRA = "registra";
 	
 	private static final String MESSAGGIO_BENVENUTO = "Welcome to EventBook";
 	private static final String ATTESA_COMANDO = "> ";
@@ -55,6 +58,19 @@ public class Main {
 			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
 			System.out.println(p.toString());
 		});
+		//comando per registrare un nuovo utente, usa notazione UNIX command line
+		protocollo.put(COMANDO_REGISTRA, ()->{
+			try {
+				System.out.println("Inserisci il nome");
+				Scanner in = new Scanner(System.in);
+				String nome = in.nextLine();
+				Registrazioni.getInstance().registra(nome);
+				Registrazioni.getInstance().save();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 		// fine inizializzazione protocollo
 		
 		//definizione scanner
@@ -63,7 +79,7 @@ public class Main {
 		//benvenuto
 		System.out.println(MESSAGGIO_BENVENUTO);
 		String comando;
-		
+		//carica risorse
 		//duty cycle
 		do {
 			System.out.print(ATTESA_COMANDO);
@@ -81,8 +97,19 @@ public class Main {
 				System.out.println(ERRORE_COMANDO_NONRICONOSCIUTO);
 		}while(!exit);
 		
-	
+		try {
+			Registrazioni.getInstance().load();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(Registrazioni.getInstance().contains("salva"));
+		System.out.println(Registrazioni.getInstance().contains("pinco"));
 		//uscita
+		//chiusura + terminazione anomala -> save
 		System.out.println(MESSAGGIO_USCITA);	
 		//chiusura risorse
 		in.close();
