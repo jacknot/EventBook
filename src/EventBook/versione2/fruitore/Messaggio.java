@@ -1,9 +1,73 @@
 package EventBook.versione2.fruitore;
 
+/**La classe Message ha il compito di fornire una struttura adatta a contenere un messaggio.<br>
+ * Il messaggio è composto da tre attributi: mittente, oggetto e destinatario.<br>
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ */
 public class Messaggio {
 	
-	private String nome;
-	private String contenuto;
+	private String addresser;
+	private String object;
+	private String description;
 	
+	private final static String FORMAT_TO_STRING ="<%s> %s : %s%n";
+	
+	
+	/**
+	 * Costruttore per la classe messaggio
+	 * @param addresser Il mittente del messaggio
+	 * @param object L'oggetto del messaggio
+	 * @param description La descrizione del messaggio
+	 */
+	public Messaggio(String addresser, String object, String description) {
+		this.addresser = addresser;
+		this.object = object;
+		this.description = description;
+	}
+	
+	/**
+	 * Restituisce il mittente del messaggio
+	 * @return Il mittente del messaggio
+	 */
+	public String getAddresser() {
+		return addresser;
+	}
+	
+	/**
+	 * Restituisce l'oggetto del messaggio
+	 * @return L'oggetto del messaggio
+	 */
+	public String getObject() {
+		return object;
+	}
+	
+	/**
+	 * Restituisce la descrizione del messaggio
+	 * @return La descrizione del messaggio
+	 */
+	public String getDescription() {
+		return description;
+	}
+	
+	/*
+	 *  ------------------- SECONDO ME NON SERVONO -------------------
+	 * 
+	public void setAddresser(String addresser) {
+		this.addresser = addresser;
+	}
+	
+	
+	public void setObject(String object) {
+		this.object = object;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	*/
+	
+	public String toString() {
+		return String.format(FORMAT_TO_STRING, addresser, object, description);
+	}
 	
 }
