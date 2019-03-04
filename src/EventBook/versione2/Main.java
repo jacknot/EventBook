@@ -66,7 +66,7 @@ public class Main {
 				String nome = in.nextLine();
 				Registrazioni.getInstance().registra(nome);
 				Registrazioni.getInstance().save();
-				in.close();
+				
 			} catch (IOException e) {
 				System.err.println("Impossibile salvare i dati di registrazione!");
 			}
