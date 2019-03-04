@@ -28,7 +28,7 @@ public class Main {
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
 	
-	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non ï¿½ stato riconosciuto";
+	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto";
 
 	public static void main(String[] args) {
 		

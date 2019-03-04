@@ -2,6 +2,7 @@ package EventBook.versione2.proposta;
 
 import java.time.LocalDate;
 import EventBook.versione1.campi.ExpandedHeading;
+import EventBook.versione2.fruitore.Messaggio;
 import EventBook.versione2.proposta.Proposta;
 
 /**
@@ -58,27 +59,27 @@ public enum Stato{
 		 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
 		 */
 		public boolean canSubscribe(Proposta p) {
-			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()));
+			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1;
 		}
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
 		public boolean transiziona(Proposta p) {
-			//data odierna
 			LocalDate tDate = LocalDate.now();
 			//data ultima iscrizione
 			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
-			//AND corto circuito per efficienza (non ho effetti collaterali)
 			//todayDate <= lastSubDate && subs == full
 			if(tDate.compareTo(lastSubDate) <= 0 & 
 					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))) {
 				p.setState(CHIUSA);
+				p.send(new Messaggio());//messaggio che avvisa che la proposta è chiusa
 				return true;
 			//todayDate == lastSubDate && subs < full
 			}else if(tDate.compareTo(lastSubDate) == 0 &
 					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))) {
 				p.setState(FALLITA);
-				return false;
+				p.send(new Messaggio());//messaggio che avvisa che la proposta è fallita
+				return true;
 			}
 			return false;
 		}

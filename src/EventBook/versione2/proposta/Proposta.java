@@ -87,9 +87,11 @@ public class Proposta {
 	 */
 	public boolean iscrivi(Notificabile user) {
 		if(aState.canSubscribe(this)){
-			iscritti.add(user);
-			aggiornaStato();
-			return true;
+			if(!proprietario.equals(user) & !iscritti.contains(user)) {
+				iscritti.add(user);
+				aggiornaStato();
+				return true;
+			}
 		}
 		return false; 
 	}
@@ -121,7 +123,7 @@ public class Proposta {
 	 * @return il numero di iscritti alla proposta
 	 */
 	public int subNumber() {
-		return iscritti.size();
+		return iscritti.size() + 1;
 	}
 	/**
 	 * Verifica se la proposta è valida

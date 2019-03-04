@@ -15,18 +15,9 @@ import EventBook.versione2.proposta.Stato;
  */
 public class GestoreProposte{
 	/**
-	 * Directory ed estensione del file in cui vengono salvate le risorse in modo consistente
-	 */
-	private static final String NAMEFORMAT = "resource/%s.ser";
-	/**
-	 * Il nome di default del file in cui sono inserite le proposte
-	 */
-	private static final String DEFAULTFILE = "gestoreProposte";
-	/**
-	 * Il nome del file in cui sono salvate le risorse
+	 * Contiene il file in cui sono presenti le informazioni del gestore di proposte
 	 */
 	private File f;
-	
 	/**
 	 * Stream per scrivere sul file
 	 */
@@ -39,22 +30,17 @@ public class GestoreProposte{
 	 * Il set che deve contenere le istanze delle proposte
 	 */
 	private InsiemeProposte set;
+	/**
+	 * Istanza per implementare il Design Pattern Singleton
+	 */
 	private static GestoreProposte instance;
 
 	/**
 	 * Costruttore
 	 * @param fileName il nome del file in cui destinare le informazioni
 	 */
-	private GestoreProposte(String fileName) {
-		f = new File(String.format(NAMEFORMAT, fileName));
+	private GestoreProposte() {
 		set = new InsiemeProposte(Stato.APERTA);
-		if(!f.exists())
-			try {
-				f.getParentFile().mkdirs();
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 	}
 	/**
 	 * Restituisce un'istanza della classe
@@ -62,7 +48,7 @@ public class GestoreProposte{
 	 */
 	public static GestoreProposte getInstance() {
 		if(instance == null)
-			instance = new GestoreProposte(DEFAULTFILE);
+			instance = new GestoreProposte();
 		return instance;
 	}
 	
@@ -98,45 +84,57 @@ public class GestoreProposte{
 		return set.contains(title);
 	}
 	/**
-	 * Carica il contenuto di sessioni precedenti
-	 * @throws IOException per imprevisti con la formazione dello stream
-	 * @throws ClassNotFoundException per imprevisti nel caricamento dei dati
+	 * Carica il contenuto di sessioni precedenti<br>
+	 * Richiede che sia stato impostato un file da cui poter prelevare le informazioni
+	 * @return l'esito dell'operazione
 	 */
-	public void load() throws IOException, ClassNotFoundException{
-		if(f.exists() && f.canRead()){
+	public boolean load(){
+		if( f != null & f.exists() & f.canRead()) {
 			try {
 				in = new ObjectInputStream(new FileInputStream(f));
 				set = (InsiemeProposte) in.readObject();
 				in.close();
+				return true;
 			}catch(IOException e) {
-				throw e;
+				//send eccezione a gestore
+				return false;
 			}catch(ClassNotFoundException e) {
-				throw e;
+				//send eccezione a gestore
+				return false;
 			}
 		}
+		return false;
 	}
 	/**
-	 * Carica il contenuto nel file di destinazione
-	 * @throws IOException per imprevisti con la creazione dello stream
+	 * Carica il contenuto nel file di destinazione<br>
+	 * Necessita che sia stato precedentemente inserito un file su cui operare
+	 * @return l'esito dell'operazione
 	 */
-	public void save() throws IOException{
+	public boolean save() {
+		if(f == null)
+			return false;
 		try {
-			if(!f.exists() || !f.canWrite())
+			if(!f.exists()) {
+				f.getParentFile().mkdirs();
 				f.createNewFile();
-			out = new ObjectOutputStream(new FileOutputStream(f));
-			out.writeObject(set);
-			out.close();
+			}
+			if(f.exists() & f.canWrite()) {
+				out = new ObjectOutputStream(new FileOutputStream(f));
+				out.writeObject(set);
+				out.close();
+				return true;
+			}
 		}catch(IOException e) {
-			throw e;
+			return false;
 		}
+		return false;
 	}
 	/**
 	 * Imposta il nome del file in cui salvare le risorse
 	 * @param nFileName il nome del file in cui salvare le risorse
 	 */
 	public void setFile(String nFileName) {
-		//PROBLEMI DI GENERAZIONE FILE
-		f = new File(String.format(NAMEFORMAT, nFileName));
+		f = new File(nFileName);
 	}
 	/**
 	 * Restituisce il nome del file in cui sono salvate in modo permanente le informazioni

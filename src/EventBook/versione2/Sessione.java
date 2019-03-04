@@ -53,12 +53,12 @@ public class Sessione {
 	}
 	
 	/**
-	 * Modifica una proposta esistente (?)
-	 * @param propostaSelezionata (?) String o direttamente oggetto?
-	 * @param nome (?)
+	 * Modifica una proposta esistente 
+	 * @param propostaSelezionata il titolo della proposta da modificare
+	 * @param nome Il nome del campo da modificare
 	 * @param valore Nuovo valore da sostituire
 	 */
-	public void modificaProposta(Proposta propostaSelezionata, String nome, String valore) {
+	public void modificaProposta(Proposta propostaSelezionata, String nome, Object valore) {
 		for(Proposta proposta: insiemeProposte) {
 			if(proposta.equals(propostaSelezionata))
 				proposta.cambia(nome, valore);
