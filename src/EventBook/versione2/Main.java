@@ -11,7 +11,6 @@ import EventBook.versione1.*;
  *
  */
 public class Main {
-	
 	private static final String COMANDI_DISPONIBILI = "I comandi a tua disposizione:"
 														+ "\n\thelp\t\tComunica i comandi a disposizione"
 														+ "\n\tcategoria\tMostra la categoria disponibile"
@@ -29,7 +28,8 @@ public class Main {
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
 	
 	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto";
-
+	
+	
 	public static void main(String[] args) {
 		
 		//condizione d'uscita
