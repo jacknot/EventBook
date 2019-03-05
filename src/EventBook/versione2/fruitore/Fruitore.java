@@ -3,7 +3,7 @@ package EventBook.versione2.fruitore;
 import java.io.Serializable;
 
 /**La classe User ha il compito di fornire una struttura adatta a gestire un fruitore del social network.<br>
- * Ad ogni fruitore è associato, oltre al nome, uno spazio personale inizialmente vuoto<br>
+ * Ad ogni fruitore Ã¨ associato, oltre al nome, uno spazio personale inizialmente vuoto<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
 public class Fruitore implements Serializable, Notificabile{
@@ -38,10 +38,10 @@ public class Fruitore implements Serializable, Notificabile{
 	
 	/**
 	 * Rimuovere un messaggio presente nello spazio personale
-	 * @param message Il messaggio da rimuovere
+	 * @param title il titolo del messaggio da rimuovere
 	 */
-	public void remove(Messaggio message) {
-		//DA FARE
+	public void remove(String title) {
+		privateSpace.remove(title);
 	}
 	
 	/**
@@ -52,5 +52,5 @@ public class Fruitore implements Serializable, Notificabile{
 		return privateSpace.toString();
 	}
 	
-	//IL toString in teoria non serve...a meno che facciamo stampare lo spazio (che è getPrivateSpace())
+	//IL toString in teoria non serve...a meno che facciamo stampare lo spazio (che ï¿½ getPrivateSpace())
 }

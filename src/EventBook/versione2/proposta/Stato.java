@@ -1,16 +1,17 @@
 package EventBook.versione2.proposta;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import EventBook.versione1.campi.ExpandedHeading;
 import EventBook.versione2.fruitore.Messaggio;
 import EventBook.versione2.proposta.Proposta;
 
 /**
- * Contiene un set predefiniti di stati in cui la proposta si può trovare
+ * Contiene un set predefiniti di stati in cui la proposta si puÃ² trovare
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public enum Stato{
+public enum Stato implements Serializable{
 	
 	INVALIDA{
 			/* (non-Javadoc)
@@ -70,11 +71,11 @@ public enum Stato{
 			//data ultima iscrizione
 			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
 			//todayDate <= lastSubDate && subs == full
-			if(tDate.compareTo(lastSubDate) <= 0 & 
+			if(tDate.compareTo(lastSubDate) <= 0 &&
 					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(CHIUSA);
-				p.send(new Messaggio(	//messaggio che avvisa che la proposta è chiusa
+				p.send(new Messaggio(	//messaggio che avvisa che la proposta ï¿½ chiusa
 						String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),
 						CONFIRMOBJ,															
 						String.format(CONFIRMFORMAT, String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),
@@ -85,11 +86,11 @@ public enum Stato{
 						));
 				return true;
 			//todayDate == lastSubDate && subs < full
-			}else if(tDate.compareTo(lastSubDate) == 0 &
+			}else if(tDate.compareTo(lastSubDate) == 0 &&
 					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(FALLITA);
-				p.send(new Messaggio(	//messaggio che avvisa che la proposta è fallita
+				p.send(new Messaggio(	//messaggio che avvisa che la proposta ï¿½ fallita
 						String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),	
 						FAILUREOBJ,
 						String.format(FAILUREFORMAT, String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())))
@@ -141,14 +142,14 @@ public enum Stato{
 	private static final String CONFIRMOBJ = "Conferma evento";
 	private static final String FAILUREOBJ = "Fallimento evento";
 	//data ora luogo importo
-	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
-													+ "\nSi ricorda di portare %s € per l'orgazzazione";
+	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrï¿½ il giorno %s alle %s in %s."
+													+ "\nSi ricorda di portare %s ï¿½ per l'orgazzazione";
 	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
-													+ "\nL'evento è quindi annullato.";
+													+ "\nL'evento ï¿½ quindi annullato.";
 	/**
 	 * Modifica lo stato della proposta in modo da poterla rendere adatta al pubblico
 	 * @param p la proposta a cui fare cambiare stato
-	 * @return True - è stato cambiato stato con successo<br>False - non è stato cambiato stato alla proposta
+	 * @return True - ï¿½ stato cambiato stato con successo<br>False - non ï¿½ stato cambiato stato alla proposta
 	 */
 	public boolean pubblica(Proposta p) {
 		return false;
@@ -156,7 +157,7 @@ public enum Stato{
 	/**
 	 * Porta la proposta p in nuovo stato
 	 * @param p la proposta a cui far cambiare stato
-	 * @return True - è stato cambiato stato con successo<br>False - non è stato cambiato stato alla proposta
+	 * @return True - ï¿½ stato cambiato stato con successo<br>False - non ï¿½ stato cambiato stato alla proposta
 	 */
 	public abstract boolean transiziona(Proposta p);
 	/**
@@ -167,9 +168,9 @@ public enum Stato{
 		return false;
 	}
 	/**
-	 * Verifica se la proposta è nello stato di potersi iscrivere
+	 * Verifica se la proposta ï¿½ nello stato di potersi iscrivere
 	 * @param p la proposta inserita
-	 * @return True - ci si può iscrivere alla proposta<br>False - non ci si può iscrivere alla proposta
+	 * @return True - ci si puï¿½ iscrivere alla proposta<br>False - non ci si puï¿½ iscrivere alla proposta
 	 */
 	public boolean canSubscribe(Proposta p) {
 		return false;

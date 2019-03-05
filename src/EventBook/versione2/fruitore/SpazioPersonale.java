@@ -37,10 +37,12 @@ public class SpazioPersonale implements Serializable{
 	
 	/**
 	 * Permette di rimuovere un messaggio presente nella lista
-	 * @param nome Nome del messaggio da rimuovere
+	 * @param title Nome del messaggio da rimuovere
 	 */
-	public void remove(String nome) {
-		//DA FARE
+	public void remove(String title) {
+		messageList.stream()
+					.filter(( m )->m.getObject().equalsIgnoreCase(title))
+					.forEach(( m )->messageList.remove(m));
 	}
 
 	public String toString() {

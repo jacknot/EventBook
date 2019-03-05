@@ -1,11 +1,13 @@
 package EventBook.versione1.campi;
 
+import java.io.Serializable;
+
 /**La classe Campo ha il compito di fornire una struttura adatta a contenere una descrizione ed un valore.<br>
  * Il valore che contiene può essere di diversi tipi, per ogni campo questo deve essere specificato.<br>
  * @param <T> Il tipo di valore che un campo può contenere.
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Field <T>{
+public class Field <T> implements Serializable{
 	
 	//Attributi
 	

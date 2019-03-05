@@ -1,27 +1,30 @@
 package EventBook.versione1.campi;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 /**Classe con il compito di contenere una descrizione corredata da informazioni relative alla sua obbligatorietà
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]
  *
  */
 public enum ExpandedHeading{
 	
-	TITOLO("Titolo", "Il titolo dell'evento", false),
-	NUMEROPARTECIPANTI("Numero di Partecipanti", "Numero di persone da coinvolgere nell'evento", true),
-	TERMINEISCRIZIONE("Termine ultimo iscrizione", "Ultimo giorno utile per iscriversi all'evento", true),
-	LUOGO("Luogo", "Indirizzo del luogo che ospiterà l'evento oppure, se l'evento è itinerante, il luogo di ritrovo dei partecipanti", true),
-	DATA("Data", "Data in cui l'evento proposto deve svolgersi o, nel caso l'evento non termini nello stesso giorno in cui ha inizio, la data dell'inizio dell'evento", true),
-	ORA("Ora", "Ora in cui i partecipanti dovranno trovarsi nel luogo \"Luogo\" in data \"Data\" per dare inizio all'evento", true),
-	DURATA("Durata", "Durata in termini di numero (approssimativo) di ore e minuti, per gli eventi che si esauriscono in un sol giorno, o in termini di numero esatto di giorni, per gli eventi che occupano più giorni	consecutivi", false),
-	QUOTAINDIVIDUALE("Quota individuale", "Spesa (o una stima della stessa) che ogni partecipante all'iniziativa dovrà sostenere (Può anche essere nulla)", true),
-	COMPRESONELLAQUOTA("Compreso nella quota", "Tutte le voci di spesa comprese nell'ammontare indicato nella \"Quota individuale\"", false),
-	DATACONCLUSIVA("Data conclusiva", "Data di conclusione dell'evento", false),
-	ORACONCLUSIVA("Ora conclusiva", "Ora di conclusione dell'evento", false),
-	NOTE("Note", "Informazioni aggiuntive ", false),
+	TITOLO("Titolo", "Il titolo dell'evento", false, String.class),
+	NUMEROPARTECIPANTI("Numero di Partecipanti", "Numero di persone da coinvolgere nell'evento", true, Integer.class),
+	TERMINEISCRIZIONE("Termine ultimo iscrizione", "Ultimo giorno utile per iscriversi all'evento", true, LocalDate.class),
+	LUOGO("Luogo", "Indirizzo del luogo che ospiterà l'evento oppure, se l'evento è itinerante, il luogo di ritrovo dei partecipanti", true, String.class),
+	DATA("Data", "Data in cui l'evento proposto deve svolgersi o, nel caso l'evento non termini nello stesso giorno in cui ha inizio, la data dell'inizio dell'evento", true, LocalDate.class),
+	ORA("Ora", "Ora in cui i partecipanti dovranno trovarsi nel luogo \"Luogo\" in data \"Data\" per dare inizio all'evento", true, LocalTime.class),
+	DURATA("Durata", "Durata in termini di numero (approssimativo) di ore e minuti, per gli eventi che si esauriscono in un sol giorno, o in termini di numero esatto di giorni, per gli eventi che occupano più giorni	consecutivi", false, Integer.class),
+	QUOTAINDIVIDUALE("Quota individuale", "Spesa (o una stima della stessa) che ogni partecipante all'iniziativa dovrà sostenere (Può anche essere nulla)", true,  Double.class),
+	COMPRESONELLAQUOTA("Compreso nella quota", "Tutte le voci di spesa comprese nell'ammontare indicato nella \"Quota individuale\"", false,  String.class),
+	DATACONCLUSIVA("Data conclusiva", "Data di conclusione dell'evento", false,  LocalDate.class),
+	ORACONCLUSIVA("Ora conclusiva", "Ora di conclusione dell'evento", false,  LocalTime.class),
+	NOTE("Note", "Informazioni aggiuntive ", false, String.class),
 	
 	//Campi FootballMatch
-	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true),
-	FASCIADIETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true);
+	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, String.class),
+	FASCIADIETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, Interval.class);
 
 	/**
 	 * Contiene il nome
@@ -35,6 +38,10 @@ public enum ExpandedHeading{
 	 * Contiene informazioni sull'obbligatorietà
 	 */
 	private boolean binding;
+	/**
+	 * Contiene informazioni sul tipo del campo
+	 */
+	private Class<?> type;
 	/**
 	 * Formattazione per la visualizzazione testuale dell'oggetto
 	 */
@@ -66,12 +73,19 @@ public enum ExpandedHeading{
 	 * @param descrizione La descrizione
 	 * @param obbligatorio Se obbligatorio
 	 */
-	private ExpandedHeading(String nome, String descrizione, boolean obbligatorio) {
+	private ExpandedHeading(String nome, String descrizione, boolean obbligatorio, Class<?> type) {
 		this.name = nome;
 		this.description = descrizione;
 		this.binding = obbligatorio;
+		this.type = type;
 	}
-	
+	/**
+	 * Restituisce il tipo del campo
+	 * @return il tipo del campo
+	 */
+	public Class<?> getType() {
+		return type;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Enum#toString()
 	 */

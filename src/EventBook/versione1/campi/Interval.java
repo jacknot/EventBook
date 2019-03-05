@@ -1,10 +1,12 @@
 package EventBook.versione1.campi;
 
+import java.io.Serializable;
+
 /**Classe con il compito di ospitare due dati numerici interi
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]
  *
  */
-public class Interval {
+public class Interval implements Serializable{
 
 	//ATTRIBUTI
 	/**
@@ -18,8 +20,8 @@ public class Interval {
 	
 	//COSTRUTTORE
 	/**Costruttore 
-	 * @param iE Il dato numerico più piccolo si vuole assegnare<br>
-	 * @param sE Il dato numerico più grande si vuole assegnare
+	 * @param iE Il dato numerico piï¿½ piccolo si vuole assegnare<br>
+	 * @param sE Il dato numerico piï¿½ grande si vuole assegnare
 	 */
 	public Interval(int iE, int sE) {
 		if(iE > sE) {
