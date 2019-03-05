@@ -1,8 +1,10 @@
 package EventBook.versione2;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import EventBook.versione1.campi.ExpandedHeading;
+import EventBook.versione2.fruitore.Fruitore;
 import EventBook.versione2.proposta.Proposta;
 
 /**Classe che consente di tenere in meomoria le proposte di un fruitore non ancora pubblicate, in modo da consentirne una modifica futura<br>
@@ -13,18 +15,17 @@ public class Sessione {
 	/**
 	 * Il nome del fruitore proprietario della sessione
 	 */
-	private String proprietario;
+	private Fruitore proprietario;
 	
 	/**
 	 * Elenco di proposte che il proprietario ha in sospeso nella sessione corrente
 	 */
 	private ArrayList<Proposta> insiemeProposte;
-	
 	/**
 	 * Costruttore
 	 * @param _proprietario Il nome del fruitore proprietario della sessione
 	 */
-	public Sessione(String _proprietario) {
+	public Sessione(Fruitore _proprietario) {
 		proprietario = _proprietario;
 		insiemeProposte = new ArrayList<Proposta>();
 	}
@@ -33,7 +34,7 @@ public class Sessione {
 	 * Restituisce il proprietario della sessione
 	 * @return Nome del fruitore proprietario
 	 */
-	public String getProprietario() {
+	public Fruitore getProprietario() {
 		return proprietario;
 	}
 
@@ -42,11 +43,14 @@ public class Sessione {
 	 * @param nome nome della proposta
 	 * @return Proposta
 	 */
-	
 	public Proposta getProposta(String nome) {
-		return insiemeProposte.stream().filter((p)->p.equals(nome)).findFirst().get(); //O while
+		Optional<Proposta> o = insiemeProposte.stream()
+							.filter((p)->p.hasTitle(nome))
+							.findFirst(); //O while
+		if(o.isPresent())
+			return o.get();
+		return null;
 	}
-
 	/**
 	 * Aggiunge una proposta all'elenco delle proposte
 	 * @param proposta Proposta da aggiungere all'elenco
@@ -54,7 +58,6 @@ public class Sessione {
 	public void aggiungiProposta(Proposta proposta) {
 		insiemeProposte.add(proposta);
 	}
-	
 	/**
 	 * Modifica una proposta esistente 
 	 * @param propostaSelezionata il titolo della proposta da modificare
@@ -67,19 +70,22 @@ public class Sessione {
 				proposta.cambia(nome, valore);
 		}
 	}
-	
+	/*
 	/**
 	 * Pubblica la proposta in bacheca
 	 * @param proposta Proposta da pubblicare
-	 */
+	 *//*
 	public void pubblica(Proposta proposta) {
 		GestoreProposte.getInstance().add(proposta);
-	}
+	}*/
 	
-	public String visualizzaNomiEventi() {
+	public String showProposals() {
 		StringBuilder stringaRitorno = new StringBuilder();
 		for(int i=0; i<insiemeProposte.size();i++) {
-			stringaRitorno.append(i+1).append(insiemeProposte.get(i).getValue(ExpandedHeading.TITOLO.getName())).append("\n");
+			stringaRitorno.append(i+1)
+						.append(" : ")
+						.append(insiemeProposte.get(i).getValue(ExpandedHeading.TITOLO.getName()))
+						.append("\n");
 		}
 		return stringaRitorno.toString();
 	}

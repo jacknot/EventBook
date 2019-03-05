@@ -99,4 +99,17 @@ public class InsiemeProposte extends HashSet<Proposta> implements Serializable{
 		return this.stream()
 					.anyMatch(( p ) -> p.getValue(ExpandedHeading.TITOLO.getName()).equals(name));
 	}
+	public String showContent() {
+		StringBuilder sb = new StringBuilder();
+		this.stream().forEach((p)->sb.append(p.toString()).append("\n"));
+		return sb.toString();
+	}
+	/**
+	 * Genera una nuova istanza di un insieme di proposte
+	 * @return una nuova bacheca
+	 */
+	//da inserire potenzialmente in una Factory
+	public static InsiemeProposte newBacheca() {
+		return new InsiemeProposte(Stato.APERTA);
+	}
 }

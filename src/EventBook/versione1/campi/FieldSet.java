@@ -86,11 +86,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	public String getFeatures() {
 		StringBuilder sb = new StringBuilder();
 		this.stream()
-			.map((e)->e.getFeatures())
-			.forEach((e)->{
-				sb.append(e);
-				sb.append(String.format(INTERLINE));
-			});
+			.forEachOrdered((f)->sb.append(f.getFeatures()).append(String.format(INTERLINE)));
 		return sb.toString();
 	}
 	/* (non-Javadoc)
@@ -99,10 +95,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		this.stream()
-			.map((e)->e.toString())
-			.forEach((e)->{
-				sb.append(e);
-			});
+			.forEachOrdered((f)->sb.append(f.toString()));
 		return sb.toString();
 	}
 }

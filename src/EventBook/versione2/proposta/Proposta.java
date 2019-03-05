@@ -56,12 +56,20 @@ public class Proposta implements Serializable{
 		aState = nS;
  	}
 	/**
-	 * Verifica se la proposta ha il nome passato come argomento
-	 * @param nome nome della proposta
+	 * Verifica se la proposta ha come titolo quello passato come argomento
+	 * @param title titolo da confrontare
+	 * @return True - ha il titolo inserito<br>False - non ha il titolo inserito
+	 */
+	public boolean hasTitle(String title) {
+		return evento.getValue(ExpandedHeading.TITOLO.getName()).equals(title);
+	}
+	/**
+	 * Verifica se la proposta è uguale a quella inserita
+	 * @param p la proposta con cui fare il confronto
 	 * @return True - sono uguali<br>False - sono diverse
 	 */
-	public boolean equals(String nome) {
-		return evento.getValue(ExpandedHeading.TITOLO.getName()).equals(nome);
+	public boolean equals(Proposta p) {
+		return evento.getValue(ExpandedHeading.TITOLO.getName()).equals(p.evento.getValue(ExpandedHeading.TITOLO.getName()));
 	}
 	/**
 	 * Modifica il campo della proposta di cui si � inserito il nome, se esiste
@@ -132,5 +140,11 @@ public class Proposta implements Serializable{
 	 */
 	public boolean isValida() {
 		return evento.isValid();
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return evento.toString();
 	}
 }

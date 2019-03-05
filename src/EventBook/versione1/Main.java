@@ -51,7 +51,7 @@ public class Main {
 		//comando caratteristiche ( visualizza le caratteristiche della categoria
 		protocollo.put(COMANDO_DESCRIZIONE,()->{
 			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
-			System.out.println(p.toString());
+			System.out.println(p.getFeatures());
 		});
 		// fine inizializzazione protocollo
 		
