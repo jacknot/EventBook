@@ -2,6 +2,7 @@ package EventBook.versione2;
 
 import java.util.ArrayList;
 
+import EventBook.versione1.campi.ExpandedHeading;
 import EventBook.versione2.proposta.Proposta;
 
 /**Classe che consente di tenere in meomoria le proposte di un fruitore non ancora pubblicate, in modo da consentirne una modifica futura<br>
@@ -37,11 +38,13 @@ public class Sessione {
 	}
 
 	/**
-	 * Restituisce l'elenco delle proposte del fruitore
-	 * @return Elenco di proposte
+	 * Restituisce la proposta specificata dal nome
+	 * @param nome nome della proposta
+	 * @return Proposta
 	 */
-	public ArrayList<Proposta> getInsiemeProposte() {
-		return insiemeProposte;
+	
+	public Proposta getProposta(String nome) {
+		return insiemeProposte.stream().filter((p)->p.equals(nome)).findFirst().get(); //O while
 	}
 
 	/**
@@ -71,6 +74,14 @@ public class Sessione {
 	 */
 	public void pubblica(Proposta proposta) {
 		GestoreProposte.getInstance().add(proposta);
+	}
+	
+	public String visualizzaNomiEventi() {
+		StringBuilder stringaRitorno = new StringBuilder();
+		for(int i=0; i<insiemeProposte.size();i++) {
+			stringaRitorno.append(i+1).append(insiemeProposte.get(i).getValue(ExpandedHeading.TITOLO.getName())).append("\n");
+		}
+		return stringaRitorno.toString();
 	}
 	
 }

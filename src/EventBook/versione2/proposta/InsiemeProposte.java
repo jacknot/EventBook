@@ -66,7 +66,7 @@ public class InsiemeProposte extends HashSet<Proposta> implements Serializable{
 	}
 	//iscrivi un Notificabile ad una proposta : OK
 	/**
-	 * Iscrivi un utente nella proposta di cui si � inserito il titolo
+	 * Iscrivi un utente nella proposta di cui si è inserito il titolo
 	 * @param title il titolo della proposta a cui aggiungere l'utente
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
@@ -81,7 +81,7 @@ public class InsiemeProposte extends HashSet<Proposta> implements Serializable{
 	 * Cerca nel set la proposta avente come titolo quello inserito<br>
 	 * Restituisce null se non ce ne sono
 	 * @param name il titolo inserito
-	 * @return la proposta di cui si � inserito il titolo 
+	 * @return la proposta di cui si è inserito il titolo 
 	 */
 	private Proposta find(String name) {
 		if(contains(name)) 

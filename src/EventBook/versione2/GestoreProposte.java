@@ -83,7 +83,7 @@ public class GestoreProposte implements Serializable{
 	 */
 	public boolean load(){
 		ObjectInputStream in = null;
-		if( f != null && f.exists() && f.canRead()) {
+		if( f != null && f.exists() && f.canRead() && !(f.length()==0)) {
 			try {
 				in = new ObjectInputStream(new FileInputStream(f));
 				instance = (GestoreProposte) in.readObject();

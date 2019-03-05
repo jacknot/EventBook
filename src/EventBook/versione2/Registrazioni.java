@@ -85,8 +85,8 @@ public class Registrazioni implements Serializable{
 	 * Salva l'oggetto Registrazioni su un file per uso futuro
 	 * @return l'esito dell'operazione
 	 */
-	public boolean save() { //Eccezioni nel main...
-	  ObjectOutputStream out = null;
+	public boolean save() {
+		ObjectOutputStream out = null;
 		if(f == null)
 			return false;
 		try {
@@ -94,14 +94,14 @@ public class Registrazioni implements Serializable{
 				f.getParentFile().mkdirs();
 				f.createNewFile();
 			}
-			if(f.exists() & f.canWrite()) {
-				
+			if(f.exists() && f.canWrite()) {
 				out = new ObjectOutputStream(new FileOutputStream(f, false));
 				out.writeObject(instance);
 				out.close();
 				return true;
 			}
 		}catch(IOException e) {
+			e.printStackTrace();
 			return false;
 		}
 		return false;
@@ -113,15 +113,20 @@ public class Registrazioni implements Serializable{
 	 * @return l'esito dell'operazione
 	 */
 	public boolean load(){
-		if( f != null & f.exists() & f.canRead()) {
-			try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));) {
+		ObjectInputStream in = null;
+		if( f != null && f.exists() && f.canRead() && !(f.length()==0)) {
+			try {
+				in = new ObjectInputStream(new FileInputStream(f));
 				instance = (Registrazioni) in.readObject();
+				in.close();
 				return true;
 			}catch(IOException e) {
 				//send eccezione a gestore
+				e.printStackTrace();
 				return false;
 			}catch(ClassNotFoundException e) {
 				//send eccezione a gestore
+				e.printStackTrace();
 				return false;
 			}
 		}

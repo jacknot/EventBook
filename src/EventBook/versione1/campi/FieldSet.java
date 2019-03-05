@@ -86,7 +86,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	public String getFeatures() {
 		StringBuilder sb = new StringBuilder();
 		this.stream()
-			.map((e)->e.toString())
+			.map((e)->e.getFeatures())
 			.forEach((e)->{
 				sb.append(e);
 				sb.append(String.format(INTERLINE));

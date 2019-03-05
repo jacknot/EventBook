@@ -56,12 +56,12 @@ public class Proposta implements Serializable{
 		aState = nS;
  	}
 	/**
-	 * Verifica se due proposte sono uguali
-	 * @param p la proposta da confrontare
+	 * Verifica se la proposta ha il nome passato come argomento
+	 * @param nome nome della proposta
 	 * @return True - sono uguali<br>False - sono diverse
 	 */
-	public boolean equals(Proposta p) {
-		return evento.getValue(ExpandedHeading.TITOLO.getName()).equals(p.evento.getValue(ExpandedHeading.TITOLO.getName()));
+	public boolean equals(String nome) {
+		return evento.getValue(ExpandedHeading.TITOLO.getName()).equals(nome);
 	}
 	/**
 	 * Modifica il campo della proposta di cui si � inserito il nome, se esiste
