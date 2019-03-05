@@ -1,12 +1,13 @@
 package EventBook.versione1.campi;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**Definisce una struttura dati con il compito di gestire di diversi campi
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class FieldSet extends ArrayList<Field<?>>{
+public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	private static final long serialVersionUID = 1L;	//soppressione warning
 	private static final String INTERLINE = "*******************************%n";
 	
@@ -35,7 +36,7 @@ public class FieldSet extends ArrayList<Field<?>>{
 	}
 	
 	/**
-	 * Restituisce il contenuto del campo di cui si è inserito il nome
+	 * Restituisce il contenuto del campo di cui si ï¿½ inserito il nome
 	 * @param name il nome del campo di cui si vuole il contenuto
 	 * @return il suo contenuto ( null se non esiste campo con il nome inserito )
 	 */
@@ -45,7 +46,7 @@ public class FieldSet extends ArrayList<Field<?>>{
 		return getField(name).getValue();
 	}
 	/**
-	 * Restituisce il tipo del campo di cui si è inserito il nome
+	 * Restituisce il tipo del campo di cui si ï¿½ inserito il nome
 	 * @param name il nome del campo di cui si vuole il tipo
 	 * @return il tipo del campo. Restituisce null se il campo non esiste
 	 */
@@ -55,8 +56,8 @@ public class FieldSet extends ArrayList<Field<?>>{
 		return getField(name).getType();		
 	}
 	/**
-	 * Imposta il valore del campo di cui si è inserito il nome.<br>
-	 * Se il nuovo valore non è del tipo appropriato non viene fatta alcuna modifica
+	 * Imposta il valore del campo di cui si ï¿½ inserito il nome.<br>
+	 * Se il nuovo valore non ï¿½ del tipo appropriato non viene fatta alcuna modifica
 	 * @param name il nome del campo di cui modificare il valore
 	 * @param nValue il nuovo valore
 	 */
@@ -65,8 +66,8 @@ public class FieldSet extends ArrayList<Field<?>>{
 			getField(name).setValue(nValue);
 	}
 	/**
-	 * Controlla se un set di campi è valido ( i campi obbligatori non hanno valore nullo) 
-	 * @return  True - se il set è valido<br>False - se il set non è valido
+	 * Controlla se un set di campi ï¿½ valido ( i campi obbligatori non hanno valore nullo) 
+	 * @return  True - se il set ï¿½ valido<br>False - se il set non ï¿½ valido
 	 */
 	public boolean isValid() {
 		if( this.stream()

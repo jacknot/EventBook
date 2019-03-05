@@ -38,11 +38,10 @@ public class Fruitore implements Serializable, Notificabile{
 	
 	/**
 	 * Rimuovere un messaggio presente nello spazio personale
-	 * @param message Il messaggio da rimuovere
+	 * @param title il titolo del messaggio da rimuovere
 	 */
-	public void remove(Messaggio message) {
-		//DA FARE
-		privateSpace.remove(message);
+	public void remove(String title) {
+		privateSpace.remove(title);
 	}
 	
 	/**

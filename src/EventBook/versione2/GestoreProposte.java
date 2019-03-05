@@ -13,22 +13,15 @@ import EventBook.versione2.proposta.Stato;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class GestoreProposte{
+public class GestoreProposte implements Serializable{
 	/**
 	 * Contiene il file in cui sono presenti le informazioni del gestore di proposte
 	 */
 	private File f;
-	/**
-	 * Stream per scrivere sul file
-	 */
-	private ObjectOutputStream out;
-	/**
-	 * Stream per leggere dal file
-	 */
-	private ObjectInputStream in;
+
 	/**
 	 * Il set che deve contenere le istanze delle proposte
-	 */
+	 */ 
 	private InsiemeProposte set;
 	/**
 	 * Istanza per implementare il Design Pattern Singleton
@@ -67,7 +60,7 @@ public class GestoreProposte{
 		set.refresh();
 	}
 	/**
-	 * Iscrivi un utente nella proposta di cui si è inserito il titolo
+	 * Iscrivi un utente nella proposta di cui si ï¿½ inserito il titolo
 	 * @param title il titolo della proposta a cui aggiungere l'utente
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
@@ -89,17 +82,20 @@ public class GestoreProposte{
 	 * @return l'esito dell'operazione
 	 */
 	public boolean load(){
-		if( f != null & f.exists() & f.canRead()) {
+		ObjectInputStream in = null;
+		if( f != null && f.exists() && f.canRead()) {
 			try {
 				in = new ObjectInputStream(new FileInputStream(f));
-				set = (InsiemeProposte) in.readObject();
+				instance = (GestoreProposte) in.readObject();
 				in.close();
 				return true;
 			}catch(IOException e) {
 				//send eccezione a gestore
+				e.printStackTrace();
 				return false;
 			}catch(ClassNotFoundException e) {
 				//send eccezione a gestore
+				e.printStackTrace();
 				return false;
 			}
 		}
@@ -111,6 +107,7 @@ public class GestoreProposte{
 	 * @return l'esito dell'operazione
 	 */
 	public boolean save() {
+		ObjectOutputStream out = null;
 		if(f == null)
 			return false;
 		try {
@@ -118,13 +115,14 @@ public class GestoreProposte{
 				f.getParentFile().mkdirs();
 				f.createNewFile();
 			}
-			if(f.exists() & f.canWrite()) {
-				out = new ObjectOutputStream(new FileOutputStream(f));
-				out.writeObject(set);
+			if(f.exists() && f.canWrite()) {
+				out = new ObjectOutputStream(new FileOutputStream(f, false));
+				out.writeObject(instance);
 				out.close();
 				return true;
 			}
 		}catch(IOException e) {
+			e.printStackTrace();
 			return false;
 		}
 		return false;

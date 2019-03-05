@@ -1,5 +1,7 @@
 package EventBook.versione1;
 
+import java.io.Serializable;
+
 import EventBook.versione1.campi.*;
 
 /**
@@ -8,7 +10,7 @@ import EventBook.versione1.campi.*;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public abstract class Category implements Cloneable{
+public abstract class Category implements Cloneable,Serializable{
 	
 	//attributi
 	
@@ -24,7 +26,7 @@ public abstract class Category implements Cloneable{
 	//metodi
 	
 	/**
-	 * Visualizza la struttura di quello che può contenere in forma testuale.<br>
+	 * Visualizza la struttura di quello che puï¿½ contenere in forma testuale.<br>
 	 * Non visualizza un loro eventuale contenuto.
 	 * @return La struttura in forma testuale
 	 */
@@ -39,7 +41,7 @@ public abstract class Category implements Cloneable{
 		return heading.toString();
 	}
 	/**
-	 * Modifica il valore del campo di cui si è inserito il nome
+	 * Modifica il valore del campo di cui si ï¿½ inserito il nome
 	 * @param name il nome del campo
 	 * @param nValue il nuovo valore del campo
 	 */
@@ -47,7 +49,7 @@ public abstract class Category implements Cloneable{
 		fields.setValue(name, nValue);
 	}
 	/**
-	 * Restituisce il valore del campo di cui si è inserito il nome
+	 * Restituisce il valore del campo di cui si ï¿½ inserito il nome
 	 * @param name il nome del campo di cui si vuole il valore
 	 * @return Il valore del campo inserito. Restituisce null se il campo non esiste
 	 */
@@ -55,7 +57,7 @@ public abstract class Category implements Cloneable{
 		return fields.getValue(name);
 	}
 	/**
-	 * Restituisce il tipo del campo di cui si è inserito il nome
+	 * Restituisce il tipo del campo di cui si ï¿½ inserito il nome
 	 * @param name il nome del campo di cui si vuole il tipo
 	 * @return Il tipo del campo inserito. Restituisce null se il campo non esiste
 	 */
@@ -63,8 +65,8 @@ public abstract class Category implements Cloneable{
 		return fields.getType(name);
 	}
 	/**
-	 * Controlla se un evento è valido
-	 * @return True - se l'evento è valido<br>False - se l'evento non è valido
+	 * Controlla se un evento ï¿½ valido
+	 * @return True - se l'evento ï¿½ valido<br>False - se l'evento non ï¿½ valido
 	 */
 	public boolean isValid() {
 		return fields.isValid();

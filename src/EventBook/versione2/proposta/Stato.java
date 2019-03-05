@@ -1,5 +1,6 @@
 package EventBook.versione2.proposta;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import EventBook.versione1.campi.ExpandedHeading;
 import EventBook.versione2.fruitore.Messaggio;
@@ -10,7 +11,7 @@ import EventBook.versione2.proposta.Proposta;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public enum Stato{
+public enum Stato implements Serializable{
 	
 	INVALIDA{
 			/* (non-Javadoc)
@@ -70,7 +71,7 @@ public enum Stato{
 			//data ultima iscrizione
 			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
 			//todayDate <= lastSubDate && subs == full
-			if(tDate.compareTo(lastSubDate) <= 0 & 
+			if(tDate.compareTo(lastSubDate) <= 0 &&
 					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(CHIUSA);
@@ -85,7 +86,7 @@ public enum Stato{
 						));
 				return true;
 			//todayDate == lastSubDate && subs < full
-			}else if(tDate.compareTo(lastSubDate) == 0 &
+			}else if(tDate.compareTo(lastSubDate) == 0 &&
 					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(FALLITA);

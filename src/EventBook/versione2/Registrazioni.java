@@ -1,5 +1,6 @@
 package EventBook.versione2;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,8 +17,7 @@ import EventBook.versione2.fruitore.Messaggio;
  */
 public class Registrazioni implements Serializable{
 
-	private static final String NOMEFILE = "resource/registrazioni.ser";
-	
+
 	/**
 	 * Lista contenente i fruitori registrati
 	 */
@@ -26,7 +26,10 @@ public class Registrazioni implements Serializable{
 	 * Istanza necessaria per poter implementare il Design Pattern Singleton
 	 */
 	private static Registrazioni instance;
-	
+	/**
+	 * Il file dell'oggetto
+	 */
+	private File f;
 	/**
 	 * Costruttore
 	 */
@@ -46,7 +49,7 @@ public class Registrazioni implements Serializable{
 	}
 	
 	/**
-	 * Controlla se il fruitore è registrato
+	 * Controlla se il fruitore ï¿½ registrato
 	 * @param name Il nome del fruitore da cercare
 	 * @return True - se esiste un fruitore con tale nome <br>False - se il fruitore non esiste
 	 */
@@ -80,27 +83,56 @@ public class Registrazioni implements Serializable{
 	
 	/**
 	 * Salva l'oggetto Registrazioni su un file per uso futuro
-	 * @throws IOException errore di I/O
+	 * @return l'esito dell'operazione
 	 */
-	public void save() throws IOException {
-		FileOutputStream fileOut = new FileOutputStream(NOMEFILE, false);
-		ObjectOutputStream out = new ObjectOutputStream(fileOut);
-		out.writeObject(instance);
-		out.close();
-		fileOut.close();
+	public boolean save() { //Eccezioni nel main...
+	  ObjectOutputStream out = null;
+		if(f == null)
+			return false;
+		try {
+			if(!f.exists()) {
+				f.getParentFile().mkdirs();
+				f.createNewFile();
+			}
+			if(f.exists() & f.canWrite()) {
+				
+				out = new ObjectOutputStream(new FileOutputStream(f, false));
+				out.writeObject(instance);
+				out.close();
+				return true;
+			}
+		}catch(IOException e) {
+			return false;
+		}
+		return false;
 	}
+
 	
 	/**
 	 * Carica da file l'oggetto Registrazioni e lo assegna alla variabile instance
-	 * @throws ClassNotFoundException La classe dell'oggetto serializzato non puÃ² essere trovata
-	 * @throws IOException errore di I/O
+	 * @return l'esito dell'operazione
 	 */
-	public void load() throws ClassNotFoundException, IOException {
-		FileInputStream fileIn = new FileInputStream(NOMEFILE);
-        ObjectInputStream in = new ObjectInputStream(fileIn);
-        instance = (Registrazioni) in.readObject();
-        in.close();
-        fileIn.close();
+	public boolean load(){
+		if( f != null & f.exists() & f.canRead()) {
+			try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));) {
+				instance = (Registrazioni) in.readObject();
+				return true;
+			}catch(IOException e) {
+				//send eccezione a gestore
+				return false;
+			}catch(ClassNotFoundException e) {
+				//send eccezione a gestore
+				return false;
+			}
+		}
+		return false;
 	}
 	
+	/**
+	 * Imposta il nome del file in cui salvare le risorse
+	 * @param nFileName il nome del file in cui salvare le risorse
+	 */
+	public void setFile(String nFileName) {
+		f = new File(nFileName);
+	}
 }

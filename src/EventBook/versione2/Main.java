@@ -1,6 +1,5 @@
 package EventBook.versione2;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -11,6 +10,8 @@ import EventBook.versione1.*;
  *
  */
 public class Main {
+	private static final String FILEBACHECA = "resource/bacheca.ser";
+	private static final String REGISTRAZIONIFILE = "resource/registrazioni.ser";
 	
 	private static final String COMANDI_DISPONIBILI = "I comandi a tua disposizione:"
 														+ "\n\thelp\t\tComunica i comandi a disposizione"
@@ -30,56 +31,32 @@ public class Main {
 	
 	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto";
 
+	private static Scanner in;
 	public static void main(String[] args) {
 		
 		//condizione d'uscita
 		boolean exit = false;
 		
-		//inizializzazione cache categorie
-		CategoryCache cache = CategoryCache.getInstance();
+		HashMap<String, Runnable> protocollo = initCommand();
 		
-		//protocollo(modo per riconoscere i comandi)
-		HashMap <String,Runnable> protocollo = new HashMap<>();
-		
-		//inizializzazione protocollo(ci inserisco i comandi)
-		//comando help
-		protocollo.put(COMANDO_HELP,()->{
-			System.out.println(COMANDI_DISPONIBILI);
-		});
-		
-		//comando categoria ( visualizza la categoria)
-		protocollo.put(COMANDO_CATEGORIA,()->{
-			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
-			System.out.println(p.getDescription());
-		});
-		
-		//comando caratteristiche ( visualizza le caratteristiche della categoria
-		protocollo.put(COMANDO_DESCRIZIONE,()->{
-			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
-			System.out.println(p.toString());
-		});
-		//comando per registrare un nuovo utente, usa notazione UNIX command line
-		protocollo.put(COMANDO_REGISTRA, ()->{
-			try {
-				System.out.print("Inserisci il nome: ");
-				Scanner in = new Scanner(System.in);
-				String nome = in.nextLine();
-				Registrazioni.getInstance().registra(nome);
-				Registrazioni.getInstance().save();
-				
-			} catch (IOException e) {
-				System.err.println("Impossibile salvare i dati di registrazione!");
-			}
-		});
-		// fine inizializzazione protocollo
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 
+			System.out.println("Salvataggio...");
+			save();
+		}));
 		
 		//definizione scanner
-		Scanner in = new Scanner(System.in);
+		in = new Scanner(System.in);
 		
 		//benvenuto
 		System.out.println(MESSAGGIO_BENVENUTO);
+		
 		String comando;
+		
 		//carica risorse
+		GestoreProposte.getInstance().setFile(FILEBACHECA);
+		Registrazioni.getInstance().setFile(REGISTRAZIONIFILE);
+		load();
+		
 		//duty cycle
 		do {
 			System.out.print(ATTESA_COMANDO);
@@ -96,22 +73,52 @@ public class Main {
 				//comando non riconosciuto
 				System.out.println(ERRORE_COMANDO_NONRICONOSCIUTO);
 		}while(!exit);
-		
-		try {
-			Registrazioni.getInstance().load();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(Registrazioni.getInstance().contains("salva"));
-		System.out.println(Registrazioni.getInstance().contains("pinco"));
 		//uscita
+		
+		save();
 		//chiusura + terminazione anomala -> save
 		System.out.println(MESSAGGIO_USCITA);	
+		
 		//chiusura risorse
 		in.close();
+	}
+	private static void load() {
+		GestoreProposte.getInstance().load();
+		Registrazioni.getInstance().load();
+
+	}
+	private static void save() {
+		GestoreProposte.getInstance().save();
+		Registrazioni.getInstance().save();
+	}
+	private static HashMap<String, Runnable> initCommand() {
+		//protocollo(modo per riconoscere i comandi)
+		HashMap <String,Runnable> protocollo = new HashMap<>();
+		
+		//inizializzazione protocollo(ci inserisco i comandi)
+		//comando help
+		protocollo.put(COMANDO_HELP,()->{
+			System.out.println(COMANDI_DISPONIBILI);
+		});
+		
+		//comando categoria ( visualizza la categoria)
+		protocollo.put(COMANDO_CATEGORIA,()->{
+			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
+			System.out.println(p.getDescription());
+		});
+		
+		//comando caratteristiche ( visualizza le caratteristiche della categoria
+		protocollo.put(COMANDO_DESCRIZIONE,()->{
+			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
+			System.out.println(p.toString());
+		});
+		//comando per registrare un nuovo utente, usa notazione UNIX command line
+		protocollo.put(COMANDO_REGISTRA, ()->{
+				System.out.print("Inserisci il nome: ");
+				String nome = in.nextLine();
+				Registrazioni.getInstance().registra(nome);
+		});
+		// fine inizializzazione protocollo
+		return protocollo;
 	}
 }
