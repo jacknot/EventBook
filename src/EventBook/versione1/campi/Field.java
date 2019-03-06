@@ -2,6 +2,8 @@ package EventBook.versione1.campi;
 
 import java.io.Serializable;
 
+import EventBook.versione2.ClassType;
+
 /**La classe Campo ha il compito di fornire una struttura adatta a contenere una descrizione ed un valore.<br>
  * Il valore che contiene può essere di diversi tipi, per ogni campo questo deve essere specificato.<br>
  * @param <T> Il tipo di valore che un campo può contenere.
@@ -67,6 +69,11 @@ public class Field <T> implements Serializable{
 	public Class<T> getType(){
 		return type;
 	}
+	
+	public ClassType getClassType(){
+		return heading.getClassType();
+	}
+	
 	/**Restituisce se il campo è obbligatorio
 	 * @return True - è obbligatorio <br> False - non è obbligatorio
 	 */

@@ -13,6 +13,9 @@ import java.io.ObjectOutputStream;
  *
  */
 public class FileHandler{
+	
+	private static final long EMPTY_FILE = 0;
+
 	/**
 	 * Carica un oggetto salvato in un file
 	 * @param path il path del file da cui caricare un oggetto
@@ -20,7 +23,7 @@ public class FileHandler{
 	 */
 	public Object load(String path) {
 		File f = new File(path);
-		if(f.exists() && f.canRead() && f.length()!=0) {
+		if(f.exists() && f.canRead() && !isEmpty(f)) {
 			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(f))){
 				return in.readObject();
 			}catch(IOException e) {
@@ -35,6 +38,7 @@ public class FileHandler{
 		}
 		return null;
 	}
+	
 	/**
 	 * Salva l'oggetto inserito nel file di cui si è inserito il path
 	 * @param path il path del file in cui salvare l'oggetto
@@ -57,5 +61,9 @@ public class FileHandler{
 			return false;
 		}
 		return false;
+	}
+	
+	private boolean isEmpty(File f) {
+		return f.length() == EMPTY_FILE;
 	}
 }

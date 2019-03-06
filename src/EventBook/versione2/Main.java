@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import EventBook.versione1.*;
+import EventBook.versione1.campi.ExpandedHeading;
+import EventBook.versione1.campi.Field;
+import EventBook.versione1.campi.FieldSet;
 import EventBook.versione2.proposta.InsiemeProposte;
 
 /**
@@ -137,14 +140,33 @@ public class Main {
 				System.out.println("Utente non registrato");
 			}
 		});
-		/*
+		
 		protocollo.put(COMANDO_CREAZIONE_EVENTO, ()->{
-			for(int i=0; i<ExpandedHeading.values().length; i++) {
-				System.out.print("inserisci "+ ExpandedHeading.values()[i].getName() + ": ");
-				String dato = in.nextLine();
+			boolean validData = false;
+			FieldSet fields = FieldSetFactory.getInstance().getContenitore("Partita di Calcio");
+			for(int i=0; i< fields.size(); i++) {
+				do {
+					Field<?> campo = fields.get(i);
+					System.out.print("Inserisci "+ campo.getName());
+					if(!campo.isBinding())System.out.print(" [Facoltativo]");
+					System.out.print(" : ");
+					String dato = in.nextLine();
+
+					if(dato.equals("") && !campo.isBinding()) {
+						validData = true;
+					} else {
+						validData = campo.getClassType().isValidType(dato);
+						if(validData) {
+							campo.getClassType().parse(campo, dato);
+							System.out.println(String.format("Il campo %s è di tipo %s", campo.getName(), campo.getValue().getClass()));
+						}
+						else System.out.println("Il dato inserito non è nel formato corretto, riprovare!");
+					}
+				}while(!validData);
+				
 				//ExpandedHeading.values()[i].parse(dato);
 			}
-		});*/
+		});
 		protocollo.put(COMANDO_MOSTRA_PROPOSTE, ()->{
 			System.out.print(session.showProposals());
 		});
