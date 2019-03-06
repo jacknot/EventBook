@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import EventBook.versione1.*;
-import EventBook.versione1.campi.ExpandedHeading;
 import EventBook.versione1.campi.Field;
 import EventBook.versione1.campi.FieldSet;
 import EventBook.versione2.proposta.InsiemeProposte;
@@ -14,27 +13,24 @@ import EventBook.versione2.proposta.InsiemeProposte;
  *
  */
 public class Main {
-
 	private static final String BACHECAFILE = "resource/bacheca.ser";
 	private static final String REGISTRAZIONIFILE = "resource/registrazioni.ser";
 
 	private static final String COMANDI_DISPONIBILI = "I comandi a tua disposizione:"
 														+ "\n\thelp\t\tComunica i comandi a disposizione"
 														+ "\n\tcategoria\tMostra la categoria disponibile"
-														+ "\n\tdesc\t\tMostra le caratteristiche della categoria disponibile"
+														+ "\n\tdescrizione\t\tMostra le caratteristiche della categoria disponibile"
 														+ "\n\texit\t\tEsce dal programma"
 														+ "\n\tregistra\tRegistra un fruitore"
 														+ "\n\tlogin\tAccedi";
-															//...
 	
 	private static final String COMANDO_HELP = "help";
-	private static final String COMANDO_DESCRIZIONE = "desc";
+	private static final String COMANDO_DESCRIZIONE = "descrizione";
 	private static final String COMANDO_CATEGORIA = "categoria";
 	private static final String COMANDO_USCITA = "exit";
 	private static final String COMANDO_REGISTRA = "registra";
 	private static final String COMANDO_LOGIN = "login";
 	
-	//Comandi da loggato
 	private static final String COMANDO_CREAZIONE_EVENTO = "crea";
 	private static final String COMANDO_MOSTRA_PROPOSTE = "visualizza";
 	private static final String COMANDO_PUBBLICA = "pubblica";
@@ -42,7 +38,6 @@ public class Main {
 	private static final String MESSAGGIO_BENVENUTO = "Welcome to EventBook";
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
-	
 
 	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non � stato riconosciuto";
 
@@ -51,10 +46,10 @@ public class Main {
 	private static Sessione session;
 	private static Database db;
 	private static InsiemeProposte bacheca;
-	
+	private static boolean exit;
 	
 	public static void main(String[] args) {
-		boolean exit = false;
+		exit = false;
 		HashMap<String, Runnable> protocollo = initCommand();
 		//chiusura + terminazione anomala -> save
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 
@@ -116,8 +111,8 @@ public class Main {
 		});
 		//comando categoria ( visualizza la categoria)
 		protocollo.put(COMANDO_CATEGORIA,()->{
-			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
-			System.out.println(p.getDescription());
+				Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
+				System.out.println(p.getDescription());
 		});
 		//comando caratteristiche ( visualizza le caratteristiche della categoria
 		protocollo.put(COMANDO_DESCRIZIONE,()->{
@@ -140,7 +135,6 @@ public class Main {
 				System.out.println("Utente non registrato");
 			}
 		});
-		
 		protocollo.put(COMANDO_CREAZIONE_EVENTO, ()->{
 			boolean validData = false;
 			FieldSet fields = FieldSetFactory.getInstance().getContenitore("Partita di Calcio");
@@ -163,8 +157,6 @@ public class Main {
 						else System.out.println("Il dato inserito non è nel formato corretto, riprovare!");
 					}
 				}while(!validData);
-				
-				//ExpandedHeading.values()[i].parse(dato);
 			}
 		});
 		protocollo.put(COMANDO_MOSTRA_PROPOSTE, ()->{

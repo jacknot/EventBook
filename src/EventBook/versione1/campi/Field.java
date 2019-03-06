@@ -116,4 +116,12 @@ public class Field <T> implements Serializable{
 	public String toString() {
 		return String.format(FORMAT_TO_STRING, heading.getName(), type.getSimpleName(), value!=null?value.toString():"");
 	}
+	/**
+	 * Controlla se i campi sono uguali
+	 * @param f il campo da confrontare
+	 * @return True - sono uguali<br>False - sono diversi
+	 */
+	public boolean equals(Field<?> f) {
+		return heading.getName().equals(f.getName()) && type.equals(f.type) && value.equals(f.value);
+	}
 }
