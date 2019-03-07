@@ -17,7 +17,7 @@ public class CategoryCache {
 	/**
 	 * Set contenente le istanze delle categorie da clonare
 	 */
-	private static Hashtable<String, Category> set = new Hashtable<String, Category>();
+	private static Hashtable<Heading, Category> set = new Hashtable<Heading, Category>();
 	
 	/**Metodo per ottenere l'istanza della classe<br>
 	 * Necessaria per il Design Pattern Singleton
@@ -39,15 +39,15 @@ public class CategoryCache {
 	 */
 	private static void loadCache() {
 		FootballMatch p = new FootballMatch();
-		set.put(Heading.PARTITADICALCIO.getName(), p);
+		set.put(Heading.PARTITADICALCIO, p);
 	}
 	
 	/**Restituisce il clone di una particolare istanza di categoria
-	 * @param name il nome della categoria di cui si vuole l'istanza
-	 * @return l'istanza della categoria di cui si � inserito il nome
+	 * @param type l'intestazione della categoria di cui si vuole l'istanza
+	 * @return l'istanza della categoria di cui si è inserito il nome
 	 */
-	public Category getCategory(String name) {
-		Category cached = set.get(name);
+	public Category getCategory(Heading type) {
+		Category cached = set.get(type);
 		return (Category) cached.clone();
 	}
 }

@@ -39,13 +39,13 @@ public class Fruitore implements Serializable, Notificabile{
 	}
 	
 	/**
-	 * Rimuovere un messaggio presente nello spazio personale
-	 * @param title il titolo del messaggio da rimuovere
+	 * Rimuove un messaggio 
+	 * @param index l'id del messaggio
+	 * @return l'esito della rimizione
 	 */
-	public void remove(String title) {
-		privateSpace.remove(title);
+	public boolean removeMsg(int index) {
+		return privateSpace.remove(index);
 	}
-	
 	/**
 	 * Ritorna la lista dei messaggi contenuta nello spazio personale
 	 * @return La lista dei messaggi contenuta nello spazio personale
@@ -53,7 +53,6 @@ public class Fruitore implements Serializable, Notificabile{
 	public String getPrivateSpace() {
 		return privateSpace.toString();
 	}
-	
 	/**
 	 * Controlla se i due utenti sono uguali
 	 * @param f utente da controllare
@@ -61,5 +60,11 @@ public class Fruitore implements Serializable, Notificabile{
 	 */
 	public boolean equals(Fruitore f) {
 		return this.name.equals(f.name);
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return name;
 	}
 }

@@ -70,7 +70,16 @@ public enum ClassType {
 	public Parser<?> getParser(){
 		return parser;
 	}
-	
+	/**
+	 * Traduce una stringa nel tipo voluto
+	 * @param value la stringa da tradurre
+	 * @return l'oggetto generato dalla stringa tradotta, null se la stringa non è corretta
+	 */
+	public Object parse(String value){
+		if(isValidType(value))
+			return parser.parse(value);
+		return null;
+	}
 	/**
 	 * Restituisce il tipo di dato
 	 * @return il tipo di dato

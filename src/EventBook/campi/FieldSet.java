@@ -60,10 +60,12 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * Se il nuovo valore non � del tipo appropriato non viene fatta alcuna modifica
 	 * @param name il nome del campo di cui modificare il valore
 	 * @param nValue il nuovo valore
+	 * @return l'esito della modifica
 	 */
-	public void setValue(String name, String nValue){
-		if(!contains(name)) 
-			getField(name).setValue(nValue);
+	public boolean setValue(String name, Object nValue){
+		if(contains(name)) 
+			return getField(name).setValue(nValue);
+		return false;
 	}
 	/**
 	 * Controlla se un set di campi � valido ( i campi obbligatori non hanno valore nullo) 

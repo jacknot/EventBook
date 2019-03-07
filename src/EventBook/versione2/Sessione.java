@@ -40,17 +40,27 @@ public class Sessione {
 	}
 
 	/**
-	 * Restituisce la proposta specificata dal nome
-	 * @param nome nome della proposta
-	 * @return Proposta
+	 * Restituisce la proposta specificata dall'id
+	 * @param id l'identificatore della proposta
+	 * @return la proposta identificata dall'identificatore, null se non è valida
 	 */
-	public Proposta getProposta(String nome) {
-		Optional<Proposta> o = insiemeProposte.stream()
-							.filter((p)->p.hasTitle(nome))
-							.findFirst(); //O while
-		if(o.isPresent())
-			return o.get();
+	public Proposta getProposta(int id) {
+		if(id < insiemeProposte.size()) {
+			return insiemeProposte.get(id);
+		}
 		return null;
+	}
+	/**
+	 * Rimuovi la proposta di cui si inserisce l'identificatore
+	 * @param id l'identificatore
+	 * @return l'esito della rimozione
+	 */
+	public boolean removeProposta(int id) {
+		if(id < insiemeProposte.size()) {
+			insiemeProposte.remove(id);
+			return true;
+		}
+		return false;
 	}
 	/**
 	 * Aggiunge una proposta all'elenco delle proposte
@@ -61,34 +71,36 @@ public class Sessione {
 	}
 	/**
 	 * Modifica una proposta esistente 
-	 * @param propostaSelezionata il titolo della proposta da modificare
-	 * @param nome Il nome del campo da modificare
+	 * @param id l'identificatore della proposta da modificare
+	 * @param campo Il nome del campo da modificare
 	 * @param valore Nuovo valore da sostituire
+	 * @return l'esito della modifica
 	 */
-	public void modificaProposta(Proposta propostaSelezionata, String nome, String valore) {
-		for(Proposta proposta: insiemeProposte) {
-			if(proposta.equals(propostaSelezionata))
-				proposta.cambia(nome, valore);
-		}
+	public boolean modificaProposta(int id, String campo, Object valore) {
+		if(id < insiemeProposte.size()) {
+			return insiemeProposte.get(id).modifica(campo, valore);
+			}
+		return false;
 	}
-	/*
 	/**
-	 * Pubblica la proposta in bacheca
-	 * @param proposta Proposta da pubblicare
-	 *//*
-	public void pubblica(Proposta proposta) {
-		GestoreProposte.getInstance().add(proposta);
-	}*/
-	
-	public String showProposals() {
+	 * Mostra le proposte prese su cui l'utente sta attualmente lavorando
+	 * @return la rappresentazione testuale della proposte prese in carico
+	 */
+	public String showInProgress() {
 		StringBuilder stringaRitorno = new StringBuilder();
 		for(int i=0; i<insiemeProposte.size();i++) {
-			stringaRitorno.append(i+1)
+			stringaRitorno.append(i)
 						.append(" : ")
-						.append(insiemeProposte.get(i).getValue(ExpandedHeading.TITOLO.getName()))
+						.append(insiemeProposte.get(i).toString())
 						.append("\n");
 		}
 		return stringaRitorno.toString();
 	}
-	
+	/**
+	 * Mostra le notifiche dell'utente a cui la sessione appartiene
+	 * @return L'elenco delle notifiche sottoforma di stringa
+	 */
+	public String showNotification() {
+		return proprietario.getPrivateSpace().toString();
+	}
 }

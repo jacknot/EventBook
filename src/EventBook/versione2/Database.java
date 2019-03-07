@@ -49,9 +49,14 @@ public class Database implements Serializable{
 	/**
 	 * Registra un fruitore nella lista Registrazioni
 	 * @param nome Nome del fruitore da registrare
+	 * @return True - l'utente è stato registrato con successo<br>False - l'utente non è stato registrato
 	 */
-	public void registra(String nome) {
-		fruitori.add(new Fruitore(nome));
+	public boolean registra(String nome) {
+		if(!contains(nome)) {
+			fruitori.add(new Fruitore(nome));
+			return true;
+		}
+		return false;
 	}
 	
 	/**

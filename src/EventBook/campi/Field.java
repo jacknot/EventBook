@@ -54,7 +54,6 @@ public class Field <T> implements Serializable{
 	/**Costruttore del campo, imposta il suo valore a null 
 	 * @param head La descrizione del campo
 	 */
-	@SuppressWarnings("unchecked")
 	public Field(ExpandedHeading head) {
 		this.heading = head;
 		this.type = (Class<T>) head.getType(); //Siamo sicuri che il cast sia sicuro
@@ -95,9 +94,15 @@ public class Field <T> implements Serializable{
 	
 	/**Imposta il valore del campo sovrascrivendo il suo vecchio valore.<br>
 	 * @param nValue Il nuovo valore del campo
+	 * @return l'esito della modifica
 	 */
-	public void setValue(String nValue){
-			this.value = type.cast(getClassType().getParser().parse(nValue));	
+	public boolean setValue(Object nValue){
+		try {
+			this.value = type.cast(nValue);
+			return true;
+		}catch(ClassCastException e) {
+			return false;
+		}
 	}
 	/**Controlla se non è stato assegnato un valore al campo
 	 * @return True - non è ancora stato dato un valore al campo<br>False - è già stato dato un valore al campo

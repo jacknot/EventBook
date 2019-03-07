@@ -96,5 +96,4 @@ public enum ExpandedHeading{
 	public String toString() {
 		return String.format(STRINGA_TO_STRING, name, description, binding);
 	}
-	
 }

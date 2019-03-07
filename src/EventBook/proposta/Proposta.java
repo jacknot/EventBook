@@ -66,12 +66,15 @@ public class Proposta implements Serializable{
 	 * Modifica il campo della proposta di cui si � inserito il nome, se esiste
 	 * @param name il nome del campo da modificare
 	 * @param value il nuovo valore del campo
+	 * @return l'esito della modifica
 	 */
-	public void cambia(String name, String value) {
+	public boolean modifica(String name, Object value) {
 		if(aState.canSet()) {
-			evento.setValue(name, value);
+			boolean esito = evento.setValue(name, value);
 			aggiornaStato();
+			return esito;
 		}
+		return false;
 	}
 	/**
 	 * Restituisce il contenuto del campo di cui si � inserito il nome
@@ -132,11 +135,10 @@ public class Proposta implements Serializable{
 	public boolean isValida() {
 		return evento.isValid();
 	}
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return evento.toString();
+		return "Propositore : " + proprietario + "\n" + evento.toString();
 	}
 }

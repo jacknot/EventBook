@@ -44,10 +44,12 @@ public class Main {
 		}));
 		
 		in = new Scanner(System.in);
+		
 		//benvenuto
 		System.out.println(MESSAGGIO_BENVENUTO);
 		String comando;
 		load();
+		
 		//duty cycle
 		do {
 			System.out.print(ATTESA_COMANDO);
@@ -96,21 +98,22 @@ public class Main {
 
 	protected enum Comando {
 		
-		EXIT("exit", "Esci dal programma",()->{
-			System.exit(0);
-		}),
+		EXIT("exit", "Esci dal programma",()->System.exit(0)),
 		CATEGORIA("categoria", "Mostra la categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
+			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO);
 			System.out.println(p.getDescription());
 		}),
 		DESCRIZIONE("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
+			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO);
 			System.out.println(p.getFeatures());
 		}),
 		REGISTRA("registra", "Registra un fruitore", ()->{
 			System.out.print("Inserisci il nome: ");
 			String nome = in.nextLine();
-			db.registra(nome);
+			if(db.registra(nome))
+				System.out.println("L'utente è stato registrato con successo");
+			else
+				System.out.println("L'utente non è stato registrato");
 		}),
 		LOGIN("login", "Accedi", ()->{
 			System.out.print("Inserisci il nome: ");
@@ -122,8 +125,49 @@ public class Main {
 				System.out.println("Utente non registrato");
 			}
 		}),
-		LOGOUT("logout", "Per uscire", ()->{
-			session = null;
+		LOGOUT("logout", "Per uscire", ()->session = null),
+		MODIFICA("modifica","Modifica il campo di una proposta",()->{
+			//inserisci id proposta
+			boolean valido = false;
+			int id = -1;
+			do {
+				try {
+				System.out.print("Inserisci l'identificatore : ");
+				id = in.nextInt();
+				valido = true;
+				bacheca.add(session.getProposta(id));
+				}catch(Exception e) {
+					System.out.println("Inserisci un numero");
+				}
+			}while(!valido);
+			//inserisci nome del campo da modificare
+			valido = false;
+			ExpandedHeading campo = ExpandedHeading.TITOLO;
+			do {
+				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
+				String nCampo = in.nextLine();
+				try {
+					campo = ExpandedHeading.valueOf(nCampo.toUpperCase());
+					valido = true;
+				}catch(IllegalArgumentException e) {
+					System.out.println("Il nome inserito non appartiene ad un campo");
+				}
+			}while(!valido);
+			//inserisci valore del campo da modificare
+			valido = false;
+			Object obj;
+			do {
+				System.out.println("Inserisci un " + campo.getType().getSimpleName()+" : ");
+				obj = campo.getClassType().parse(in.nextLine());
+				if(obj != null)
+					valido = true;
+				else
+					System.out.println("Il valore inserito non è corretto");
+			}while(!valido);
+			if(session.modificaProposta(id, campo.getName(), obj))
+				System.out.println("Modifica avvenuta con successo");
+			else
+				System.out.println("Modifica fallita");
 		}),
 		CREAZIONE_EVENTO("crea", "Crea un nuovo evento", ()->{
 			boolean validData = false;
@@ -151,13 +195,52 @@ public class Main {
 				}while(!validData);
 			}
 		}),
-		MOSTRA_PROPOSTE("visualizza", "Visualizza le tue proposte", ()->{
-			System.out.print(session.showProposals());
+		MOSTRA_IN_LAVORAZIONE("mostraInLavorazione", "Visualizza le tue proposte", ()->System.out.print(session.showInProgress())),
+		MOSTRA_NOTIFICHE("mostraNotifiche","Mostra le tue notifiche", ()->System.out.println(session.showNotification())),
+		RIMUOVI_NOTIFICA("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",()->{
+			boolean valido = false;
+			do {
+				try {
+					System.out.print("Inserisci l'id da eliminare: ");
+					int i = in.nextInt();
+					valido = true;
+					if(!session.getProprietario().removeMsg(i))
+						System.out.println("La rimozione non è andata a fine");
+				}catch(Exception e) {
+					System.out.println("Dato invalido, inserisci un numero");
+				}
+			}while(!valido);
 		}),
+		MOSTRA_BACHECA("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
+			System.out.println("Le proposte in bacheca:\n" + bacheca.showContent());
+		}),
+		//da controllare
 		PUBBLICA("pubblica", "Pubblica un evento creato", ()->{
-			System.out.print("Inserisci il nome: ");
-			String nome = in.nextLine();
-			bacheca.add(session.getProposta(nome)); //O con nome o indice
+			boolean valido = false;
+			do {
+				try {
+				System.out.print("Inserisci l'identificatore : ");
+				int id = in.nextInt();
+				valido = true;
+				bacheca.add(session.getProposta(id));
+				}catch(Exception e) {
+					System.out.println("Inserisci un numero");
+				}
+			}while(!valido);
+		}),
+		PARTECIPA("partecipa","Partecipa ad una proposta in bacheca",()->{
+			boolean valido = false;
+			do {
+				try {
+				System.out.print("Inserisci l'identificatore : ");
+				int id = in.nextInt();
+				valido = true;
+				if(!bacheca.iscrivi(id, session.getProprietario()))
+					System.out.println("L'iscrizione non è andata a buon fine");
+				}catch(Exception e) {
+					System.out.println("Inserisci un numero");
+				}
+			}while(!valido);
 		});
 		
 		private String nome;
@@ -213,7 +296,7 @@ class ListaComandi extends ArrayList<Comando>{
 	
 	public void logout() {
 		remove(Comando.CREAZIONE_EVENTO);
-		remove(Comando.MOSTRA_PROPOSTE);
+		removeMsg(Comando.MOSTRA_PROPOSTE);
 		remove(Comando.PUBBLICA);
 		remove(Comando.LOGOUT);
 		add(Comando.REGISTRA);

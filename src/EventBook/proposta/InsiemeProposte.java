@@ -1,9 +1,8 @@
 package EventBook.proposta;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
 
-import EventBook.campi.ExpandedHeading;
 import EventBook.fruitore.Notificabile;
 
 /**
@@ -11,7 +10,7 @@ import EventBook.fruitore.Notificabile;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class InsiemeProposte extends HashSet<Proposta> implements Serializable{
+public class InsiemeProposte extends ArrayList<Proposta> implements Serializable{
 	//occhio a metodi non voluti/pericolosi
 	//definisci interfaccia per limitarli
 	/**
@@ -36,11 +35,10 @@ public class InsiemeProposte extends HashSet<Proposta> implements Serializable{
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
 	public boolean add(Proposta p) {
-		if(!contains(p.getValue(ExpandedHeading.TITOLO.getName()))) {
+		if(!contains(p)) {
 			p.pubblica();
 			if(p.sameState(univoco)) {
-				super.add(p);
-				return true;
+				return super.add(p);
 			}
 		}
 		return false;
@@ -65,39 +63,29 @@ public class InsiemeProposte extends HashSet<Proposta> implements Serializable{
 	}
 	//iscrivi un Notificabile ad una proposta : OK
 	/**
-	 * Iscrivi un utente nella proposta di cui si è inserito il titolo
-	 * @param title il titolo della proposta a cui aggiungere l'utente
+	 * Iscrivi un utente nella proposta di cui si è inserito l'identificatore
+	 * @param id l'identificatore della proposta a cui aggiungere l'utente
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
 	 */
-	public boolean iscrivi(String title, Notificabile user) {
-		if(contains(title))
-			return find(title).iscrivi(user);
+	public boolean iscrivi(int id, Notificabile user) {
+		if(id < size())
+			return get(id).iscrivi(user);
 		return false;
-	}
-	//cerca proposta per titolo : OK
-	/**
-	 * Cerca nel set la proposta avente come titolo quello inserito<br>
-	 * Restituisce null se non ce ne sono
-	 * @param name il titolo inserito
-	 * @return la proposta di cui si è inserito il titolo 
-	 */
-	private Proposta find(String name) {
-		if(contains(name)) 
-			return this.stream()
-					.filter(( p ) -> p.getValue(ExpandedHeading.TITOLO.getName()).equals(name))
-					.findFirst().get();
-		return null;
 	}
 	/**
 	 * Controlla che il set contenga almeno una proposta con il titolo inserito
-	 * @param name il titolo della proposta
+	 * @param p il titolo della proposta
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
-	public boolean contains(String name) {
+	public boolean contains(Proposta p) {
 		return this.stream()
-					.anyMatch(( p ) -> p.getValue(ExpandedHeading.TITOLO.getName()).equals(name));
+					.anyMatch(( sp ) -> sp.equals(p));
 	}
+	/**
+	 * Mostra il contenuto dell'insieme di proposte in forma testuale
+	 * @return il contenuto dell'insieme in forma testuale
+	 */
 	public String showContent() {
 		StringBuilder sb = new StringBuilder();
 		this.stream().forEach((p)->sb.append(p.toString()).append("\n"));

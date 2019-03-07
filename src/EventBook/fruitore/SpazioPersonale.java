@@ -21,7 +21,6 @@ public class SpazioPersonale implements Serializable{
 	public SpazioPersonale() {
 		messageList = new ArrayList<Messaggio>();
 	}
-	
 	/**
 	 * Restituisce la lista dei messaggi
 	 * @return La lista dei messaggi
@@ -29,7 +28,6 @@ public class SpazioPersonale implements Serializable{
 	public ArrayList <Messaggio> getMessageList() {
 		return messageList;
 	}
-	
 	/**
 	 * Permette di aggiungere un nuovo messaggio alla lista
 	 * @param newMessage Il nuovo messaggio da aggiungere
@@ -37,22 +35,23 @@ public class SpazioPersonale implements Serializable{
 	public void add(Messaggio newMessage) {
 		messageList.add(newMessage);
 	}
-	
 	/**
 	 * Permette di rimuovere un messaggio presente nella lista
-	 * @param title Nome del messaggio da rimuovere
+	 * @param index identificatore del messaggio da rimuovere
+	 * @return l'esito della rimozione
 	 */
-	public void remove(String title) {
-		messageList.stream()
-					.filter(( m )->m.getObject().equalsIgnoreCase(title))
-					.forEach(( m )->messageList.remove(m));
+	public boolean remove(int index) {
+		if(index < messageList.size()) {
+			messageList.remove(index);
+			return true;
+		}
+		return false;
 	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer temp = new StringBuffer("Spazio personale: %n");
+		StringBuffer temp = new StringBuffer(FORMAT_TO_STRING);
 		for(int i=0; i<messageList.size(); i++) {
 			temp.append(messageList.get(i));
 		}
