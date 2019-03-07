@@ -52,5 +52,12 @@ public class Fruitore implements Serializable, Notificabile{
 		return privateSpace.toString();
 	}
 	
-	//IL toString in teoria non serve...a meno che facciamo stampare lo spazio (che � getPrivateSpace())
+	/**
+	 * Controlla se i due utenti sono uguali
+	 * @param f utente da controllare
+	 * @return true se uguali<br>false altrimenti
+	 */
+	public boolean equals(Fruitore f) {
+		return this.name.equals(f.name);
+	}
 }

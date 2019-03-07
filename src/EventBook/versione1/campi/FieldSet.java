@@ -89,6 +89,16 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 			.forEachOrdered((f)->sb.append(f.getFeatures()).append(String.format(INTERLINE)));
 		return sb.toString();
 	}
+	
+	/**
+	 * Controlla se i due FieldSet sono uguali
+	 * @param set FieldSet da confrontare
+	 * @return True se tutti i valori sono uguali<br>False altrimenti
+	 */
+	public boolean equals(FieldSet set) {
+		return ((this.isValid() && set.isValid()) && this.stream().filter((f) -> f.isBinding()).allMatch((f) -> f.getValue().equals(set.getValue(f.getName()))));
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.util.AbstractCollection#toString()
 	 */

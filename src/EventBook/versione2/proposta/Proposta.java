@@ -68,8 +68,8 @@ public class Proposta implements Serializable{
 	 * @param p la proposta con cui fare il confronto
 	 * @return True - sono uguali<br>False - sono diverse
 	 */
-	public boolean equals(Proposta p) {
-		return evento.getValue(ExpandedHeading.TITOLO.getName()).equals(p.evento.getValue(ExpandedHeading.TITOLO.getName()));
+	public boolean equals (Proposta p) {
+		return (this.proprietario.equals(p.proprietario) && this.evento.equals(p.evento));
 	}
 	/**
 	 * Modifica il campo della proposta di cui si � inserito il nome, se esiste
@@ -141,6 +141,7 @@ public class Proposta implements Serializable{
 	public boolean isValida() {
 		return evento.isValid();
 	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

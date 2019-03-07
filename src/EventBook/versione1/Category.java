@@ -83,6 +83,15 @@ public abstract class Category implements Cloneable,Serializable{
 		}
 		return clone;
 	}
+	
+	/**
+	 * Controlla se le due categorie sono uguali
+	 * @param c categoria da confrontare
+	 * @return True se uguali<br>False altrimenti
+	 */
+	public boolean equals(Category c) {
+		return (this.heading.getName().equals(c.heading.getName()) && this.fields.equals(c.fields));
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
