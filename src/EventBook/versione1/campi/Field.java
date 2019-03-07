@@ -14,6 +14,11 @@ public class Field <T> implements Serializable{
 	//Attributi
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Il tipo del campo
 	 */
 	private final Class<T> type;
@@ -35,12 +40,12 @@ public class Field <T> implements Serializable{
 	
 	//Costruttori
 	
-	/**Costruttore per la classe campo
+	/**Costruttore per la classe campo 
 	 * @param head La descrizione del campo
 	 * @param type tipo del campo
 	 * @param value Il valore assunto dal campo
 	 */
-	public Field(ExpandedHeading head, Class<T> type, T value) {
+	public Field(ExpandedHeading head, Class<T> type, T value) {//PROBABILMENTE NON SERVE
 		this.heading = head;
 		this.value = value;
 		this.type = type;
@@ -49,9 +54,10 @@ public class Field <T> implements Serializable{
 	/**Costruttore del campo, imposta il suo valore a null 
 	 * @param head La descrizione del campo
 	 */
-	public Field(ExpandedHeading head, Class<T> type) {
+	@SuppressWarnings("unchecked")
+	public Field(ExpandedHeading head) {
 		this.heading = head;
-		this.type = type;
+		this.type = (Class<T>) head.getType(); //Siamo sicuri che il cast sia sicuro
 		this.value = null;
 	}
 	
@@ -86,13 +92,12 @@ public class Field <T> implements Serializable{
 	public T getValue() {
 		return value;
 	}
+	
 	/**Imposta il valore del campo sovrascrivendo il suo vecchio valore.<br>
-	 * Se il tipo del valore non è appropriato il vecchio valore non viene aggiornato
 	 * @param nValue Il nuovo valore del campo
 	 */
-	public void setValue(Object nValue){
-		if(type.isAssignableFrom(nValue.getClass()))
-			this.value = type.cast(nValue);	
+	public void setValue(String nValue){
+			this.value = type.cast(getClassType().getParser().parse(nValue));	
 	}
 	/**Controlla se non è stato assegnato un valore al campo
 	 * @return True - non è ancora stato dato un valore al campo<br>False - è già stato dato un valore al campo

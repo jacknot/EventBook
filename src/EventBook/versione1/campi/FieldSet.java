@@ -61,7 +61,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * @param name il nome del campo di cui modificare il valore
 	 * @param nValue il nuovo valore
 	 */
-	public void setValue(String name, Object nValue){
+	public void setValue(String name, String nValue){
 		if(!contains(name)) 
 			getField(name).setValue(nValue);
 	}

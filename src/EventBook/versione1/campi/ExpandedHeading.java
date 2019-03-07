@@ -2,7 +2,7 @@ package EventBook.versione1.campi;
 
 import EventBook.versione2.ClassType;
 
-/**Classe con il compito di contenere una descrizione corredata da informazioni relative alla sua obbligatorietà
+/**Classe con il compito di contenere una descrizione corredata da informazioni relative alla sua obbligatorietà e il suo tipo
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]
  *
  */

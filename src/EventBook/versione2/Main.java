@@ -1,11 +1,13 @@
 package EventBook.versione2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 import EventBook.versione1.*;
 import EventBook.versione1.campi.Field;
 import EventBook.versione1.campi.FieldSet;
+import EventBook.versione2.Main.Comando;
 import EventBook.versione2.proposta.InsiemeProposte;
 
 /**
@@ -15,14 +17,6 @@ import EventBook.versione2.proposta.InsiemeProposte;
 public class Main {
 	private static final String BACHECAFILE = "resource/bacheca.ser";
 	private static final String REGISTRAZIONIFILE = "resource/registrazioni.ser";
-
-	private static final String COMANDI_DISPONIBILI = "I comandi a tua disposizione:"
-														+ "\n\thelp\t\tComunica i comandi a disposizione"
-														+ "\n\tcategoria\tMostra la categoria disponibile"
-														+ "\n\tdescrizione\t\tMostra le caratteristiche della categoria disponibile"
-														+ "\n\texit\t\tEsce dal programma"
-														+ "\n\tregistra\tRegistra un fruitore"
-														+ "\n\tlogin\tAccedi";
 	
 	private static final String COMANDO_HELP = "help";
 	private static final String COMANDO_DESCRIZIONE = "descrizione";
@@ -30,6 +24,7 @@ public class Main {
 	private static final String COMANDO_USCITA = "exit";
 	private static final String COMANDO_REGISTRA = "registra";
 	private static final String COMANDO_LOGIN = "login";
+	private static final String COMANDO_LOGOUT = "logout";
 	
 	private static final String COMANDO_CREAZIONE_EVENTO = "crea";
 	private static final String COMANDO_MOSTRA_PROPOSTE = "visualizza";
@@ -39,7 +34,7 @@ public class Main {
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
 
-	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non � stato riconosciuto";
+	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
 
 	private static Scanner in;
 	
@@ -50,12 +45,15 @@ public class Main {
 	
 	public static void main(String[] args) {
 		exit = false;
-		HashMap<String, Runnable> protocollo = initCommand();
+		ListaComandi protocollo = new ListaComandi();
+		
 		//chiusura + terminazione anomala -> save
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 
+			System.out.println(MESSAGGIO_USCITA);	
 			in.close();
 			save();
 		}));
+		
 		in = new Scanner(System.in);
 		//benvenuto
 		System.out.println(MESSAGGIO_BENVENUTO);
@@ -66,16 +64,19 @@ public class Main {
 			System.out.print(ATTESA_COMANDO);
 			//aspetto input
 			comando = in.nextLine();
-			// elaborazione comando
-			if(comando.equals(COMANDO_USCITA))
-				exit = true;
-			else if(protocollo.containsKey(comando))
-				protocollo.get(comando).run();
+			// elaborazione comando		
+			if(protocollo.contains(comando)) {
+				protocollo.run(comando);
+				if(comando.equals(COMANDO_LOGIN) && session != null)
+					protocollo.log();
+				else if(comando.equals(COMANDO_LOGOUT) && session == null)
+					protocollo.logout();
+			}				
 			else
 				System.out.println(ERRORE_COMANDO_NONRICONOSCIUTO);
 		}while(!exit);
 		//uscita
-		System.out.println(MESSAGGIO_USCITA);	
+		
 	}
 	/**
 	 * Carica il database e la bacheca
@@ -103,29 +104,26 @@ public class Main {
 		System.out.println("Salvataggio database ...");
 		System.out.println(new FileHandler().save(REGISTRAZIONIFILE, db));
 	}
-	private static HashMap<String, Runnable> initCommand() {
-		HashMap <String,Runnable> protocollo = new HashMap<>();
-		//comando help
-		protocollo.put(COMANDO_HELP,()->{
-			System.out.println(COMANDI_DISPONIBILI);
-		});
-		//comando categoria ( visualizza la categoria)
-		protocollo.put(COMANDO_CATEGORIA,()->{
-				Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
-				System.out.println(p.getDescription());
-		});
-		//comando caratteristiche ( visualizza le caratteristiche della categoria
-		protocollo.put(COMANDO_DESCRIZIONE,()->{
+
+	protected enum Comando {
+		
+		EXIT("exit", "Esci dal programma",()->{
+			System.exit(0);
+		}),
+		CATEGORIA("categoria", "Mostra la categoria disponibile", ()->{
+			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
+			System.out.println(p.getDescription());
+		}),
+		DESCRIZIONE("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
 			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO.getName());
 			System.out.println(p.getFeatures());
-		});
-		//comando per registrare un nuovo utente, usa notazione UNIX command line
-		protocollo.put(COMANDO_REGISTRA, ()->{
-				System.out.print("Inserisci il nome: ");
-				String nome = in.nextLine();
-				db.registra(nome);
-		});
-		protocollo.put(COMANDO_LOGIN, ()->{
+		}),
+		REGISTRA("registra", "Registra un fruitore", ()->{
+			System.out.print("Inserisci il nome: ");
+			String nome = in.nextLine();
+			db.registra(nome);
+		}),
+		LOGIN("login", "Accedi", ()->{
 			System.out.print("Inserisci il nome: ");
 			String nome = in.nextLine();
 			if(db.contains(nome)) {
@@ -134,8 +132,11 @@ public class Main {
 			else {
 				System.out.println("Utente non registrato");
 			}
-		});
-		protocollo.put(COMANDO_CREAZIONE_EVENTO, ()->{
+		}),
+		LOGOUT("logout", "Sloggati", ()->{
+			session = null;
+		}),
+		CREAZIONE_EVENTO("crea", "Crea un nuovo evento", ()->{
 			boolean validData = false;
 			FieldSet fields = FieldSetFactory.getInstance().getContenitore("Partita di Calcio");
 			for(int i=0; i< fields.size(); i++) {
@@ -145,29 +146,114 @@ public class Main {
 					if(!campo.isBinding())System.out.print(" [Facoltativo]");
 					System.out.print(" : ");
 					String dato = in.nextLine();
-
+	
 					if(dato.equals("") && !campo.isBinding()) {
 						validData = true;
 					} else {
 						validData = campo.getClassType().isValidType(dato);
 						if(validData) {
-							campo.getClassType().parse(campo, dato);
-							System.out.println(String.format("Il campo %s è di tipo %s", campo.getName(), campo.getValue().getClass()));
+							campo.setValue(dato);
+							System.out.println(String.format("Il campo %s è di tipo %s, valore: %s", campo.getName(), campo.getValue().getClass(), campo.getValue().toString()));
 						}
 						else System.out.println("Il dato inserito non è nel formato corretto, riprovare!");
 					}
 				}while(!validData);
 			}
-		});
-		protocollo.put(COMANDO_MOSTRA_PROPOSTE, ()->{
+		}),
+		MOSTRA_PROPOSTE("visualizza", "Visualizza le tue proposte", ()->{
 			System.out.print(session.showProposals());
-		});
-		protocollo.put(COMANDO_PUBBLICA, ()->{
+		}),
+		PUBBLICA("pubblica", "Pubblica un evento creato", ()->{
 			System.out.print("Inserisci il nome: ");
 			String nome = in.nextLine();
 			bacheca.add(session.getProposta(nome)); //O con nome o indice
 		});
-		// fine inizializzazione protocollo
-		return protocollo;
+		
+		private String nome;
+		private String descrizione;
+		private Runnable esecuzione;
+		
+		private Comando(String comando, String descrizione, Runnable esecuzione) {
+			this.nome = comando;
+			this.descrizione = descrizione;
+			this.esecuzione = esecuzione;
+		}
+	
+		public String getNome() {
+			return nome;
+		}
+	
+		public String getDescrizione() {
+			return descrizione;
+		}
+	
+		public void run() {
+			esecuzione.run();
+		}
+		
+		public boolean equalsName(String comando) {
+			return this.nome.equals(comando);
+		}
+	}	
+
+}
+
+class ListaComandi extends ArrayList<Comando>{
+	
+	private static final String FORMAT_TOSTRING = "\n\t%-20s%s";
+	
+	public ListaComandi() {
+		super();
+		add(Comando.EXIT);
+		add(Comando.CATEGORIA);
+		add(Comando.DESCRIZIONE);
+		add(Comando.REGISTRA);
+		add(Comando.LOGIN);
+	}
+	
+	public void log() {
+		add(Comando.CREAZIONE_EVENTO);
+		add(Comando.MOSTRA_PROPOSTE);
+		add(Comando.PUBBLICA);
+		add(Comando.LOGOUT);
+		remove(Comando.REGISTRA);
+		remove(Comando.LOGIN);	
+	}
+	
+	public void logout() {
+		remove(Comando.CREAZIONE_EVENTO);
+		remove(Comando.MOSTRA_PROPOSTE);
+		remove(Comando.PUBBLICA);
+		remove(Comando.LOGOUT);
+		add(Comando.REGISTRA);
+		add(Comando.LOGIN);
+	}
+	
+	public boolean contains(String key) {
+		if(key.equals("help")) return true;
+		for(Comando comando: this) {
+			if(comando.equalsName(key))
+				return true;
+		}
+		return false;
+	}
+	
+	public void run(String nomeComando) {
+		if(nomeComando.equals("help"))
+			System.out.println(toString());
+		for(Comando comando : this) {
+			if(comando.equalsName(nomeComando)) {
+				comando.run();
+				break;
+			}				
+		}
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder("I comandi a tua disposizione:");
+		for(Comando comando : this) {
+			sb.append(String.format(FORMAT_TOSTRING, comando.getNome(), comando.getDescrizione()));
+		}
+		return sb.toString();
 	}
 }

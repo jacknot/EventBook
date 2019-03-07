@@ -8,6 +8,8 @@ import java.io.Serializable;
  */
 public class Fruitore implements Serializable, Notificabile{
 
+	private static final long serialVersionUID = 1L;
+	
 	private String name;
 	private SpazioPersonale privateSpace;
 	

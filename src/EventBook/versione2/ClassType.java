@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.StringTokenizer;
 
-import EventBook.versione1.campi.Field;
 import EventBook.versione1.campi.Interval;
 
 public enum ClassType {
@@ -41,9 +40,8 @@ public enum ClassType {
 		return obj.matches(regex);
 	}
 	
-	public void parse(Field<?> campo, String value){ //eventualmente field da spostare in Parser, devo per forza assegnare qua il valore perchè non si sa che tipo deve restituire questo metodo
-		campo.setValue(parser.parser(value));
-		//return campo;
+	public Parser<?> getParser(){
+		return parser;
 	}
 	
 	public Class<?> getType(){

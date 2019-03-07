@@ -64,7 +64,7 @@ public class Sessione {
 	 * @param nome Il nome del campo da modificare
 	 * @param valore Nuovo valore da sostituire
 	 */
-	public void modificaProposta(Proposta propostaSelezionata, String nome, Object valore) {
+	public void modificaProposta(Proposta propostaSelezionata, String nome, String valore) {
 		for(Proposta proposta: insiemeProposte) {
 			if(proposta.equals(propostaSelezionata))
 				proposta.cambia(nome, valore);

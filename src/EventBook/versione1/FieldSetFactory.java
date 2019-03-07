@@ -1,7 +1,5 @@
 package EventBook.versione1;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Supplier;
 import EventBook.versione1.campi.*;
@@ -32,8 +30,8 @@ public class FieldSetFactory {
 		types = new HashMap<String, Supplier<FieldSet>>();
 		types.put(Heading.PARTITADICALCIO.getName(), ()->{
 			FieldSet cc = contenitoreComune();
-			cc.add(new Field<>(ExpandedHeading.GENERE, ExpandedHeading.GENERE.getType()));
-			cc.add(new Field <>(ExpandedHeading.FASCIADIETA, ExpandedHeading.FASCIADIETA.getType()));
+			cc.add(new Field<>(ExpandedHeading.GENERE));
+			cc.add(new Field <>(ExpandedHeading.FASCIADIETA));
 			return cc;
 		});
 	}
@@ -54,18 +52,18 @@ public class FieldSetFactory {
 	 */
 	private FieldSet contenitoreComune() {
 		FieldSet cc = new FieldSet();
-		cc.add(new Field <>(ExpandedHeading.TITOLO, ExpandedHeading.TITOLO.getType()));
-		cc.add(new Field <>(ExpandedHeading.NUMEROPARTECIPANTI, ExpandedHeading.NUMEROPARTECIPANTI.getType()));
-		cc.add(new Field <>(ExpandedHeading.TERMINEISCRIZIONE, ExpandedHeading.TERMINEISCRIZIONE.getType()));
-		cc.add(new Field <>(ExpandedHeading.LUOGO, ExpandedHeading.LUOGO.getType()));
-		cc.add(new Field <>(ExpandedHeading.DATA, ExpandedHeading.DATA.getType()));
-		cc.add(new Field <>(ExpandedHeading.ORA, ExpandedHeading.ORA.getType()));
-		cc.add(new Field <>(ExpandedHeading.DURATA, ExpandedHeading.DURATA.getType()));
-		cc.add(new Field <>(ExpandedHeading.QUOTAINDIVIDUALE, ExpandedHeading.QUOTAINDIVIDUALE.getType()));
-		cc.add(new Field <>(ExpandedHeading.COMPRESONELLAQUOTA, ExpandedHeading.COMPRESONELLAQUOTA.getType()));
-		cc.add(new Field <>(ExpandedHeading.DATACONCLUSIVA, ExpandedHeading.DATACONCLUSIVA.getType()));
-		cc.add(new Field <>(ExpandedHeading.ORACONCLUSIVA, ExpandedHeading.ORACONCLUSIVA.getType()));
-		cc.add(new Field <>(ExpandedHeading.NOTE, ExpandedHeading.NOTE.getType()));
+		cc.add(new Field <>(ExpandedHeading.TITOLO));
+		cc.add(new Field <>(ExpandedHeading.NUMEROPARTECIPANTI));
+		cc.add(new Field <>(ExpandedHeading.TERMINEISCRIZIONE));
+		cc.add(new Field <>(ExpandedHeading.LUOGO));
+		cc.add(new Field <>(ExpandedHeading.DATA));
+		cc.add(new Field <>(ExpandedHeading.ORA));
+		cc.add(new Field <>(ExpandedHeading.DURATA));
+		cc.add(new Field <>(ExpandedHeading.QUOTAINDIVIDUALE));
+		cc.add(new Field <>(ExpandedHeading.COMPRESONELLAQUOTA));
+		cc.add(new Field <>(ExpandedHeading.DATACONCLUSIVA));
+		cc.add(new Field <>(ExpandedHeading.ORACONCLUSIVA));
+		cc.add(new Field <>(ExpandedHeading.NOTE));
 		return cc;
 	}
 	/**Restituisce un contenitore di campi a seconda del tipo inserito in ingresso

@@ -76,7 +76,7 @@ public class Proposta implements Serializable{
 	 * @param name il nome del campo da modificare
 	 * @param value il nuovo valore del campo
 	 */
-	public void cambia(String name, Object value) {
+	public void cambia(String name, String value) {
 		if(aState.canSet()) {
 			evento.setValue(name, value);
 			aggiornaStato();
