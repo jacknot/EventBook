@@ -1,16 +1,11 @@
 package EventBook.versione2;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import EventBook.versione2.fruitore.Fruitore;
-import EventBook.versione2.fruitore.Messaggio;
+import EventBook.fruitore.Fruitore;
+import EventBook.fruitore.Messaggio;
+
 
 /**Classe che contiene la lista di tutti i Fruitori registrati al programma.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -21,15 +16,6 @@ public class Database implements Serializable{
 	 * Lista contenente i fruitori registrati
 	 */
 	private ArrayList<Fruitore> fruitori;
-	/*
-	/**
-	 * Istanza necessaria per poter implementare il Design Pattern Singleton
-	 *//*
-	private static Registrazioni instance;
-	/**
-	 * Il file dell'oggetto
-	 *//*
-	private File f;*/
 	/**
 	 * Costruttore
 	 */
@@ -47,17 +33,6 @@ public class Database implements Serializable{
 			return fruitori.stream().filter((f)->f.getName().equals(name)).findFirst().get();
 		return null;
 	}
-	/*
-	/**Metodo per ottenere l'istanza della classe<br>
-	 * Necessaria per il Design Pattern Singleton
-	 * @return l'istanza della classe
-	 *//*
-	public static Registrazioni getInstance() {
-		if(instance == null)
-			instance = new Registrazioni();
-		return instance;
-	
-	}*/
 	/**
 	 * Controlla se il fruitore � registrato
 	 * @param name Il nome del fruitore da cercare
@@ -90,64 +65,4 @@ public class Database implements Serializable{
 				fruitore.ricevi(messaggio);
 		}
 	}
-	/*
-	/**
-	 * Salva l'oggetto Registrazioni su un file per uso futuro
-	 * @return l'esito dell'operazione
-	 *//*
-	public boolean save() {
-		ObjectOutputStream out = null;
-		if(f == null)
-			return false;
-		try {
-			if(!f.exists()) {
-				f.getParentFile().mkdirs();
-				f.createNewFile();
-			}
-			if(f.exists() && f.canWrite()) {
-				out = new ObjectOutputStream(new FileOutputStream(f, false));
-				out.writeObject(instance);
-				out.close();
-				return true;
-			}
-		}catch(IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return false;
-	}*/
-
-	/*
-	/**
-	 * Carica da file l'oggetto Registrazioni e lo assegna alla variabile instance
-	 * @return l'esito dell'operazione
-	 *//*
-	public boolean load(){
-		ObjectInputStream in = null;
-		if( f != null && f.exists() && f.canRead() && !(f.length()==0)) {
-			try {
-				in = new ObjectInputStream(new FileInputStream(f));
-				instance = (Registrazioni) in.readObject();
-				in.close();
-				return true;
-			}catch(IOException e) {
-				//send eccezione a gestore
-				e.printStackTrace();
-				return false;
-			}catch(ClassNotFoundException e) {
-				//send eccezione a gestore
-				e.printStackTrace();
-				return false;
-			}
-		}
-		return false;
-	}*/
-	/*
-	/**
-	 * Imposta il nome del file in cui salvare le risorse
-	 * @param nFileName il nome del file in cui salvare le risorse
-	 *//*
-	public void setFile(String nFileName) {
-		f = new File(nFileName);
-	}*/
 }

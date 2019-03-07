@@ -1,14 +1,12 @@
 package EventBook.versione2;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
-import EventBook.versione1.*;
-import EventBook.versione1.campi.Field;
-import EventBook.versione1.campi.FieldSet;
+import EventBook.campi.*;
+import EventBook.categoria.*;
+import EventBook.proposta.InsiemeProposte;
 import EventBook.versione2.Main.Comando;
-import EventBook.versione2.proposta.InsiemeProposte;
 
 /**
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -17,23 +15,14 @@ import EventBook.versione2.proposta.InsiemeProposte;
 public class Main {
 	private static final String BACHECAFILE = "resource/bacheca.ser";
 	private static final String REGISTRAZIONIFILE = "resource/registrazioni.ser";
-	
-	private static final String COMANDO_HELP = "help";
-	private static final String COMANDO_DESCRIZIONE = "descrizione";
-	private static final String COMANDO_CATEGORIA = "categoria";
-	private static final String COMANDO_USCITA = "exit";
-	private static final String COMANDO_REGISTRA = "registra";
+
 	private static final String COMANDO_LOGIN = "login";
 	private static final String COMANDO_LOGOUT = "logout";
-	
-	private static final String COMANDO_CREAZIONE_EVENTO = "crea";
-	private static final String COMANDO_MOSTRA_PROPOSTE = "visualizza";
-	private static final String COMANDO_PUBBLICA = "pubblica";
-	
+
 	private static final String MESSAGGIO_BENVENUTO = "Welcome to EventBook";
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
-
+	
 	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
 
 	private static Scanner in;
@@ -133,17 +122,19 @@ public class Main {
 				System.out.println("Utente non registrato");
 			}
 		}),
-		LOGOUT("logout", "Sloggati", ()->{
+		LOGOUT("logout", "Per uscire", ()->{
 			session = null;
 		}),
 		CREAZIONE_EVENTO("crea", "Crea un nuovo evento", ()->{
 			boolean validData = false;
+			//crea tipo evento
 			FieldSet fields = FieldSetFactory.getInstance().getContenitore("Partita di Calcio");
 			for(int i=0; i< fields.size(); i++) {
 				do {
 					Field<?> campo = fields.get(i);
 					System.out.print("Inserisci "+ campo.getName());
-					if(!campo.isBinding())System.out.print(" [Facoltativo]");
+					if(!campo.isBinding())
+						System.out.print(" [Facoltativo]");
 					System.out.print(" : ");
 					String dato = in.nextLine();
 	
@@ -249,6 +240,9 @@ class ListaComandi extends ArrayList<Comando>{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.util.AbstractCollection#toString()
+	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder("I comandi a tua disposizione:");
 		for(Comando comando : this) {

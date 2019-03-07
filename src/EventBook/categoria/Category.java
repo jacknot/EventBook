@@ -1,8 +1,9 @@
-package EventBook.versione1;
+package EventBook.categoria;
 
 import java.io.Serializable;
 
-import EventBook.versione1.campi.*;
+import EventBook.campi.FieldSet;
+
 
 /**
  * Classe con il compito di definire il comportamento di una categoria.<br>

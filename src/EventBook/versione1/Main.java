@@ -3,6 +3,10 @@ package EventBook.versione1;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import EventBook.categoria.Category;
+import EventBook.categoria.CategoryCache;
+import EventBook.categoria.Heading;
+
 /**
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *

@@ -1,4 +1,4 @@
-package EventBook.versione2.fruitore;
+package EventBook.fruitore;
 
 import java.io.Serializable;
 

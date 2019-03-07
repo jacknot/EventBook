@@ -27,11 +27,9 @@ public class FileHandler{
 			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(f))){
 				return in.readObject();
 			}catch(IOException e) {
-				//send eccezione a gestore
 				e.printStackTrace();
 				return null;
 			}catch(ClassNotFoundException e) {
-				//send eccezione a gestore
 				e.printStackTrace();
 				return null;
 			}
@@ -63,6 +61,11 @@ public class FileHandler{
 		return false;
 	}
 	
+	/**
+	 * Controlla se il file inserito come parametro è vuoto
+	 * @param f il file da controllare
+	 * @return True - il file è vuoto<br>False - il file non è vuoto
+	 */
 	private boolean isEmpty(File f) {
 		return f.length() == EMPTY_FILE;
 	}

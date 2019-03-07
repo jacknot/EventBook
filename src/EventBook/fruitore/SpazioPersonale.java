@@ -1,4 +1,4 @@
-package EventBook.versione2.fruitore;
+package EventBook.fruitore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,6 +8,9 @@ import java.util.ArrayList;
  */
 public class SpazioPersonale implements Serializable{
 	
+	/**
+	 * Contiene i messaggi
+	 */
 	private ArrayList <Messaggio> messageList;
 	
 	private final static String FORMAT_TO_STRING ="Spazio personale : %n%n";
@@ -16,7 +19,7 @@ public class SpazioPersonale implements Serializable{
 	 * Costruttore per la classe PrivateSpace
 	 */
 	public SpazioPersonale() {
-		messageList = new ArrayList();
+		messageList = new ArrayList<Messaggio>();
 	}
 	
 	/**
@@ -45,6 +48,9 @@ public class SpazioPersonale implements Serializable{
 					.forEach(( m )->messageList.remove(m));
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		StringBuffer temp = new StringBuffer("Spazio personale: %n");
 		for(int i=0; i<messageList.size(); i++) {

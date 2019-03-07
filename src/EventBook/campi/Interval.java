@@ -1,4 +1,4 @@
-package EventBook.versione1.campi;
+package EventBook.campi;
 
 import java.io.Serializable;
 

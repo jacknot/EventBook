@@ -1,10 +1,10 @@
-package EventBook.versione2.proposta;
+package EventBook.proposta;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import EventBook.versione1.campi.ExpandedHeading;
-import EventBook.versione2.fruitore.Messaggio;
-import EventBook.versione2.proposta.Proposta;
+
+import EventBook.campi.ExpandedHeading;
+import EventBook.fruitore.Messaggio;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare

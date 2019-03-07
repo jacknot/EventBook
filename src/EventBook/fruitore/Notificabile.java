@@ -1,6 +1,5 @@
-package EventBook.versione2.fruitore;
+package EventBook.fruitore;
 
-import EventBook.versione2.fruitore.Messaggio;
 
 /**
  * Quest'interfaccia definisce il comportamento di oggetti in grado di ricevere un messaggio

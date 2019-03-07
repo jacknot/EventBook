@@ -1,12 +1,11 @@
-package EventBook.versione2.proposta;
+package EventBook.proposta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import EventBook.versione1.Category;
-import EventBook.versione1.campi.ExpandedHeading;
-import EventBook.versione2.fruitore.Messaggio;
-import EventBook.versione2.proposta.Stato;
-import EventBook.versione2.fruitore.Notificabile;
+
+import EventBook.categoria.Category;
+import EventBook.fruitore.Messaggio;
+import EventBook.fruitore.Notificabile;
 
 /**
  * Una proposta fa riferimento ad un particolare evento e consente di potersi iscrivere ad essa
@@ -55,14 +54,6 @@ public class Proposta implements Serializable{
 	public void setState(Stato nS) {
 		aState = nS;
  	}
-	/**
-	 * Verifica se la proposta ha come titolo quello passato come argomento
-	 * @param title titolo da confrontare
-	 * @return True - ha il titolo inserito<br>False - non ha il titolo inserito
-	 */
-	public boolean hasTitle(String title) {
-		return evento.getValue(ExpandedHeading.TITOLO.getName()).equals(title);
-	}
 	/**
 	 * Verifica se la proposta è uguale a quella inserita
 	 * @param p la proposta con cui fare il confronto

@@ -1,4 +1,4 @@
-package EventBook.versione1;
+package EventBook.categoria;
 
 import java.io.Serializable;
 
