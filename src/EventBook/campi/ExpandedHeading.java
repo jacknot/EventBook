@@ -1,5 +1,7 @@
 package EventBook.campi;
 
+import java.util.stream.Stream;
+
 import EventBook.versione2.ClassType;
 
 /**Classe con il compito di contenere una descrizione corredata da informazioni relative alla sua obbligatorietà e il suo tipo
@@ -96,4 +98,12 @@ public enum ExpandedHeading{
 	public String toString() {
 		return String.format(STRINGA_TO_STRING, name, description, binding);
 	}
+	/**
+	 * Controlla se le due intestazioni sono uguali
+	 * @param eh l'intestazione da confrontare
+	 * @return True - sono uguali<br>False - sono diversi
+	 */
+	public boolean equals(ExpandedHeading eh) {
+		return this.name.equals(eh.name);
+	} 
 }

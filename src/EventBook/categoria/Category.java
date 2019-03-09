@@ -58,12 +58,12 @@ public abstract class Category implements Cloneable,Serializable{
 		return fields.getValue(name);
 	}
 	/**
-	 * Restituisce il tipo del campo di cui si � inserito il nome
-	 * @param name il nome del campo di cui si vuole il tipo
-	 * @return Il tipo del campo inserito. Restituisce null se il campo non esiste
+	 * Controlla se la categoria contiene il campo di cui si è inserito il nome
+	 * @param field il nome del campo da controllare
+	 * @return True - contiene il campo<br>False - non contiene il campo
 	 */
-	public Class<?> getType(String name){
-		return fields.getType(name);
+	public boolean containsField(String field) {
+		return fields.contains(field);
 	}
 	/**
 	 * Controlla se un evento � valido
@@ -72,6 +72,7 @@ public abstract class Category implements Cloneable,Serializable{
 	public boolean isValid() {
 		return fields.isValid();
 	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */

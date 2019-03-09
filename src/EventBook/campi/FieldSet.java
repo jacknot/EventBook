@@ -18,8 +18,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 */
 	public boolean contains(String name) {
 		if( this.stream()
-				.filter((c)->c.getName().equals(name))
-				.count() > 0 )
+				.anyMatch((f)->f.getName().equalsIgnoreCase(name)))
 			return true;
 		return false;
 	}

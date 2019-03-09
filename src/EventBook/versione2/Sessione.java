@@ -65,9 +65,10 @@ public class Sessione {
 	/**
 	 * Aggiunge una proposta all'elenco delle proposte
 	 * @param proposta Proposta da aggiungere all'elenco
+	 * @return L'esito dell'operazione
 	 */
-	public void aggiungiProposta(Proposta proposta) {
-		insiemeProposte.add(proposta);
+	public boolean aggiungiProposta(Proposta proposta) {
+		return insiemeProposte.add(proposta);
 	}
 	/**
 	 * Modifica una proposta esistente 
