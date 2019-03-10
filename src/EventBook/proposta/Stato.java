@@ -12,7 +12,6 @@ import EventBook.fruitore.Messaggio;
  *
  */
 public enum Stato implements Serializable{
-	
 	INVALIDA{
 			/* (non-Javadoc)
 			 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
