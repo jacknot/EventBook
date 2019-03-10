@@ -2,6 +2,7 @@ package EventBook.fruitore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 /**La classe PrivateSpace ha il compito di fornire una struttura adatta a contenere e gestire un insieme di messaggi.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -52,9 +53,8 @@ public class SpazioPersonale implements Serializable{
 	 */
 	public String toString() {
 		StringBuffer temp = new StringBuffer(FORMAT_TO_STRING);
-		for(int i=0; i<messageList.size(); i++) {
-			temp.append(messageList.get(i));
-		}
+		IntStream.of(0, messageList.size() - 1)
+					.forEachOrdered((i)->temp.append(i + " : " + messageList.get(i).toString() + "\n"));
 		return String.format(temp.toString());
 	}
 }

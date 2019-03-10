@@ -2,6 +2,7 @@ package EventBook.proposta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import EventBook.fruitore.Notificabile;
 
@@ -88,7 +89,8 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 */
 	public String showContent() {
 		StringBuilder sb = new StringBuilder();
-		this.stream().forEach((p)->sb.append(p.toString()).append("\n"));
+		IntStream.of(0, size() - 1)
+				.forEachOrdered((i)->sb.append(i + " : " + get(i).toString() + "\n"));
 		return sb.toString();
 	}
 	/**

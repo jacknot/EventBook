@@ -23,7 +23,7 @@ public class Main {
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
 	
-	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
+	private static final String ERRORE_SCONOSCIUTO = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
 
 	private static Scanner in;
 	private static ListaComandi protocollo;
@@ -46,17 +46,17 @@ public class Main {
 		}));
 		
 		in = new Scanner(System.in);
-		System.out.println(MESSAGGIO_BENVENUTO);
 		String comando;
 		load();
 		
+		System.out.println(MESSAGGIO_BENVENUTO);
 		do {
 			System.out.print(ATTESA_COMANDO);
 			comando = in.nextLine();		
 			if(protocollo.contains(comando))
 				protocollo.run(comando);
 			else
-				System.out.println(ERRORE_COMANDO_NONRICONOSCIUTO);
+				System.out.println(ERRORE_SCONOSCIUTO);
 		}while(true);		
 	}
 	/**
@@ -75,6 +75,7 @@ public class Main {
 			bacheca = InsiemeProposte.newBacheca();
 			System.out.println("Caricata nuova bacheca");
 			}
+		System.out.println("Fine caricamento");
 	}
 	/**
 	 * Salva la bacheca e il database
@@ -146,7 +147,7 @@ public class Main {
 			do {
 				try {
 				System.out.print("Inserisci l'identificatore : ");
-				id = in.nextInt();
+				id = Integer.parseInt(in.nextLine());
 				valido = true;
 				bacheca.add(session.getProposta(id));
 				}catch(Exception e) {
@@ -170,12 +171,12 @@ public class Main {
 			valido = false;
 			Object obj;
 			do {
-				System.out.println("Inserisci un " + campo.getType().getSimpleName()+" : ");
+				System.out.println("Inserisci il nuovo valore (" + campo.getType().getSimpleName()+") : ");
 				obj = campo.getClassType().parse(in.nextLine());
 				if(obj != null)
 					valido = true;
 				else
-					System.out.println("Il valore inserito non è corretto");
+					System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo " + campo.getClassType().getRegex());
 			}while(!valido);
 			//conferma modifica
 			valido = false;
@@ -183,8 +184,13 @@ public class Main {
 				System.out.println("Sei sicuro di voler modificare ?");
 				System.out.println("Proposta :" + id + ", Campo :" + campo.getName() + ", nuovo valore: " + obj.toString());
 				System.out.print("[y/n]> ");
-				if(!in.nextLine().equalsIgnoreCase("y"))
+				String conferma = in.nextLine();
+				if(conferma.equalsIgnoreCase("n")) {
 					annulla = true;
+					valido = true;
+				}else if(conferma.equalsIgnoreCase("y")) {
+					valido = true;
+				}
 			}while(!valido);
 			//modifica effetiva
 			if(!annulla && session.modificaProposta(id, campo.getName(), obj))
@@ -202,17 +208,18 @@ public class Main {
 						do {
 							System.out.print("Inserisci un valore per il campo: ");
 							String value = in.nextLine();
-							if((value == "") && !fd.isBinding())
+							if(!fd.isBinding())
 								valid = true;
-							else if(fd.getClassType().isValidType(value)) {
+							if(fd.getClassType().isValidType(value)) {
 								valid = true;
 								if(evento.setValue(fd.getName(), fd.getClassType().parse(value)))
-									System.out.println("Dato inserito correttamente");
+									System.out.println("Dato inserito correttamente\n");
 								else
-									System.out.println("Il dato non è stato inserito correttamente");
+									System.out.println("Il dato non è stato inserito correttamente\n");
 							}
 							if(!valid)
-								System.out.println("Il dato inserito non è valido, riprova");
+								System.out.println("Il dato inserito non è valido.\nInserisci qualcosa del tipo "
+														+ fd.getClassType().getRegex()+"\n");
 						}while(!valid);
 					});
 			if(session.aggiungiProposta(new Proposta(evento, session.getProprietario())))
@@ -227,7 +234,7 @@ public class Main {
 			do {
 				try {
 					System.out.print("Inserisci l'id da eliminare: ");
-					int i = in.nextInt();
+					int i = Integer.parseInt(in.nextLine());
 					valido = true;
 					if(!session.getProprietario().removeMsg(i))
 						System.out.println("La rimozione non è andata a fine");
@@ -243,10 +250,14 @@ public class Main {
 			boolean valido = false;
 			do {
 				try {
-				System.out.print("Inserisci l'identificatore : ");
-				int id = in.nextInt();
-				valido = true;
-				bacheca.add(session.getProposta(id));
+					System.out.print("Inserisci l'identificatore : ");
+					int id = Integer.parseInt(in.nextLine());
+					valido = true;
+					if(session.contains(id)) {
+						bacheca.add(session.getProposta(id));
+						System.out.println("Proposta aggiunta con successo");
+					}else
+						System.out.println("La proposta inserita non è valida");
 				}catch(Exception e) {
 					System.out.println("Inserisci un numero");
 				}
@@ -257,7 +268,7 @@ public class Main {
 			do {
 				try {
 				System.out.print("Inserisci l'identificatore : ");
-				int id = in.nextInt();
+				int id = Integer.parseInt(in.nextLine());
 				valido = true;
 				if(!bacheca.iscrivi(id, session.getProprietario()))
 					System.out.println("L'iscrizione non è andata a buon fine");

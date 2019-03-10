@@ -1,6 +1,6 @@
 package EventBook.campi;
 
-import EventBook.versione2.ClassType;
+import EventBook.tipiDato.ClassType;
 
 /**Classe con il compito di contenere una descrizione corredata da informazioni relative alla sua obbligatorietà e il suo tipo
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]
@@ -22,7 +22,7 @@ public enum ExpandedHeading{
 	NOTE("Note", "Informazioni aggiuntive ", false, ClassType.STRING),
 	
 	//Campi FootballMatch
-	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.STRING),
+	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.GENDER),
 	FASCIADIETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL);
 
 	/**
@@ -44,7 +44,7 @@ public enum ExpandedHeading{
 	/**
 	 * Formattazione per la visualizzazione testuale dell'oggetto
 	 */
-	private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s%n";
+	private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s";
 	
 	/**Restituisce il nome
 	 * @return Il nome

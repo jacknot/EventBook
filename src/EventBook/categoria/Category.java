@@ -99,7 +99,7 @@ public abstract class Category implements Cloneable,Serializable{
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("%n%s%n%n", heading.getName()));
+		sb.append(String.format("%s%n", heading.getName()));
 		sb.append(fields.toString());
 		return sb.toString();
 	}

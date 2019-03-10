@@ -12,7 +12,7 @@ public class Messaggio implements Serializable{
 	private String object;
 	private String description;
 	
-	private final static String FORMAT_TO_STRING ="<%s> %s : %s%n";
+	private final static String FORMAT_TO_STRING ="<%s> %s : %s";
 	
 	
 	/**

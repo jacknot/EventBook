@@ -1,11 +1,11 @@
-package EventBook.versione2;
+package EventBook.tipiDato;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.StringTokenizer;
 
-import EventBook.campi.Interval;
+import EventBook.versione2.Parser;
 
 
 /**
@@ -19,8 +19,7 @@ public enum ClassType {
 	INTEGER(Integer.class, "\\d+", (i) -> Integer.parseInt(i)),
 	REAL(Double.class, "\\d+\\.\\d{2}", (real) -> Double.parseDouble(real)),
 	DATA(LocalDate.class, "(0[1-9]|[1-2][0-9]|3[0-1])\\/(0[1-9]|1[0-2])\\/(2[0-9]{3})", (data) ->{
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		return LocalDate.parse(data, formatter);
+		return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}),
 	ORA(LocalTime.class, "(0[1-9]|1[0-9]|2[0-3]):([0-5][0-9])", (ora) -> {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -29,7 +28,10 @@ public enum ClassType {
 	INTERVAL(Interval.class, "\\d{1,2}-\\d{1,2}", (interval) ->{
 		StringTokenizer tokenizer = new StringTokenizer(interval, "-");
 		return new Interval(Integer.parseInt(tokenizer.nextToken()), Integer.parseInt(tokenizer.nextToken()));
-	});
+	}),
+	GENDER(Gender.class, "[m|f]" ,(gender)->{
+		return new Gender(gender.equals("f"));
+		});
 	
 	/**
 	 * Tipo di ritorno
@@ -64,11 +66,11 @@ public enum ClassType {
 		return obj.matches(regex);
 	}
 	/**
-	 * Restituisce la logica di estrazione del dato
-	 * @return la logica di estrazione del dato
+	 * Restituisce l'espressione regolare legata al dato
+	 * @return l'espressione regolare legata al dato
 	 */
-	public Parser<?> getParser(){
-		return parser;
+	public String getRegex(){
+		return regex;
 	}
 	/**
 	 * Traduce una stringa nel tipo voluto

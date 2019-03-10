@@ -1,4 +1,4 @@
-package EventBook.campi;
+package EventBook.tipiDato;
 
 import java.io.Serializable;
 

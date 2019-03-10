@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	private static final long serialVersionUID = 1L;	//soppressione warning
-	private static final String INTERLINE = "*******************************%n";
+	private static final String INTERLINE = "%n*******************************%n";
 	
 	/**
 	 * Controlla se il contenitore contiene un campo
@@ -106,7 +106,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		this.stream()
-			.forEachOrdered((f)->sb.append(f.toString()));
+			.forEachOrdered((f)->sb.append(f.toString() + "\n"));
 		return sb.toString();
 	}
 }

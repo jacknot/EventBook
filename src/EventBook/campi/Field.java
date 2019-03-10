@@ -2,7 +2,7 @@ package EventBook.campi;
 
 import java.io.Serializable;
 
-import EventBook.versione2.ClassType;
+import EventBook.tipiDato.ClassType;
 
 /**La classe Campo ha il compito di fornire una struttura adatta a contenere una descrizione ed un valore.<br>
  * Il valore che contiene può essere di diversi tipi, per ogni campo questo deve essere specificato.<br>
@@ -36,27 +36,17 @@ public class Field <T> implements Serializable{
 	/**
 	 * La stringa usata per mostrare le principali caratteristiche del campo
 	 */
-	private final static String FORMAT_TO_STRING ="%s <%s> : %s%n";
+	private final static String FORMAT_TO_STRING ="%s <%s> : %s";
 	
 	//Costruttori
-	
-	/**Costruttore per la classe campo 
-	 * @param head La descrizione del campo
-	 * @param type tipo del campo
-	 * @param value Il valore assunto dal campo
-	 */
-	public Field(ExpandedHeading head, Class<T> type, T value) {//PROBABILMENTE NON SERVE
-		this.heading = head;
-		this.value = value;
-		this.type = type;
-	}
 	
 	/**Costruttore del campo, imposta il suo valore a null 
 	 * @param head La descrizione del campo
 	 */
 	public Field(ExpandedHeading head) {
 		this.heading = head;
-		this.type = (Class<T>) head.getType(); //Siamo sicuri che il cast sia sicuro
+		//Il cast non genera problemi dato che stiamo dando un tipo consistente con l'intestazione del campo ( head )
+		this.type = (Class<T>) head.getType(); 
 		this.value = null;
 	}
 	

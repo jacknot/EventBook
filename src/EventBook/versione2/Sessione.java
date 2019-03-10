@@ -1,9 +1,8 @@
 package EventBook.versione2;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.stream.IntStream;
 
-import EventBook.campi.ExpandedHeading;
 import EventBook.fruitore.Fruitore;
 import EventBook.proposta.Proposta;
 
@@ -89,12 +88,8 @@ public class Sessione {
 	 */
 	public String showInProgress() {
 		StringBuilder stringaRitorno = new StringBuilder();
-		for(int i=0; i<insiemeProposte.size();i++) {
-			stringaRitorno.append(i)
-						.append(" : ")
-						.append(insiemeProposte.get(i).toString())
-						.append("\n");
-		}
+		IntStream.of(0, insiemeProposte.size() - 1)
+					.forEachOrdered((i)->stringaRitorno.append(i + " : " + insiemeProposte.get(i).toString() + "\n"));
 		return stringaRitorno.toString();
 	}
 	/**
@@ -103,5 +98,13 @@ public class Sessione {
 	 */
 	public String showNotification() {
 		return proprietario.getPrivateSpace().toString();
+	}
+	/**
+	 * Controlla se la sessione contiene la proposta di cui si è inserito l'identificatore
+	 * @param id l'identificatore della proposta
+	 * @return True - contiene la proposta<br>False - non contiene la proposta
+	 */
+	public boolean contains(int id) {
+		return id >= 0 && id < insiemeProposte.size();
 	}
 }

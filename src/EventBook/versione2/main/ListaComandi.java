@@ -82,7 +82,7 @@ class ListaComandi extends ArrayList<Comando>{
 	public void run(String nomeComando) {
 		if(nomeComando.equals("help"))
 			System.out.println(toString());
-		if(contains(nomeComando))
+		else if(contains(nomeComando))
 			this.stream()
 				.filter((c)->c.equalsName(nomeComando))
 				.findFirst().get().run();

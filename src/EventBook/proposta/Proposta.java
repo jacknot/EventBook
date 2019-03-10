@@ -32,14 +32,16 @@ public class Proposta implements Serializable{
 	private ArrayList<Notificabile> iscritti;
 	/**
 	 * Costruttore di una proposta
-	 * @param c L'evento a cui far� riferimento la proposta
-	 * @param u Il proprietario della proposta
+	 * @param event L'evento a cui far� riferimento la proposta
+	 * @param owner Il proprietario della proposta
 	 */
-	public Proposta(Category c, Notificabile u) {
-		this.evento = c;
-		this.proprietario = u;
-		this.aState = Stato.INVALIDA;
+	public Proposta(Category event, Notificabile owner) {
+		this.evento = event;
+		this.proprietario = owner;
 		this.iscritti = new ArrayList<Notificabile>();
+		this.aState = Stato.INVALIDA;
+		//gestisce il caso in cui l'evento di riferimento sia già valido
+		aggiornaStato();
 	}
 	/**
 	 * Fa cambiare stato alla proposta
