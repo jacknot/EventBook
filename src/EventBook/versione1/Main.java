@@ -48,13 +48,13 @@ public class Main {
 		
 		//comando categoria ( visualizza la categoria)
 		protocollo.put(COMANDO_CATEGORIA,()->{
-			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
+			Category p = cache.getCategory(Heading.PARTITADICALCIO);
 			System.out.println(p.getDescription());
 		});
 		
 		//comando caratteristiche ( visualizza le caratteristiche della categoria
 		protocollo.put(COMANDO_DESCRIZIONE,()->{
-			Category p = cache.getCategory(Heading.PARTITADICALCIO.getName());
+			Category p = cache.getCategory(Heading.PARTITADICALCIO);
 			System.out.println(p.getFeatures());
 		});
 		// fine inizializzazione protocollo
