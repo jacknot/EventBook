@@ -10,7 +10,7 @@ import EventBook.campi.Interval;
 
 /**
  * Contiene dei tipi e una logica per poter analizzare una stringa ed estrarre un valore del tipo correlato
- * @author Matteo
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public enum ClassType {

@@ -1,7 +1,5 @@
 package EventBook.campi;
 
-import java.util.stream.Stream;
-
 import EventBook.versione2.ClassType;
 
 /**Classe con il compito di contenere una descrizione corredata da informazioni relative alla sua obbligatorietà e il suo tipo

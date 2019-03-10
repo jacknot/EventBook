@@ -2,7 +2,7 @@ package EventBook.versione2;
 
 /**
  * Interfaccia funzionale con il compito di definire il comportamento di oggetti di estrazione da una stringa
- * @author Matteo
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  * @param <T> Il tipo di dato che si vuole ottenere da una stringa
  */

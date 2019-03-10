@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * Classe con il compito di gestire caricamenti e salvataggi da un file di oggetti generici
- * @author Matteo
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public class FileHandler{

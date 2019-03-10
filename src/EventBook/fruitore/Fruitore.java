@@ -10,7 +10,13 @@ public class Fruitore implements Serializable, Notificabile{
 
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Il nome del fruitore
+	 */
 	private String name;
+	/**
+	 * Lo spazio personale del fruitore
+	 */
 	private SpazioPersonale privateSpace;
 	
 	/**

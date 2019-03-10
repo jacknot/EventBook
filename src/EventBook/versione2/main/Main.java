@@ -11,16 +11,14 @@ import EventBook.versione2.FileHandler;
 import EventBook.versione2.Sessione;
 
 /**
+ * Classe contente il punto di partenza da cui far iniziare il programam
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public class Main {
-	private static final String BACHECAFILE = "resource/bacheca.ser";
-	private static final String REGISTRAZIONIFILE = "resource/registrazioni.ser";
-
-	private static final String COMANDO_LOGIN = "login";
-	private static final String COMANDO_LOGOUT = "logout";
-
+	private static final String BACHECA = "resource/bacheca.ser";
+	private static final String DATABASE = "resource/registrazioni.ser";
+	
 	private static final String MESSAGGIO_BENVENUTO = "Welcome to EventBook";
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
@@ -28,15 +26,17 @@ public class Main {
 	private static final String ERRORE_COMANDO_NONRICONOSCIUTO = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
 
 	private static Scanner in;
-	
+	private static ListaComandi protocollo;
 	private static Sessione session;
 	private static Database db;
 	private static InsiemeProposte bacheca;
-	private static boolean exit;
 	
+	/**
+	 * Il punto da cui far iniziare il programma
+	 * @param args lista di argomenti da passare
+	 */
 	public static void main(String[] args) {
-		exit = false;
-		ListaComandi protocollo = new ListaComandi();
+		protocollo = new ListaComandi();
 		
 		//chiusura + terminazione anomala -> save
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 
@@ -46,43 +46,31 @@ public class Main {
 		}));
 		
 		in = new Scanner(System.in);
-		
-		//benvenuto
 		System.out.println(MESSAGGIO_BENVENUTO);
 		String comando;
 		load();
 		
-		//duty cycle
 		do {
 			System.out.print(ATTESA_COMANDO);
-			//aspetto input
-			comando = in.nextLine();
-			// elaborazione comando		
-			if(protocollo.contains(comando)) {
+			comando = in.nextLine();		
+			if(protocollo.contains(comando))
 				protocollo.run(comando);
-				if(comando.equals(COMANDO_LOGIN) && session != null)
-					protocollo.log();
-				else if(comando.equals(COMANDO_LOGOUT) && session == null)
-					protocollo.logout();
-			}				
 			else
 				System.out.println(ERRORE_COMANDO_NONRICONOSCIUTO);
-		}while(!exit);
-		//uscita
-		
+		}while(true);		
 	}
 	/**
 	 * Carica il database e la bacheca
 	 */
 	private static void load() {
 		System.out.println("Caricamento database ...");
-		db = (Database)new FileHandler().load(REGISTRAZIONIFILE);
+		db = (Database)new FileHandler().load(DATABASE);
 		if(db == null) {
 			db = new Database();
 			System.out.println("Caricato nuovo database");
 			}
 		System.out.println("Caricamento bacheca ...");
-		bacheca = (InsiemeProposte)new FileHandler().load(BACHECAFILE);
+		bacheca = (InsiemeProposte)new FileHandler().load(BACHECA);
 		if(bacheca == null) {
 			bacheca = InsiemeProposte.newBacheca();
 			System.out.println("Caricata nuova bacheca");
@@ -93,11 +81,28 @@ public class Main {
 	 */
 	private static void save() {
 		System.out.println("Salvataggio bacheca ...");
-		System.out.println(new FileHandler().save(BACHECAFILE, bacheca));
+		System.out.println(new FileHandler().save(BACHECA, bacheca));
 		System.out.println("Salvataggio database ...");
-		System.out.println(new FileHandler().save(REGISTRAZIONIFILE, db));
+		System.out.println(new FileHandler().save(DATABASE, db));
 	}
-
+	/**
+	 * Effettua operazioni sul protocollo a seguito del log in dell'utente
+	 */
+	private static void logIn() {
+		protocollo.logIn();
+	}
+	/**
+	 * Effettua operazioni sul protocollo a seguito del log out dell'utente
+	 */
+	private static void logOut() {
+		protocollo.logOut();
+	}
+	
+	/**
+	 * Enumerazione contente i vari comandi disponibili all'utente, comprese le loro funzionalità
+	 * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+	 *
+	 */
 	protected enum Comando {
 		
 		EXIT("exit", "Esci dal programma",()->System.exit(0)),
@@ -122,15 +127,20 @@ public class Main {
 			String nome = in.nextLine();
 			if(db.contains(nome)) {
 				session = new Sessione(db.getFruitore(nome));
+				logIn();
+				System.out.println("Loggato come: " + nome);
 			}
 			else {
 				System.out.println("Utente non registrato");
 			}
 		}),
-		LOGOUT("logout", "Per uscire", ()->session = null),
+		LOGOUT("logout", "Per uscire", ()->{
+			session = null;
+			logOut();
+			}),
 		MODIFICA("modifica","Modifica il campo di una proposta",()->{
-			//inserisci id proposta
 			boolean annulla = false;
+			//inserisci id proposta
 			boolean valido = false;
 			int id = -1;
 			do {
@@ -229,7 +239,6 @@ public class Main {
 		MOSTRA_BACHECA("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
 			System.out.println("Le proposte in bacheca:\n" + bacheca.showContent());
 		}),
-		//da controllare
 		PUBBLICA("pubblica", "Pubblica un evento creato", ()->{
 			boolean valido = false;
 			do {

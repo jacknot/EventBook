@@ -3,7 +3,7 @@ package EventBook.fruitore;
 import java.io.Serializable;
 
 /**La classe Message ha il compito di fornire una struttura adatta a contenere un messaggio.<br>
- * Il messaggio � composto da tre attributi: mittente, oggetto e destinatario.<br>
+ * Il messaggio è composto da tre attributi: mittente, oggetto e destinatario.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
 public class Messaggio implements Serializable{
@@ -51,23 +51,9 @@ public class Messaggio implements Serializable{
 		return description;
 	}
 	
-	/*
-	 *  ------------------- SECONDO ME NON SERVONO -------------------
-	 * 
-	public void setAddresser(String addresser) {
-		this.addresser = addresser;
-	}
-	
-	
-	public void setObject(String object) {
-		this.object = object;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	*/
-	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return String.format(FORMAT_TO_STRING, addresser, object, description);
 	}

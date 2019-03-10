@@ -4,19 +4,33 @@ import java.util.ArrayList;
 
 import EventBook.versione2.main.Main.Comando;
 
+/**
+ * Contenitore in grado di gestire una lista di comandi e di poter fare operazioni su di essi
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
 class ListaComandi extends ArrayList<Comando>{
 	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Il formato con cui vengono stampati i comandi
+	 */
 	private static final String FORMAT_TOSTRING = "\n\t%-20s%s";
 	
-	protected ListaComandi() {
+	/**
+	 * Costruttore
+	 */
+	public ListaComandi() {
 		super();
 		add(Comando.EXIT);
 		add(Comando.REGISTRA);
 		add(Comando.LOGIN);
 	}
 	
-	protected void log() {
+	/**
+	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logIn
+	 */
+	public void logIn() {
 		add(Comando.CATEGORIA);
 		add(Comando.DESCRIZIONE);
 		add(Comando.LOGOUT);
@@ -31,8 +45,10 @@ class ListaComandi extends ArrayList<Comando>{
 		remove(Comando.REGISTRA);
 		remove(Comando.LOGIN);	
 	}
-	
-	protected void logout() {
+	/**
+	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logOut
+	 */
+	public void logOut() {
 		add(Comando.REGISTRA);
 		add(Comando.LOGIN);
 		remove(Comando.CATEGORIA);
@@ -53,7 +69,7 @@ class ListaComandi extends ArrayList<Comando>{
 	 * @param key il nome del comando di cui si vuole verificare la presenza
 	 * @return True - è presente un comando con il nome inserito<br>False - non è presente un comando con il nome inserito
 	 */
-	protected boolean contains(String key) {
+	public boolean contains(String key) {
 		if(key.equals("help")) return true;
 		return this.stream()
 				.anyMatch((c)->c.equalsName(key));
@@ -63,7 +79,7 @@ class ListaComandi extends ArrayList<Comando>{
 	 * Esegue il comando di cui si è inserito il nome, se presente
 	 * @param nomeComando il nome del comando da eseguire
 	 */
-	protected void run(String nomeComando) {
+	public void run(String nomeComando) {
 		if(nomeComando.equals("help"))
 			System.out.println(toString());
 		if(contains(nomeComando))
