@@ -1,5 +1,6 @@
 package EventBook.versione2.main;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.*;
 
@@ -19,18 +20,21 @@ public class Main {
 	private static final String BACHECA = "resource/bacheca.ser";
 	private static final String DATABASE = "resource/registrazioni.ser";
 	
+	private static final String NEW_LINE = "\n";
 	private static final String MESSAGGIO_BENVENUTO = "Welcome to EventBook";
 	private static final String ATTESA_COMANDO = "> ";
 	private static final String MESSAGGIO_USCITA = "Bye Bye";
 	
 	private static final String ERRORE_SCONOSCIUTO = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
 
+	private static Timer refreshTimer;
 	private static Scanner in;
 	private static ListaComandi protocollo;
 	private static Sessione session;
 	private static Database db;
 	private static InsiemeProposte bacheca;
 	
+	private static final long DELAY = 20000;//300000;//5MIN
 	/**
 	 * Il punto da cui far iniziare il programma
 	 * @param args lista di argomenti da passare
@@ -42,6 +46,7 @@ public class Main {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 
 			System.out.println(MESSAGGIO_USCITA);	
 			in.close();
+			refreshTimer.cancel();
 			save();
 		}));
 		
@@ -49,10 +54,19 @@ public class Main {
 		String comando;
 		load();
 		
-		System.out.println(MESSAGGIO_BENVENUTO);
+		refreshTimer = new Timer("RefreshBacheca");
+		refreshTimer.schedule(new TimerTask() {
+			public void run() {
+				bacheca.refresh();
+				//System.out.println("(Refreshed)");
+			}
+		}, DELAY, DELAY);
+		
+		System.out.println(NEW_LINE + MESSAGGIO_BENVENUTO);
 		do {
-			System.out.print(ATTESA_COMANDO);
+			System.out.print(NEW_LINE + ATTESA_COMANDO);
 			comando = in.nextLine();		
+			System.out.print(NEW_LINE);
 			if(protocollo.contains(comando))
 				protocollo.run(comando);
 			else
@@ -109,11 +123,11 @@ public class Main {
 		EXIT("exit", "Esci dal programma",()->System.exit(0)),
 		CATEGORIA("categoria", "Mostra la categoria disponibile", ()->{
 			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO);
-			System.out.println(p.getDescription());
+			System.out.print(p.getDescription());
 		}),
 		DESCRIZIONE("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
 			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO);
-			System.out.println(p.getFeatures());
+			System.out.print(p.getFeatures());
 		}),
 		REGISTRA("registra", "Registra un fruitore", ()->{
 			System.out.print("Inserisci il nome: ");
@@ -171,7 +185,7 @@ public class Main {
 			valido = false;
 			Object obj;
 			do {
-				System.out.println("Inserisci il nuovo valore (" + campo.getType().getSimpleName()+") : ");
+				System.out.print("Inserisci il nuovo valore (" + campo.getType().getSimpleName()+") : ");
 				obj = campo.getClassType().parse(in.nextLine());
 				if(obj != null)
 					valido = true;
@@ -208,8 +222,10 @@ public class Main {
 						do {
 							System.out.print("Inserisci un valore per il campo: ");
 							String value = in.nextLine();
-							if(!fd.isBinding())
+							if(!fd.isBinding() && value.isEmpty()) {
 								valid = true;
+								System.out.print(NEW_LINE); //Lascio uno spazio per non stampare tutto attaccato
+							}
 							if(fd.getClassType().isValidType(value)) {
 								valid = true;
 								if(evento.setValue(fd.getName(), fd.getClassType().parse(value)))
@@ -218,7 +234,7 @@ public class Main {
 									System.out.println("Il dato non è stato inserito correttamente\n");
 							}
 							if(!valid)
-								System.out.println("Il dato inserito non è valido.\nInserisci qualcosa del tipo "
+								System.out.println(NEW_LINE + "Il dato inserito non è valido.\nInserisci qualcosa del tipo "
 														+ fd.getClassType().getRegex()+"\n");
 						}while(!valid);
 					});
@@ -244,7 +260,7 @@ public class Main {
 			}while(!valido);
 		}),
 		MOSTRA_BACHECA("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
-			System.out.println("Le proposte in bacheca:\n" + bacheca.showContent());
+			System.out.print("Le proposte in bacheca:\n\n" + bacheca.showContent());
 		}),
 		PUBBLICA("pubblica", "Pubblica un evento creato", ()->{
 			boolean valido = false;

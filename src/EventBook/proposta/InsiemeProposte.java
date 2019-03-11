@@ -35,7 +35,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	/* (non-Javadoc)
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
-	public boolean add(Proposta p) {
+	public synchronized boolean add(Proposta p) {
 		if(!contains(p)) {
 			p.pubblica();
 			if(p.sameState(univoco)) {
@@ -57,7 +57,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	/**
 	 * Effettua un refresh delle proposte nel set
 	 */
-	public void refresh() {
+	public synchronized void refresh() {
 		this.stream()
 				.forEach(( p ) -> p.aggiornaStato());
 		clean();
@@ -69,7 +69,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
 	 */
-	public boolean iscrivi(int id, Notificabile user) {
+	public synchronized boolean iscrivi(int id, Notificabile user) {
 		if(id < size())
 			return get(id).iscrivi(user);
 		return false;
@@ -79,7 +79,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 * @param p il titolo della proposta
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
-	public boolean contains(Proposta p) {
+	public synchronized boolean contains(Proposta p) {
 		return this.stream()
 					.anyMatch(( sp ) -> sp.equals(p));
 	}
@@ -87,7 +87,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 * Mostra il contenuto dell'insieme di proposte in forma testuale
 	 * @return il contenuto dell'insieme in forma testuale
 	 */
-	public String showContent() {
+	public synchronized String showContent() {
 		StringBuilder sb = new StringBuilder();
 		IntStream.range(0, size())
 					.forEachOrdered((i)->sb.append(i + " : " + get(i).toString() + "\n"));

@@ -142,9 +142,9 @@ public enum Stato implements Serializable{
 	private static final String FAILUREOBJ = "Fallimento evento";
 	//data ora luogo importo
 	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terr� il giorno %s alle %s in %s."
-													+ "\nSi ricorda di portare %s � per l'orgazzazione";
+													+ "\nSi ricorda di portare %s per l'orgazzazione";
 	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
-													+ "\nL'evento � quindi annullato.";
+													+ "\nL'evento è quindi annullato.";
 	/**
 	 * Modifica lo stato della proposta in modo da poterla rendere adatta al pubblico
 	 * @param p la proposta a cui fare cambiare stato
