@@ -15,7 +15,7 @@ import EventBook.versione2.Parser;
  */
 public enum ClassType {
 
-	STRING(String.class, "\\D+", "Stringa", (str) -> str),
+	STRING(String.class, "[^\n]+", "Stringa", (str) -> str),
 	INTEGER(Integer.class, "\\d+", "Numero intero", (i) -> Integer.parseInt(i)),
 	REAL(Double.class, "\\d+\\.\\d{2}", "Numero reale con . e due decimali", (real) -> Double.parseDouble(real)),
 	DATA(LocalDate.class, "(0[1-9]|[1-2][0-9]|3[0-1])\\/(0[1-9]|1[0-2])\\/(2[0-9]{3})", "gg/mm/aaaa", (data) ->{
