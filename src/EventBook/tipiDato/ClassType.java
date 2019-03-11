@@ -21,11 +21,11 @@ public enum ClassType {
 	DATA(LocalDate.class, "(0[1-9]|[1-2][0-9]|3[0-1])\\/(0[1-9]|1[0-2])\\/(2[0-9]{3})", "gg/mm/aaaa", (data) ->{
 		return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}),
-	ORA(LocalTime.class, "(0[1-9]|1[0-9]|2[0-3]):([0-5][0-9])", "hh:mm", (ora) -> {
+	ORA(LocalTime.class, "(0[1-9]|1[0-9]|2[0-3]):([0-5][0-9])", "hh:mm (formato 24 ore)", (ora) -> {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		return LocalTime.parse(ora, formatter);
 	}),
-	INTERVAL(Interval.class, "\\d{1,2}-\\d{1,2}", "anni-anni", (interval) ->{
+	INTERVAL(Interval.class, "\\d{1,2}-\\d{1,2}", "etàMinima-etàMassima", (interval) ->{
 		StringTokenizer tokenizer = new StringTokenizer(interval, "-");
 		return new Interval(Integer.parseInt(tokenizer.nextToken()), Integer.parseInt(tokenizer.nextToken()));
 	}),

@@ -60,39 +60,39 @@ public enum Stato implements Serializable{
 		 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
 		 */
 		public boolean canSubscribe(Proposta p) {
-			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1;
+			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1; //integer.class.cast  o Integer.parse(p.getvalue) ?
 		}
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
 		public boolean transiziona(Proposta p) {
-			LocalDate tDate = LocalDate.now();
+			LocalDate todayDate = LocalDate.now();
 			//data ultima iscrizione
 			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
 			//todayDate <= lastSubDate && subs == full
-			if(tDate.compareTo(lastSubDate) <= 0 &&
+			if(todayDate.compareTo(lastSubDate) <= 0 &&
 					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(CHIUSA);
-				p.send(new Messaggio(	//messaggio che avvisa che la proposta � chiusa
-						String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),
+				p.send(new Messaggio(	//messaggio che avvisa che la proposta è chiusa
+						p.getValue(ExpandedHeading.TITOLO.getName()).toString(),
 						CONFIRMOBJ,															
-						String.format(CONFIRMFORMAT, String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),
-													String.class.cast(p.getValue(ExpandedHeading.DATA.getName())),
-													String.class.cast(p.getValue(ExpandedHeading.ORA.getName())),
-													String.class.cast(p.getValue(ExpandedHeading.LUOGO.getName())),
-													String.class.cast(p.getValue(ExpandedHeading.QUOTAINDIVIDUALE.getName())))									
+						String.format(CONFIRMFORMAT, p.getValue(ExpandedHeading.TITOLO.getName()),
+													p.getValue(ExpandedHeading.DATA.getName()),
+													p.getValue(ExpandedHeading.ORA.getName()),
+													p.getValue(ExpandedHeading.LUOGO.getName()),
+													p.getValue(ExpandedHeading.QUOTAINDIVIDUALE.getName()))							
 						));
 				return true;
-			//todayDate == lastSubDate && subs < full
-			}else if(tDate.compareTo(lastSubDate) == 0 &&
+			//todayDate >= lastSubDate && subs < full
+			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
 					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(FALLITA);
-				p.send(new Messaggio(	//messaggio che avvisa che la proposta � fallita
-						String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())),	
+				p.send(new Messaggio(	//messaggio che avvisa che la proposta è fallita
+						p.getValue(ExpandedHeading.TITOLO.getName()).toString(),	
 						FAILUREOBJ,
-						String.format(FAILUREFORMAT, String.class.cast(p.getValue(ExpandedHeading.TITOLO.getName())))
+						String.format(FAILUREFORMAT, p.getValue(ExpandedHeading.TITOLO.getName()))
 						));
 				return true;
 			}
@@ -141,14 +141,14 @@ public enum Stato implements Serializable{
 	private static final String CONFIRMOBJ = "Conferma evento";
 	private static final String FAILUREOBJ = "Fallimento evento";
 	//data ora luogo importo
-	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terr� il giorno %s alle %s in %s."
-													+ "\nSi ricorda di portare %s per l'orgazzazione";
+	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
+													+ "\nSi ricorda di portare %s per l'organizzazione";
 	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
 													+ "\nL'evento è quindi annullato.";
 	/**
 	 * Modifica lo stato della proposta in modo da poterla rendere adatta al pubblico
 	 * @param p la proposta a cui fare cambiare stato
-	 * @return True - � stato cambiato stato con successo<br>False - non � stato cambiato stato alla proposta
+	 * @return True - è stato cambiato stato con successo<br>False - non è stato cambiato stato alla proposta
 	 */
 	public boolean pubblica(Proposta p) {
 		return false;
@@ -156,7 +156,7 @@ public enum Stato implements Serializable{
 	/**
 	 * Porta la proposta p in nuovo stato
 	 * @param p la proposta a cui far cambiare stato
-	 * @return True - � stato cambiato stato con successo<br>False - non � stato cambiato stato alla proposta
+	 * @return True - è stato cambiato stato con successo<br>False - non è stato cambiato stato alla proposta
 	 */
 	public abstract boolean transiziona(Proposta p);
 	/**
@@ -167,9 +167,9 @@ public enum Stato implements Serializable{
 		return false;
 	}
 	/**
-	 * Verifica se la proposta � nello stato di potersi iscrivere
+	 * Verifica se la proposta è nello stato di potersi iscrivere
 	 * @param p la proposta inserita
-	 * @return True - ci si pu� iscrivere alla proposta<br>False - non ci si pu� iscrivere alla proposta
+	 * @return True - ci si può iscrivere alla proposta<br>False - non ci si può iscrivere alla proposta
 	 */
 	public boolean canSubscribe(Proposta p) {
 		return false;

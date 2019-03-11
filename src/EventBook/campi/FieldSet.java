@@ -45,7 +45,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 		return getField(name).getValue();
 	}
 	/**
-	 * Restituisce il tipo del campo di cui si � inserito il nome
+	 * Restituisce il tipo del campo di cui si è inserito il nome
 	 * @param name il nome del campo di cui si vuole il tipo
 	 * @return il tipo del campo. Restituisce null se il campo non esiste
 	 */
@@ -55,7 +55,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 		return getField(name).getType();		
 	}
 	/**
-	 * Imposta il valore del campo di cui si � inserito il nome.<br>
+	 * Imposta il valore del campo di cui si è inserito il nome.<br>
 	 * Se il nuovo valore non � del tipo appropriato non viene fatta alcuna modifica
 	 * @param name il nome del campo di cui modificare il valore
 	 * @param nValue il nuovo valore
@@ -67,8 +67,8 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 		return false;
 	}
 	/**
-	 * Controlla se un set di campi � valido ( i campi obbligatori non hanno valore nullo) 
-	 * @return  True - se il set � valido<br>False - se il set non � valido
+	 * Controlla se un set di campi è valido ( i campi obbligatori non hanno valore nullo) 
+	 * @return  True - se il set è valido<br>False - se il set non è valido
 	 */
 	public boolean isValid() {
 		if( this.stream()

@@ -110,7 +110,7 @@ public class Proposta implements Serializable{
 		return aState.equals(s);
 	}
 	/**
-	 * Avvisa la proposta che � stata resa pubblica
+	 * Avvisa la proposta che è stata resa pubblica
 	 */
 	public void pubblica() {
 		aState.pubblica(this);
@@ -142,6 +142,6 @@ public class Proposta implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Propositore : " + proprietario + "\n" + evento.toString() + "Stato : " + aState + "\n";
+		return "Propositore : " + proprietario + "\n" + evento.toString();
 	}
 }

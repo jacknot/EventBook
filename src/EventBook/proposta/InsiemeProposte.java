@@ -19,7 +19,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 */
 	private static final long serialVersionUID = -2744536594935868510L;
 	/**
-	 * Lo stato che desidero tutte le proste nella lista abbiano
+	 * Lo stato che desidero tutte le proposte nella lista abbiano
 	 */
 	private final Stato univoco;
 	
@@ -48,10 +48,17 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
-	private void clean() {
-		this.stream()
+	private  void clean() {
+		ArrayList<Proposta> toClean = new ArrayList<Proposta>();
+		for(Proposta proposta : this) {
+			if(!proposta.sameState(univoco)) {
+				toClean.add(proposta);
+			}
+		}
+		removeAll(toClean);
+		/*this.stream()
 				.filter(( p ) -> !p.sameState(univoco))
-				.forEach(( p ) -> remove(p));
+				.forEach(( p ) -> remove(p));*/
 	}
 	//refreshAll : OK
 	/**

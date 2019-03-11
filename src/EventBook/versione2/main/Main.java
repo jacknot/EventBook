@@ -258,13 +258,14 @@ public class Main {
 					int i = Integer.parseInt(in.nextLine());
 					valido = true;
 					if(!session.getProprietario().removeMsg(i))
-						System.out.println("La rimozione non è andata a fine");
+						System.out.println("La rimozione non è andata a buon fine");
 				}catch(Exception e) {
 					System.out.println("Dato invalido, inserisci un numero");
 				}
 			}while(!valido);
 		}),
 		MOSTRA_BACHECA("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
+			bacheca.refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente vedrà la bacheca aggiornata
 			System.out.print("Le proposte in bacheca:\n" + bacheca.showContent());
 		}),
 		PUBBLICA("pubblica", "Pubblica un evento creato", ()->{
