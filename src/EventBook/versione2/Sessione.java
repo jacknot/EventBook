@@ -88,7 +88,7 @@ public class Sessione {
 	 */
 	public String showInProgress() {
 		StringBuilder stringaRitorno = new StringBuilder();
-		IntStream.of(0, insiemeProposte.size() - 1)
+		IntStream.range(0, insiemeProposte.size())
 					.forEachOrdered((i)->stringaRitorno.append(i + " : " + insiemeProposte.get(i).toString() + "\n"));
 		return stringaRitorno.toString();
 	}

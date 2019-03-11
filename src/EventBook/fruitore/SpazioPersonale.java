@@ -53,7 +53,7 @@ public class SpazioPersonale implements Serializable{
 	 */
 	public String toString() {
 		StringBuffer temp = new StringBuffer(FORMAT_TO_STRING);
-		IntStream.of(0, messageList.size() - 1)
+		IntStream.range(0, messageList.size())
 					.forEachOrdered((i)->temp.append(i + " : " + messageList.get(i).toString() + "\n"));
 		return String.format(temp.toString());
 	}

@@ -89,8 +89,8 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 */
 	public String showContent() {
 		StringBuilder sb = new StringBuilder();
-		IntStream.of(0, size() - 1)
-				.forEachOrdered((i)->sb.append(i + " : " + get(i).toString() + "\n"));
+		IntStream.range(0, size())
+					.forEachOrdered((i)->sb.append(i + " : " + get(i).toString() + "\n"));
 		return sb.toString();
 	}
 	/**

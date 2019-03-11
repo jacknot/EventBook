@@ -1,11 +1,13 @@
 package EventBook.tipiDato;
 
+import java.io.Serializable;
+
 /**
  * Classe con il compito di poter istanziare dati relativi al genere di una persona
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class Gender {
+public class Gender implements Serializable{
 	
 	/**
 	 * Il genere 
