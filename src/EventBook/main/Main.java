@@ -1,14 +1,13 @@
-package EventBook.versione2.main;
+package EventBook.main;
 
 import java.util.*;
 import java.util.stream.*;
 
 import EventBook.campi.*;
 import EventBook.categoria.*;
+import EventBook.fruitore.Database;
 import EventBook.proposta.*;
-import EventBook.versione2.Database;
-import EventBook.versione2.FileHandler;
-import EventBook.versione2.Sessione;
+import EventBook.utility.*;
 
 /**
  * Classe contente il punto di partenza da cui far iniziare il programam

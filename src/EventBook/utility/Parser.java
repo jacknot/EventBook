@@ -1,4 +1,4 @@
-package EventBook.versione2;
+package EventBook.utility;
 
 /**
  * Interfaccia funzionale con il compito di definire il comportamento di oggetti di estrazione da una stringa

@@ -1,8 +1,8 @@
-package EventBook.versione2.main;
+package EventBook.main;
 
 import java.util.ArrayList;
 
-import EventBook.versione2.main.Main.Comando;
+import EventBook.main.Main.Comando;
 
 /**
  * Contenitore in grado di gestire una lista di comandi e di poter fare operazioni su di essi

@@ -1,4 +1,4 @@
-package EventBook.versione2;
+package EventBook.utility;
 
 import java.io.File;
 import java.io.FileInputStream;

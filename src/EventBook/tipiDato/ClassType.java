@@ -5,7 +5,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.StringTokenizer;
 
-import EventBook.versione2.Parser;
+import EventBook.utility.Parser;
+
 
 
 /**
