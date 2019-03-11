@@ -60,7 +60,9 @@ public enum Stato implements Serializable{
 		 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
 		 */
 		public boolean canSubscribe(Proposta p) {
-			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1; //integer.class.cast  o Integer.parse(p.getvalue) ?
+			//integer.class.cast  o Integer.parse(p.getvalue) ?
+			//è un cast perchè il campo tiene un valore di tipo intero
+			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1; 
 		}
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
@@ -69,15 +71,18 @@ public enum Stato implements Serializable{
 			LocalDate todayDate = LocalDate.now();
 			//data ultima iscrizione
 			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
+			//gestione titolo non inserito
+			String titolo = p.getValue(ExpandedHeading.TITOLO.getName()) == null?
+					UNKNOWN_TITLE:p.getValue(ExpandedHeading.TITOLO.getName()).toString();
 			//todayDate <= lastSubDate && subs == full
 			if(todayDate.compareTo(lastSubDate) <= 0 &&
 					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(CHIUSA);
 				p.send(new Messaggio(	//messaggio che avvisa che la proposta è chiusa
-						p.getValue(ExpandedHeading.TITOLO.getName()).toString(),
+						titolo,
 						CONFIRMOBJ,															
-						String.format(CONFIRMFORMAT, p.getValue(ExpandedHeading.TITOLO.getName()),
+						String.format(CONFIRMFORMAT, titolo,
 													p.getValue(ExpandedHeading.DATA.getName()),
 													p.getValue(ExpandedHeading.ORA.getName()),
 													p.getValue(ExpandedHeading.LUOGO.getName()),
@@ -89,10 +94,11 @@ public enum Stato implements Serializable{
 					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(FALLITA);
+				
 				p.send(new Messaggio(	//messaggio che avvisa che la proposta è fallita
-						p.getValue(ExpandedHeading.TITOLO.getName()).toString(),	
+						titolo,	
 						FAILUREOBJ,
-						String.format(FAILUREFORMAT, p.getValue(ExpandedHeading.TITOLO.getName()))
+						String.format(FAILUREFORMAT, titolo)
 						));
 				return true;
 			}
@@ -138,6 +144,7 @@ public enum Stato implements Serializable{
 		}
 	};
 	
+	private static final String UNKNOWN_TITLE = "(titolo mancante)";
 	private static final String CONFIRMOBJ = "Conferma evento";
 	private static final String FAILUREOBJ = "Fallimento evento";
 	//data ora luogo importo

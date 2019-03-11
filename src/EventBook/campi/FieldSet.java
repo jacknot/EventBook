@@ -56,7 +56,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	}
 	/**
 	 * Imposta il valore del campo di cui si è inserito il nome.<br>
-	 * Se il nuovo valore non � del tipo appropriato non viene fatta alcuna modifica
+	 * Se il nuovo valore non è del tipo appropriato non viene fatta alcuna modifica
 	 * @param name il nome del campo di cui modificare il valore
 	 * @param nValue il nuovo valore
 	 * @return l'esito della modifica

@@ -9,7 +9,7 @@ package EventBook.fruitore;
 public interface Notificabile {
 	/**
 	 * L'oggetto che implementa questa interfaccia deve poter gestire la ricezione di un messaggio
-	 * @param msg
+	 * @param msg il messaggio che deve ricevere
 	 */
 	public void ricevi(Messaggio msg);
 }

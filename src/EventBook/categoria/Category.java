@@ -1,7 +1,9 @@
 package EventBook.categoria;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
+import EventBook.campi.ExpandedHeading;
 import EventBook.campi.FieldSet;
 
 
@@ -70,7 +72,9 @@ public abstract class Category implements Cloneable,Serializable{
 	 * @return True - se l'evento è valido<br>False - se l'evento non è valido
 	 */
 	public boolean isValid() {
-		return fields.isValid();
+		//controllo sulla sequenzialità delle date
+		return fields.isValid() && ((LocalDate)fields.getValue(ExpandedHeading.DATA.getName()))
+										.compareTo((LocalDate)fields.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName())) >= 0;
 	}
 	
 	/* (non-Javadoc)

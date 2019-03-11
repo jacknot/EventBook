@@ -70,7 +70,7 @@ public class FieldSetFactory {
 	}
 	/**Restituisce un contenitore di campi a seconda del tipo inserito in ingresso
 	 * @param tipo il tipo di contenitore da generare
-	 * @return il contenitore di campi del tipo desiderato (null se il tipo inserito non � contemplato)
+	 * @return il contenitore di campi del tipo desiderato (null se il tipo inserito non è contemplato)
 	 */
 	public FieldSet getContenitore(String tipo){
 		if(!types.containsKey(tipo))

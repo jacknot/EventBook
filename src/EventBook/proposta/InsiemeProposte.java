@@ -12,8 +12,6 @@ import EventBook.fruitore.Notificabile;
  *
  */
 public class InsiemeProposte extends ArrayList<Proposta> implements Serializable{
-	//occhio a metodi non voluti/pericolosi
-	//definisci interfaccia per limitarli
 	/**
 	 * 
 	 */
@@ -31,7 +29,6 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 		super();
 		univoco = nState;
 	}
-	//aggiungere nuove proposte : add(Proposta)
 	/* (non-Javadoc)
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
@@ -44,23 +41,16 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 		}
 		return false;
 	}
-	//pulire dalle proposte che non piacciono : OK
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
 	private  void clean() {
 		ArrayList<Proposta> toClean = new ArrayList<Proposta>();
-		for(Proposta proposta : this) {
-			if(!proposta.sameState(univoco)) {
-				toClean.add(proposta);
-			}
-		}
+		this.stream()
+			.filter((p)->!p.sameState(univoco))
+			.forEach((p)->toClean.add(p));
 		removeAll(toClean);
-		/*this.stream()
-				.filter(( p ) -> !p.sameState(univoco))
-				.forEach(( p ) -> remove(p));*/
 	}
-	//refreshAll : OK
 	/**
 	 * Effettua un refresh delle proposte nel set
 	 */
@@ -69,7 +59,6 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 				.forEach(( p ) -> p.aggiornaStato());
 		clean();
 	}
-	//iscrivi un Notificabile ad una proposta : OK
 	/**
 	 * Iscrivi un utente nella proposta di cui si è inserito l'identificatore
 	 * @param id l'identificatore della proposta a cui aggiungere l'utente

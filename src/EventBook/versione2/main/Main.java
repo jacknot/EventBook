@@ -294,6 +294,8 @@ public class Main {
 				valido = true;
 				if(!bacheca.iscrivi(id, session.getProprietario()))
 					System.out.println("L'iscrizione non è andata a buon fine");
+				else
+					System.out.println("L'iscrizione è andata a buon fine");
 				}catch(Exception e) {
 					System.out.println("Inserisci un numero");
 				}

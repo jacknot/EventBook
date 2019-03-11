@@ -28,14 +28,13 @@ public class Database implements Serializable{
 	 * @param name il nome del fruitore
 	 * @return il fruitore di cui si è inserito il nome, null altrimenti
 	 */
-	//estendere rilasciando una Sessione con già incorporato il fruitore
 	public Fruitore getFruitore(String name) {
 		if(contains(name))
 			return fruitori.stream().filter((f)->f.getName().equals(name)).findFirst().get();
 		return null;
 	}
 	/**
-	 * Controlla se il fruitore � registrato
+	 * Controlla se il fruitore è registrato
 	 * @param name Il nome del fruitore da cercare
 	 * @return True - se esiste un fruitore con tale nome <br>False - se il fruitore non esiste
 	 */
