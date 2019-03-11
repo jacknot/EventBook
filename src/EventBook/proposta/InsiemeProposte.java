@@ -90,7 +90,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	public synchronized String showContent() {
 		StringBuilder sb = new StringBuilder();
 		IntStream.range(0, size())
-					.forEachOrdered((i)->sb.append(i + " : " + get(i).toString() + "\n"));
+					.forEachOrdered((i)->sb.append("\n" + i + " : " + get(i).toString()));
 		return sb.toString();
 	}
 	/**

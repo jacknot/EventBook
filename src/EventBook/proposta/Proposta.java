@@ -14,6 +14,7 @@ import EventBook.fruitore.Notificabile;
  */
 public class Proposta implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	/**
 	 * La categoria a cui la proposta fa riferimento
 	 */
@@ -141,6 +142,6 @@ public class Proposta implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Propositore : " + proprietario + "\n" + evento.toString();
+		return "Propositore : " + proprietario + "\n" + evento.toString() + "Stato : " + aState;
 	}
 }

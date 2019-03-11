@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 public class Interval implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	//ATTRIBUTI
 	/**
 	 * Il minore fra i due dati

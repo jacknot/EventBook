@@ -14,7 +14,7 @@ public enum ExpandedHeading{
 	LUOGO("Luogo", "Indirizzo del luogo che ospiterà l'evento oppure, se l'evento è itinerante, il luogo di ritrovo dei partecipanti", true, ClassType.STRING),
 	DATA("Data", "Data in cui l'evento proposto deve svolgersi o, nel caso l'evento non termini nello stesso giorno in cui ha inizio, la data dell'inizio dell'evento", true, ClassType.DATA),
 	ORA("Ora", "Ora in cui i partecipanti dovranno trovarsi nel luogo \"Luogo\" in data \"Data\" per dare inizio all'evento", true, ClassType.ORA),
-	DURATA("Durata", "Durata in termini di numero (approssimativo) di ore e minuti, per gli eventi che si esauriscono in un sol giorno, o in termini di numero esatto di giorni, per gli eventi che occupano più giorni	consecutivi", false, ClassType.INTEGER),
+	DURATA("Durata", "Durata in termini di numero (approssimativo) di ore e minuti, per gli eventi che si esauriscono in un sol giorno, o in termini di numero esatto di giorni, per gli eventi che occupano più giorni	consecutivi", false, ClassType.ORA),
 	QUOTAINDIVIDUALE("Quota individuale", "Spesa (o una stima della stessa) che ogni partecipante all'iniziativa dovrà sostenere (Può anche essere nulla)", true, ClassType.REAL),
 	COMPRESONELLAQUOTA("Compreso nella quota", "Tutte le voci di spesa comprese nell'ammontare indicato nella \"Quota individuale\"", false,  ClassType.STRING),
 	DATACONCLUSIVA("Data conclusiva", "Data di conclusione dell'evento", false,  ClassType.DATA),
@@ -44,7 +44,8 @@ public enum ExpandedHeading{
 	/**
 	 * Formattazione per la visualizzazione testuale dell'oggetto
 	 */
-	private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s";
+	//private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s";
+	private final static String STRINGA_TO_STRING = "Nome: %s%s%nDescrizione: %s";
 	
 	/**Restituisce il nome
 	 * @return Il nome
@@ -94,7 +95,10 @@ public enum ExpandedHeading{
 	 * @see java.lang.Enum#toString()
 	 */
 	public String toString() {
-		return String.format(STRINGA_TO_STRING, name, description, binding);
+		String bindingString = "";
+		if(!binding)
+			bindingString = " [Facoltativo]";
+		return String.format(STRINGA_TO_STRING, name, bindingString, description);
 	}
 	/**
 	 * Controlla se le due intestazioni sono uguali

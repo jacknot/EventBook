@@ -12,6 +12,7 @@ import EventBook.fruitore.Messaggio;
  */
 public class Database implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Lista contenente i fruitori registrati
 	 */

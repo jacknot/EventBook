@@ -15,23 +15,23 @@ import EventBook.versione2.Parser;
  */
 public enum ClassType {
 
-	STRING(String.class, "\\D+", (str) -> str),
-	INTEGER(Integer.class, "\\d+", (i) -> Integer.parseInt(i)),
-	REAL(Double.class, "\\d+\\.\\d{2}", (real) -> Double.parseDouble(real)),
-	DATA(LocalDate.class, "(0[1-9]|[1-2][0-9]|3[0-1])\\/(0[1-9]|1[0-2])\\/(2[0-9]{3})", (data) ->{
+	STRING(String.class, "\\D+", "Stringa", (str) -> str),
+	INTEGER(Integer.class, "\\d+", "Numero intero", (i) -> Integer.parseInt(i)),
+	REAL(Double.class, "\\d+\\.\\d{2}", "Numero reale con . e due decimali", (real) -> Double.parseDouble(real)),
+	DATA(LocalDate.class, "(0[1-9]|[1-2][0-9]|3[0-1])\\/(0[1-9]|1[0-2])\\/(2[0-9]{3})", "gg/mm/aaaa", (data) ->{
 		return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}),
-	ORA(LocalTime.class, "(0[1-9]|1[0-9]|2[0-3]):([0-5][0-9])", (ora) -> {
+	ORA(LocalTime.class, "(0[1-9]|1[0-9]|2[0-3]):([0-5][0-9])", "hh:mm", (ora) -> {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		return LocalTime.parse(ora, formatter);
 	}),
-	INTERVAL(Interval.class, "\\d{1,2}-\\d{1,2}", (interval) ->{
+	INTERVAL(Interval.class, "\\d{1,2}-\\d{1,2}", "anni-anni", (interval) ->{
 		StringTokenizer tokenizer = new StringTokenizer(interval, "-");
 		return new Interval(Integer.parseInt(tokenizer.nextToken()), Integer.parseInt(tokenizer.nextToken()));
 	}),
-	GENDER(Gender.class, "[m|f]" ,(gender)->{
-		return new Gender(gender.equals("f"));
-		});
+	GENDER(Gender.class, "[MF]" ,"M/F", (gender)->{
+		return new Gender(gender.matches("F"));
+	});
 	
 	/**
 	 * Tipo di ritorno
@@ -41,6 +41,10 @@ public enum ClassType {
 	 * L'espressione regolare con il compito di definire le regole tramite le quali analizzare la stringa
 	 */
 	private String regex;
+	/**
+	 * Stringa utile a spiegare all'utente come inserire il dato nel modo corretto
+	 */
+	private String syntax;
 	/**
 	 * La logica per estrarre il tipo di dato corretto
 	 */
@@ -52,9 +56,10 @@ public enum ClassType {
 	 * @param regex l'espressione regolare legata al tipo
 	 * @param parser la logica di estrazione da una stringa
 	 */
-	private ClassType(Class<?> type, String regex, Parser<?> parser) {
+	private ClassType(Class<?> type, String regex, String syntax, Parser<?> parser) {
 		this.type = type;
 		this.regex = regex;
+		this.syntax = syntax;
 		this.parser = parser;
 	}
 	/**
@@ -66,11 +71,11 @@ public enum ClassType {
 		return obj.matches(regex);
 	}
 	/**
-	 * Restituisce l'espressione regolare legata al dato
-	 * @return l'espressione regolare legata al dato
+	 * Restituisce la sintassi da utilizzare
+	 * @return sintassi
 	 */
-	public String getRegex(){
-		return regex;
+	public String getSyntax(){
+		return syntax;
 	}
 	/**
 	 * Traduce una stringa nel tipo voluto

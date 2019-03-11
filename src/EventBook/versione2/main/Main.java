@@ -1,6 +1,5 @@
 package EventBook.versione2.main;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.*;
 
@@ -65,7 +64,7 @@ public class Main {
 		System.out.println(NEW_LINE + MESSAGGIO_BENVENUTO);
 		do {
 			System.out.print(NEW_LINE + ATTESA_COMANDO);
-			comando = in.nextLine();		
+			comando = in.nextLine().trim();		
 			System.out.print(NEW_LINE);
 			if(protocollo.contains(comando))
 				protocollo.run(comando);
@@ -190,7 +189,7 @@ public class Main {
 				if(obj != null)
 					valido = true;
 				else
-					System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo " + campo.getClassType().getRegex());
+					System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + campo.getClassType().getSyntax());
 			}while(!valido);
 			//conferma modifica
 			valido = false;
@@ -220,7 +219,7 @@ public class Main {
 						boolean valid = false;
 						System.out.println(fd.toString());
 						do {
-							System.out.print("Inserisci un valore per il campo: ");
+							System.out.print("\tInserisci un valore per il campo: ");
 							String value = in.nextLine();
 							if(!fd.isBinding() && value.isEmpty()) {
 								valid = true;
@@ -229,13 +228,13 @@ public class Main {
 							if(fd.getClassType().isValidType(value)) {
 								valid = true;
 								if(evento.setValue(fd.getName(), fd.getClassType().parse(value)))
-									System.out.println("Dato inserito correttamente\n");
+									System.out.println("\tDato inserito correttamente\n");
 								else
-									System.out.println("Il dato non è stato inserito correttamente\n");
+									System.out.println("\tIl dato non è stato inserito correttamente\n");
 							}
 							if(!valid)
-								System.out.println(NEW_LINE + "Il dato inserito non è valido.\nInserisci qualcosa del tipo "
-														+ fd.getClassType().getRegex()+"\n");
+								System.out.println(NEW_LINE + "\tIl dato inserito non è valido.\n\tInserisci qualcosa di tipo "
+														+ fd.getClassType().getSyntax() +"\n");
 						}while(!valid);
 					});
 			if(session.aggiungiProposta(new Proposta(evento, session.getProprietario())))
@@ -243,7 +242,12 @@ public class Main {
 			else
 				System.out.println("La proposta non è stata aggiunta");
 		}),
-		MOSTRA_IN_LAVORAZIONE("mostraInLavorazione", "Visualizza le tue proposte", ()->System.out.print(session.showInProgress())),
+		MOSTRA_IN_LAVORAZIONE("mostraInLavorazione", "Visualizza le tue proposte", ()->{
+			String proposte = session.showInProgress();
+			if(proposte.equals(""))
+				System.out.print("Nessuna proposta in lavorazione!");
+			else System.out.print(session.showInProgress());			
+		}),
 		MOSTRA_NOTIFICHE("mostraNotifiche","Mostra le tue notifiche", ()->System.out.println(session.showNotification())),
 		RIMUOVI_NOTIFICA("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",()->{
 			boolean valido = false;
@@ -260,7 +264,7 @@ public class Main {
 			}while(!valido);
 		}),
 		MOSTRA_BACHECA("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
-			System.out.print("Le proposte in bacheca:\n\n" + bacheca.showContent());
+			System.out.print("Le proposte in bacheca:\n" + bacheca.showContent());
 		}),
 		PUBBLICA("pubblica", "Pubblica un evento creato", ()->{
 			boolean valido = false;

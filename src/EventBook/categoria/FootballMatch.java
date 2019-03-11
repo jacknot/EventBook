@@ -7,6 +7,9 @@ import EventBook.campi.FieldSetFactory;
  *
  */
 public class FootballMatch extends Category{
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Costruttore
 	 */

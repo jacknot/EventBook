@@ -13,7 +13,7 @@ import EventBook.campi.FieldSet;
  */
 public abstract class Category implements Cloneable,Serializable{
 	
-	//attributi
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * Contiene i campi

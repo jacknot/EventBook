@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public class Gender implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Il genere 
 	 */

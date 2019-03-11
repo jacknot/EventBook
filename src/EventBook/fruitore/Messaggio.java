@@ -8,6 +8,8 @@ import java.io.Serializable;
  */
 public class Messaggio implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+	
 	private String addresser;
 	private String object;
 	private String description;
