@@ -76,6 +76,7 @@ public enum ExpandedHeading{
 	 * @param nome Il nome
 	 * @param descrizione La descrizione
 	 * @param obbligatorio Se obbligatorio
+	 * @param type il tipo di dato associato alla descrizione
 	 */
 	private ExpandedHeading(String nome, String descrizione, boolean obbligatorio, ClassType type) {
 		this.name = nome;

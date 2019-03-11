@@ -55,6 +55,7 @@ public enum ClassType {
 	 * Costruttore
 	 * @param type il tipo di dato
 	 * @param regex l'espressione regolare legata al tipo
+	 * @param syntax la traduzione in lunguaggio naturale del regex inserito
 	 * @param parser la logica di estrazione da una stringa
 	 */
 	private ClassType(Class<?> type, String regex, String syntax, Parser<?> parser) {
