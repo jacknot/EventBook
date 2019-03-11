@@ -142,6 +142,6 @@ public class Proposta implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Propositore : " + proprietario + "\n" + evento.toString() + "Stato : " + aState;
+		return "Propositore : " + proprietario + "\n" + evento.toString() + "Stato : " + aState + "\n";
 	}
 }

@@ -151,6 +151,7 @@ public class Main {
 		LOGOUT("logout", "Per uscire", ()->{
 			session = null;
 			logOut();
+			System.out.println("Logout eseguito");
 			}),
 		MODIFICA("modifica","Modifica il campo di una proposta",()->{
 			boolean annulla = false;
