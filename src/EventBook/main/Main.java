@@ -32,7 +32,7 @@ public class Main {
 	private static Database db;
 	private static InsiemeProposte bacheca;
 	
-	private static final long DELAY = 20000;//300000;//5MIN
+	private static final long DELAY = 3600000;//60MIN
 	/**
 	 * Il punto da cui far iniziare il programma
 	 * @param args lista di argomenti da passare
