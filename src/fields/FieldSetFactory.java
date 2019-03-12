@@ -69,13 +69,13 @@ public class FieldSetFactory {
 		return cc;
 	}
 	/**Restituisce un contenitore di campi a seconda del tipo inserito in ingresso
-	 * @param tipo il tipo di contenitore da generare
+	 * @param type il tipo di contenitore da generare
 	 * @return il contenitore di campi del tipo desiderato (null se il tipo inserito non è contemplato)
 	 */
-	public FieldSet getContenitore(String tipo){
-		if(!types.containsKey(tipo))
+	public FieldSet getSet(String type){
+		if(!types.containsKey(type))
 			return null;
-		return types.get(tipo).get();
+		return types.get(type).get();
 	} 
 	//End Factory
 }
