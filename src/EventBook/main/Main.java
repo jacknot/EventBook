@@ -246,7 +246,9 @@ public class Main {
 			String proposte = session.showInProgress();
 			if(proposte.equals(""))
 				System.out.print("Nessuna proposta in lavorazione!");
-			else System.out.print(session.showInProgress());			
+			else {
+				System.out.print("Le proposte in lavorazione:\n" + session.showInProgress());			
+			}
 		}),
 		MOSTRA_NOTIFICHE("mostraNotifiche","Mostra le tue notifiche", ()->System.out.println(session.showNotification())),
 		RIMUOVI_NOTIFICA("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",()->{
