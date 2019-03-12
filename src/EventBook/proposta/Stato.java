@@ -60,8 +60,6 @@ public enum Stato implements Serializable{
 		 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
 		 */
 		public boolean canSubscribe(Proposta p) {
-			//integer.class.cast  o Integer.parse(p.getvalue) ?
-			//è un cast perchè il campo tiene un valore di tipo intero
 			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1; 
 		}
 		/* (non-Javadoc)

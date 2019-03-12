@@ -46,7 +46,7 @@ public class Field <T> implements Serializable{
 	public Field(ExpandedHeading head) {
 		this.heading = head;
 		//Il cast non genera problemi dato che stiamo dando un tipo consistente con l'intestazione del campo ( head )
-		this.type = (Class<T>) head.getType(); //SOPPRIMERE O NO IL WARNING?
+		this.type = (Class<T>) head.getType(); 
 		this.value = null;
 	}
 	
