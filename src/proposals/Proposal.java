@@ -90,6 +90,7 @@ public class Proposal implements Serializable{
 	/**
 	 * Iscrive un fruitore alla proposta 
 	 * @param user il fruitore da iscrivere
+	 * @return True - l'utente è stato correttamente iscritto alla proposta<br>False - l'utente non è stato iscritto alla proposta
 	 */
 	public boolean signUp(Notifiable user) {
 		if(aState.canSignUp(this)){

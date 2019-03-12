@@ -339,7 +339,7 @@ public class Main {
 	
 		/**
 		 * Restituisce la descrizione del comando
-		 * @return
+		 * @return restituisce la descrizione del comando
 		 */
 		public String getDescription() {
 			return description;

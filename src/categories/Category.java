@@ -47,6 +47,7 @@ public abstract class Category implements Cloneable,Serializable{
 	 * Modifica il valore del campo di cui si è inserito il nome
 	 * @param name il nome del campo
 	 * @param nValue il nuovo valore del campo
+	 * @return True - il campo è stato modificato<br>False - il campo non è stato modificato
 	 */
 	public boolean setValue(String name, Object nValue) {
 		return fields.setValue(name, nValue);
