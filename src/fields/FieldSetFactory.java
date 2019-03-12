@@ -1,9 +1,9 @@
-package EventBook.campi;
+package fields;
 
 import java.util.*;
 import java.util.function.Supplier;
 
-import EventBook.categoria.Heading;
+import categories.Heading;
 
 
 /**Implementazione Design Pattern Factory per generare diversi tipi di contenitore di campi a seconda delle esigenze.<br>

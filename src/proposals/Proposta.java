@@ -1,11 +1,11 @@
-package EventBook.proposta;
+package proposals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import EventBook.categoria.Category;
-import EventBook.fruitore.Messaggio;
-import EventBook.fruitore.Notificabile;
+import categories.Category;
+import users.Messaggio;
+import users.Notificabile;
 
 /**
  * Una proposta fa riferimento ad un particolare evento e consente di potersi iscrivere ad essa

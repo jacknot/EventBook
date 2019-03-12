@@ -1,4 +1,4 @@
-package EventBook.campi;
+package fields;
 
 import java.io.Serializable;
 import java.util.ArrayList;

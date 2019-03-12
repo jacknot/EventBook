@@ -1,4 +1,4 @@
-package EventBook.tipiDato;
+package dataTypes;
 
 import java.io.Serializable;
 

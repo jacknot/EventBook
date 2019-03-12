@@ -1,10 +1,10 @@
-package EventBook.proposta;
+package proposals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import EventBook.fruitore.Notificabile;
+import users.Notificabile;
 
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato

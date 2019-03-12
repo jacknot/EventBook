@@ -1,10 +1,10 @@
-package EventBook.proposta;
+package proposals;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import EventBook.campi.ExpandedHeading;
-import EventBook.fruitore.Messaggio;
+import fields.ExpandedHeading;
+import users.Messaggio;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare

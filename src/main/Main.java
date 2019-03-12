@@ -1,13 +1,13 @@
-package EventBook.main;
+package main;
 
 import java.util.*;
 import java.util.stream.*;
 
-import EventBook.campi.*;
-import EventBook.categoria.*;
-import EventBook.fruitore.Database;
-import EventBook.proposta.*;
-import EventBook.utility.*;
+import categories.*;
+import fields.*;
+import proposals.*;
+import users.Database;
+import utility.*;
 
 /**
  * Classe contente il punto di partenza da cui far iniziare il programam

@@ -1,8 +1,8 @@
-package EventBook.campi;
+package fields;
 
 import java.io.Serializable;
 
-import EventBook.tipiDato.ClassType;
+import dataTypes.ClassType;
 
 /**La classe Campo ha il compito di fornire una struttura adatta a contenere una descrizione ed un valore.<br>
  * Il valore che contiene può essere di diversi tipi, per ogni campo questo deve essere specificato.<br>

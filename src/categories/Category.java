@@ -1,10 +1,10 @@
-package EventBook.categoria;
+package categories;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import EventBook.campi.ExpandedHeading;
-import EventBook.campi.FieldSet;
+import fields.ExpandedHeading;
+import fields.FieldSet;
 
 
 /**

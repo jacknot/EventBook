@@ -1,11 +1,11 @@
-package EventBook.tipiDato;
+package dataTypes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.StringTokenizer;
 
-import EventBook.utility.Parser;
+import utility.Parser;
 
 
 

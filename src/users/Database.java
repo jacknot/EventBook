@@ -1,10 +1,10 @@
-package EventBook.fruitore;
+package users;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import EventBook.fruitore.Fruitore;
-import EventBook.fruitore.Messaggio;
+import users.Fruitore;
+import users.Messaggio;
 
 
 /**Classe che contiene la lista di tutti i Fruitori registrati al programma.<br>

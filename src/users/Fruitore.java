@@ -1,4 +1,4 @@
-package EventBook.fruitore;
+package users;
 
 import java.io.Serializable;
 

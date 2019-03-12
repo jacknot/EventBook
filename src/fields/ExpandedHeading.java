@@ -1,6 +1,6 @@
-package EventBook.campi;
+package fields;
 
-import EventBook.tipiDato.ClassType;
+import dataTypes.ClassType;
 
 /**Classe con il compito di contenere una descrizione corredata da informazioni relative alla sua obbligatorietà e il suo tipo
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]

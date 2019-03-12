@@ -1,10 +1,10 @@
-package EventBook.utility;
+package utility;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import EventBook.fruitore.Fruitore;
-import EventBook.proposta.Proposta;
+import proposals.Proposta;
+import users.Fruitore;
 
 
 /**Classe che consente di tenere in meomoria le proposte di un fruitore non ancora pubblicate, in modo da consentirne una modifica futura<br>
