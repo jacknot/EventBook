@@ -93,10 +93,10 @@ public class Main {
 	 * Salva la bacheca e il database
 	 */
 	private static void save() {
-		System.out.println("Salvataggio bacheca ...");
-		System.out.println(new FileHandler().save(BACHECA, bacheca));
-		System.out.println("Salvataggio database ...");
-		System.out.println(new FileHandler().save(DATABASE, db));
+		System.out.print("Salvataggio bacheca... ");
+		System.out.println((new FileHandler().save(BACHECA, bacheca))?"completato":"fallito");
+		System.out.print("Salvataggio database... ");
+		System.out.println((new FileHandler().save(DATABASE, db))?"completato":"fallito");
 	}
 	/**
 	 * Effettua operazioni sul protocollo a seguito del log in dell'utente
@@ -133,7 +133,7 @@ public class Main {
 			if(db.registra(nome))
 				System.out.println("L'utente è stato registrato con successo");
 			else
-				System.out.println("L'utente non è stato registrato");
+				System.out.println("L'utente è già esistente");
 		}),
 		LOGIN("login", "Accedi", ()->{
 			System.out.print("Inserisci il nome: ");
@@ -277,10 +277,12 @@ public class Main {
 					int id = Integer.parseInt(in.nextLine());
 					valido = true;
 					if(session.contains(id)) {
-						bacheca.add(session.getProposta(id));
-						System.out.println("Proposta aggiunta con successo");
+						if(bacheca.add(session.getProposta(id)))
+							System.out.println("Proposta aggiunta con successo");
+						else
+							System.out.println("La proposta inserita non è valida");
 					}else
-						System.out.println("La proposta inserita non è valida");
+						System.out.println("La proposta inserita non esiste");
 				}catch(Exception e) {
 					System.out.println("Inserisci un numero");
 				}
