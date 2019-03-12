@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import users.Notificabile;
+import users.Notifiable;
 
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class InsiemeProposte extends ArrayList<Proposta> implements Serializable{
+public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	/**
 	 * 
 	 */
@@ -19,23 +19,23 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	/**
 	 * Lo stato che desidero tutte le proposte nella lista abbiano
 	 */
-	private final Stato univoco;
+	private final State state;
 	
 	/**
 	 * Costruttore
 	 * @param nState lo stato in cui devono essere tutte le proposte inserite
 	 */
-	public InsiemeProposte(Stato nState) {
+	public ProposalSet(State nState) {
 		super();
-		univoco = nState;
+		this.state = nState;
 	}
 	/* (non-Javadoc)
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
-	public synchronized boolean add(Proposta p) {
+	public synchronized boolean add(Proposal p) {
 		if(!contains(p)) {
-			p.pubblica();
-			if(p.sameState(univoco)) {
+			p.publish();
+			if(p.hasState(state)) {
 				return super.add(p);
 			}
 		}
@@ -45,9 +45,9 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
 	private  void clean() {
-		ArrayList<Proposta> toClean = new ArrayList<Proposta>();
+		ArrayList<Proposal> toClean = new ArrayList<Proposal>();
 		this.stream()
-			.filter((p)->!p.sameState(univoco))
+			.filter((p)->!p.hasState(state))
 			.forEach((p)->toClean.add(p));
 		removeAll(toClean);
 	}
@@ -56,7 +56,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 */
 	public synchronized void refresh() {
 		this.stream()
-				.forEach(( p ) -> p.aggiornaStato());
+				.forEach(( p ) -> p.update());
 		clean();
 	}
 	/**
@@ -65,9 +65,9 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
 	 */
-	public synchronized boolean iscrivi(int id, Notificabile user) {
+	public synchronized boolean signUp(int id, Notifiable user) {
 		if(id < size())
-			return get(id).iscrivi(user);
+			return get(id).signUp(user);
 		return false;
 	}
 	/**
@@ -75,7 +75,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 * @param p il titolo della proposta
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
-	public synchronized boolean contains(Proposta p) {
+	public synchronized boolean contains(Proposal p) {
 		return this.stream()
 					.anyMatch(( sp ) -> sp.equals(p));
 	}
@@ -94,7 +94,7 @@ public class InsiemeProposte extends ArrayList<Proposta> implements Serializable
 	 * @return una nuova bacheca
 	 */
 	//da inserire potenzialmente in una Factory
-	public static InsiemeProposte newBacheca() {
-		return new InsiemeProposte(Stato.APERTA);
+	public static ProposalSet newNoticeBoard() {
+		return new ProposalSet(State.OPEN);
 	}
 }

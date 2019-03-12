@@ -8,13 +8,13 @@ import java.io.Serializable;
  */
 public enum Heading implements Serializable{	
 
-	PARTITADICALCIO("Partita di Calcio", "Una partita di calcio tra vari generi e età");
+	FOOTBALLMATCH("Partita di Calcio", "Una partita di calcio tra vari generi e età");
 	
 	/**
 	 * Definisce un formato per la visualizzazione sottoforma di stringa del contenuto dell'oggetto
 	 */
 
-	private final static String FORMAT_TO_STRING = "Nome: %s%nDescrizione: %s%n";
+	private final static String TOSTRING_FORMAT = "Nome: %s%nDescrizione: %s%n";
 	
 	/**
 	 * Contiene un nome
@@ -53,6 +53,6 @@ public enum Heading implements Serializable{
 	 * @see java.lang.Enum#toString()
 	 */
 	public String toString() {
-		return String.format(FORMAT_TO_STRING, name, description);
+		return String.format(TOSTRING_FORMAT, name, description);
 	}
 }

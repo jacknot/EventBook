@@ -3,39 +3,39 @@ package utility;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import proposals.Proposta;
-import users.Fruitore;
+import proposals.Proposal;
+import users.User;
 
 
 /**Classe che consente di tenere in meomoria le proposte di un fruitore non ancora pubblicate, in modo da consentirne una modifica futura<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class Sessione {
+public class Session {
 	/**
 	 * Il nome del fruitore proprietario della sessione
 	 */
-	private Fruitore proprietario;
+	private User owner;
 	
 	/**
 	 * Elenco di proposte che il proprietario ha in sospeso nella sessione corrente
 	 */
-	private ArrayList<Proposta> insiemeProposte;
+	private ArrayList<Proposal> proposalsSet;
 	/**
 	 * Costruttore
-	 * @param _proprietario Il nome del fruitore proprietario della sessione
+	 * @param owner Il nome del fruitore proprietario della sessione
 	 */
-	public Sessione(Fruitore _proprietario) {
-		proprietario = _proprietario;
-		insiemeProposte = new ArrayList<Proposta>();
+	public Session(User owner) {
+		this.owner = owner;
+		proposalsSet = new ArrayList<Proposal>();
 	}
 
 	/**
 	 * Restituisce il proprietario della sessione
 	 * @return Nome del fruitore proprietario
 	 */
-	public Fruitore getProprietario() {
-		return proprietario;
+	public User getOwner() {
+		return owner;
 	}
 
 	/**
@@ -43,9 +43,9 @@ public class Sessione {
 	 * @param id l'identificatore della proposta
 	 * @return la proposta identificata dall'identificatore, null se non è valida
 	 */
-	public Proposta getProposta(int id) {
-		if(id < insiemeProposte.size()) {
-			return insiemeProposte.get(id);
+	public Proposal getProposal(int id) {
+		if(id < proposalsSet.size()) {
+			return proposalsSet.get(id);
 		}
 		return null;
 	}
@@ -54,20 +54,20 @@ public class Sessione {
 	 * @param id l'identificatore
 	 * @return l'esito della rimozione
 	 */
-	public boolean removeProposta(int id) {
-		if(id < insiemeProposte.size()) {
-			insiemeProposte.remove(id);
+	public boolean removeProposal(int id) {
+		if(id < proposalsSet.size()) {
+			proposalsSet.remove(id);
 			return true;
 		}
 		return false;
 	}
 	/**
 	 * Aggiunge una proposta all'elenco delle proposte
-	 * @param proposta Proposta da aggiungere all'elenco
+	 * @param proposal Proposta da aggiungere all'elenco
 	 * @return L'esito dell'operazione
 	 */
-	public boolean aggiungiProposta(Proposta proposta) {
-		return insiemeProposte.add(proposta);
+	public boolean addProposal(Proposal proposal) {
+		return proposalsSet.add(proposal);
 	}
 	/**
 	 * Modifica una proposta esistente 
@@ -76,9 +76,9 @@ public class Sessione {
 	 * @param valore Nuovo valore da sostituire
 	 * @return l'esito della modifica
 	 */
-	public boolean modificaProposta(int id, String campo, Object valore) {
-		if(id < insiemeProposte.size()) {
-			return insiemeProposte.get(id).modifica(campo, valore);
+	public boolean modifyProposal(int id, String campo, Object valore) {
+		if(id < proposalsSet.size()) {
+			return proposalsSet.get(id).modify(campo, valore);
 			}
 		return false;
 	}
@@ -88,8 +88,8 @@ public class Sessione {
 	 */
 	public String showInProgress() {
 		StringBuilder stringaRitorno = new StringBuilder();
-		IntStream.range(0, insiemeProposte.size())
-					.forEachOrdered((i)->stringaRitorno.append("\n" + i + " : " + insiemeProposte.get(i).toString()));
+		IntStream.range(0, proposalsSet.size())
+					.forEachOrdered((i)->stringaRitorno.append("\n" + i + " : " + proposalsSet.get(i).toString()));
 		return stringaRitorno.toString();
 	}
 	/**
@@ -97,7 +97,7 @@ public class Sessione {
 	 * @return L'elenco delle notifiche sottoforma di stringa
 	 */
 	public String showNotification() {
-		return proprietario.getPrivateSpace().toString();
+		return owner.getPrivateSpace().toString();
 	}
 	/**
 	 * Controlla se la sessione contiene la proposta di cui si è inserito l'identificatore
@@ -105,6 +105,6 @@ public class Sessione {
 	 * @return True - contiene la proposta<br>False - non contiene la proposta
 	 */
 	public boolean contains(int id) {
-		return id >= 0 && id < insiemeProposte.size();
+		return id >= 0 && id < proposalsSet.size();
 	}
 }

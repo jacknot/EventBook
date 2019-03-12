@@ -39,7 +39,7 @@ public class CategoryCache {
 	 */
 	private static void loadCache() {
 		FootballMatch p = new FootballMatch();
-		set.put(Heading.PARTITADICALCIO, p);
+		set.put(Heading.FOOTBALLMATCH, p);
 	}
 	
 	/**Restituisce il clone di una particolare istanza di categoria

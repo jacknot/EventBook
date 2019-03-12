@@ -7,35 +7,35 @@ import java.util.stream.IntStream;
 /**La classe PrivateSpace ha il compito di fornire una struttura adatta a contenere e gestire un insieme di messaggi.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class SpazioPersonale implements Serializable{
+public class PersonalSpace implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Contiene i messaggi
 	 */
-	private ArrayList <Messaggio> messageList;
+	private ArrayList <Message> messageList;
 	
-	private final static String FORMAT_TO_STRING ="Spazio personale : %n%n";
+	private final static String TOSTRING_FORMAT ="Spazio personale : %n%n";
 	
 	/**
 	 * Costruttore per la classe PrivateSpace
 	 */
-	public SpazioPersonale() {
-		messageList = new ArrayList<Messaggio>();
+	public PersonalSpace() {
+		messageList = new ArrayList<Message>();
 	}
 	/**
 	 * Restituisce la lista dei messaggi
 	 * @return La lista dei messaggi
 	 */
-	public ArrayList <Messaggio> getMessageList() {
+	public ArrayList <Message> getMessageList() {
 		return messageList;
 	}
 	/**
 	 * Permette di aggiungere un nuovo messaggio alla lista
 	 * @param newMessage Il nuovo messaggio da aggiungere
 	 */
-	public void add(Messaggio newMessage) {
+	public void add(Message newMessage) {
 		messageList.add(newMessage);
 	}
 	/**
@@ -54,9 +54,9 @@ public class SpazioPersonale implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer temp = new StringBuffer(FORMAT_TO_STRING);
+		StringBuffer tmp = new StringBuffer(TOSTRING_FORMAT);
 		IntStream.range(0, messageList.size())
-					.forEachOrdered((i)->temp.append(i + " : " + messageList.get(i).toString() + "\n"));
-		return String.format(temp.toString());
+					.forEachOrdered((i)->tmp.append(i + " : " + messageList.get(i).toString() + "\n"));
+		return String.format(tmp.toString());
 	}
 }

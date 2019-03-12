@@ -6,10 +6,10 @@ package users;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public interface Notificabile {
+public interface Notifiable {
 	/**
 	 * L'oggetto che implementa questa interfaccia deve poter gestire la ricezione di un messaggio
 	 * @param msg il messaggio che deve ricevere
 	 */
-	public void ricevi(Messaggio msg);
+	public void receive(Message msg);
 }

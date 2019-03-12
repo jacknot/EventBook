@@ -4,21 +4,21 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import fields.ExpandedHeading;
-import users.Messaggio;
+import users.Message;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public enum Stato implements Serializable{
-	INVALIDA{
+public enum State implements Serializable{
+	INVALID{
 			/* (non-Javadoc)
 			 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 			 */
-			public boolean transiziona(Proposta p) {
-				if(p.isValida()) {
-					p.setState(VALIDA);
+			public boolean transition(Proposal p) {
+				if(p.isValid()) {
+					p.setState(VALID);
 					return true;
 				}
 				return false;
@@ -30,7 +30,7 @@ public enum Stato implements Serializable{
 				return true;
 			}
 	},
-	VALIDA{
+	VALID{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#canSet()
 		 */
@@ -40,9 +40,9 @@ public enum Stato implements Serializable{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
-		public boolean transiziona(Proposta p) {
-			if(!p.isValida()) {
-				p.setState(INVALIDA);
+		public boolean transition(Proposal p) {
+			if(!p.isValid()) {
+				p.setState(INVALID);
 				return true;
 			}
 			return false;
@@ -50,37 +50,37 @@ public enum Stato implements Serializable{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#pubblica(EventBook.versione2.Proposta)
 		 */
-		public boolean pubblica(Proposta p) {
-			p.setState(APERTA);
+		public boolean publish(Proposal p) {
+			p.setState(OPEN);
 			return true;
 		}
 	},
-	APERTA{
+	OPEN{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
 		 */
-		public boolean canSubscribe(Proposta p) {
+		public boolean canSignUp(Proposal p) {
 			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1; 
 		}
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
-		public boolean transiziona(Proposta p) {
+		public boolean transition(Proposal p) {
 			LocalDate todayDate = LocalDate.now();
 			//data ultima iscrizione
 			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
 			//gestione titolo non inserito
-			String titolo = p.getValue(ExpandedHeading.TITOLO.getName()) == null?
+			String title = p.getValue(ExpandedHeading.TITOLO.getName()) == null?
 					UNKNOWN_TITLE:p.getValue(ExpandedHeading.TITOLO.getName()).toString();
 			//todayDate <= lastSubDate && subs == full
 			if(todayDate.compareTo(lastSubDate) <= 0 &&
 					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
-				p.setState(CHIUSA);
-				p.send(new Messaggio(	//messaggio che avvisa che la proposta è chiusa
-						titolo,
+				p.setState(CLOSED);
+				p.send(new Message(	//messaggio che avvisa che la proposta è chiusa
+						title,
 						CONFIRMOBJ,															
-						String.format(CONFIRMFORMAT, titolo,
+						String.format(CONFIRMFORMAT, title,
 													p.getValue(ExpandedHeading.DATA.getName()),
 													p.getValue(ExpandedHeading.ORA.getName()),
 													p.getValue(ExpandedHeading.LUOGO.getName()),
@@ -91,23 +91,23 @@ public enum Stato implements Serializable{
 			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
 					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
 					) {
-				p.setState(FALLITA);
+				p.setState(ENDED);
 				
-				p.send(new Messaggio(	//messaggio che avvisa che la proposta è fallita
-						titolo,	
+				p.send(new Message(	//messaggio che avvisa che la proposta è fallita
+						title,	
 						FAILUREOBJ,
-						String.format(FAILUREFORMAT, titolo)
+						String.format(FAILUREFORMAT, title)
 						));
 				return true;
 			}
 			return false;
 		}
 	},
-	CHIUSA{
+	CLOSED{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
-		public boolean transiziona(Proposta p) {
+		public boolean transition(Proposal p) {
 			LocalDate tDate = LocalDate.now();
 			Object tmp = p.getValue(ExpandedHeading.DATACONCLUSIVA.getName());
 			if(tmp == null) {
@@ -129,15 +129,15 @@ public enum Stato implements Serializable{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
-		public boolean transiziona(Proposta p) {
+		public boolean transition(Proposal p) {
 			return false;
 		}		
 	},
-	FALLITA{
+	ENDED{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
-		public boolean transiziona(Proposta p) {
+		public boolean transition(Proposal p) {
 			return false;
 		}
 	};
@@ -155,7 +155,7 @@ public enum Stato implements Serializable{
 	 * @param p la proposta a cui fare cambiare stato
 	 * @return True - è stato cambiato stato con successo<br>False - non è stato cambiato stato alla proposta
 	 */
-	public boolean pubblica(Proposta p) {
+	public boolean publish(Proposal p) {
 		return false;
 	}
 	/**
@@ -163,7 +163,7 @@ public enum Stato implements Serializable{
 	 * @param p la proposta a cui far cambiare stato
 	 * @return True - è stato cambiato stato con successo<br>False - non è stato cambiato stato alla proposta
 	 */
-	public abstract boolean transiziona(Proposta p);
+	public abstract boolean transition(Proposal p);
 	/**
 	 * Verifica se lo stato attuale consente alla proposta di cambiare
 	 * @return True - lo consente<br>False - non lo consente
@@ -176,7 +176,7 @@ public enum Stato implements Serializable{
 	 * @param p la proposta inserita
 	 * @return True - ci si può iscrivere alla proposta<br>False - non ci si può iscrivere alla proposta
 	 */
-	public boolean canSubscribe(Proposta p) {
+	public boolean canSignUp(Proposal p) {
 		return false;
 	}
 }

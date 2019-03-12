@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Il messaggio è composto da tre attributi: mittente, oggetto e destinatario.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Messaggio implements Serializable{
+public class Message implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -14,7 +14,7 @@ public class Messaggio implements Serializable{
 	private String object;
 	private String description;
 	
-	private final static String FORMAT_TO_STRING ="<%s> %s : %s";
+	private final static String TOSTRING_FORMAT ="<%s> %s : %s";
 	
 	
 	/**
@@ -23,7 +23,7 @@ public class Messaggio implements Serializable{
 	 * @param object L'oggetto del messaggio
 	 * @param description La descrizione del messaggio
 	 */
-	public Messaggio(String addresser, String object, String description) {
+	public Message(String addresser, String object, String description) {
 		this.addresser = addresser;
 		this.object = object;
 		this.description = description;
@@ -57,7 +57,7 @@ public class Messaggio implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return String.format(FORMAT_TO_STRING, addresser, object, description);
+		return String.format(TOSTRING_FORMAT, addresser, object, description);
 	}
 	
 }

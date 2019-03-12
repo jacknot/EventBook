@@ -49,7 +49,7 @@ public enum ExpandedHeading{
 	 * Formattazione per la visualizzazione testuale dell'oggetto
 	 */
 	//private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s";
-	private final static String STRINGA_TO_STRING = "Nome: %s%s%nDescrizione: %s";
+	private final static String TOSTRING_FORMAT = "Nome: %s%s%nDescrizione: %s";
 	
 	/**Restituisce il nome
 	 * @return Il nome
@@ -92,6 +92,10 @@ public enum ExpandedHeading{
 		return type;
 	}
 	
+	/**
+	 * Restituisce il tipo di dato che l'intestazione può contenere
+	 * @return il tipo di dato che può contenere
+	 */
 	public Class<?> getType() {
 		return type.getType();
 	}
@@ -103,7 +107,7 @@ public enum ExpandedHeading{
 		String bindingString = "";
 		if(!binding)
 			bindingString = " [Facoltativo]";
-		return String.format(STRINGA_TO_STRING, name, bindingString, description);
+		return String.format(TOSTRING_FORMAT, name, bindingString, description);
 	}
 	/**
 	 * Controlla se le due intestazioni sono uguali

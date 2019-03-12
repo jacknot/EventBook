@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Ad ogni fruitore è associato, oltre al nome, uno spazio personale inizialmente vuoto<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Fruitore implements Serializable, Notificabile{
+public class User implements Serializable, Notifiable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -17,15 +17,15 @@ public class Fruitore implements Serializable, Notificabile{
 	/**
 	 * Lo spazio personale del fruitore
 	 */
-	private SpazioPersonale privateSpace;
+	private PersonalSpace privateSpace;
 	
 	/**
 	 * Costruttore per la classe User
 	 * @param name Il nome del fruitore
 	 */
-	public Fruitore(String name) {
+	public User(String name) {
 		this.name = name;
-		this.privateSpace = new SpazioPersonale();
+		this.privateSpace = new PersonalSpace();
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class Fruitore implements Serializable, Notificabile{
 	 * Aggiunge un messaggio allo spazio personale
 	 * @param message Il messaggio da aggiungere
 	 */
-	public void ricevi(Messaggio message) {
+	public void receive(Message message) {
 		privateSpace.add(message);
 	}
 	
@@ -53,18 +53,11 @@ public class Fruitore implements Serializable, Notificabile{
 		return privateSpace.remove(index);
 	}
 	/**
-	 * Ritorna la lista dei messaggi contenuta nello spazio personale
-	 * @return La lista dei messaggi contenuta nello spazio personale
-	 */
-	public String getPrivateSpace() {
-		return privateSpace.toString();
-	}
-	/**
 	 * Controlla se i due utenti sono uguali
 	 * @param f utente da controllare
 	 * @return true se uguali<br>false altrimenti
 	 */
-	public boolean equals(Fruitore f) {
+	public boolean equals(User f) {
 		return this.name.equals(f.name);
 	}
 	/* (non-Javadoc)
@@ -72,5 +65,12 @@ public class Fruitore implements Serializable, Notificabile{
 	 */
 	public String toString() {
 		return name;
+	}
+	/**
+	 * Restituisce lo spazio personale dell'utente attualmente connesso
+	 * @return lo spazio personale dell'utente
+	 */
+	public PersonalSpace getPrivateSpace() {
+		return this.privateSpace;
 	}
 }

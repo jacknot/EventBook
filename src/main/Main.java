@@ -15,22 +15,22 @@ import utility.*;
  *
  */
 public class Main {
-	private static final String BACHECA = "resource/bacheca.ser";
+	private static final String NOTICEBOARD = "resource/bacheca.ser";
 	private static final String DATABASE = "resource/registrazioni.ser";
 	
 	private static final String NEW_LINE = "\n";
-	private static final String MESSAGGIO_BENVENUTO = "Welcome to EventBook";
-	private static final String ATTESA_COMANDO = "> ";
-	private static final String MESSAGGIO_USCITA = "Bye Bye";
+	private static final String WELCOME = "Welcome to EventBook";
+	private static final String WAITING = "> ";
+	private static final String EXITMSG = "Bye Bye";
 	
-	private static final String ERRORE_SCONOSCIUTO = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
+	private static final String ERROR_UNKNOWN_COMMAND = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
 
 	private static Timer refreshTimer;
 	private static Scanner in;
-	private static ListaComandi protocollo;
-	private static Sessione session;
-	private static Database db;
-	private static InsiemeProposte bacheca;
+	private static CommandList protocol;
+	private static Session session;
+	private static Database database;
+	private static ProposalSet noticeBoard;
 	
 	private static final long DELAY = 3600000;//60MIN
 	/**
@@ -38,37 +38,36 @@ public class Main {
 	 * @param args lista di argomenti da passare
 	 */
 	public static void main(String[] args) {
-		protocollo = new ListaComandi();
+		protocol = new CommandList();
 		
 		//chiusura + terminazione anomala -> save
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 
-			System.out.println(MESSAGGIO_USCITA);	
+			System.out.println(EXITMSG);	
 			in.close();
 			refreshTimer.cancel();
 			save();
 		}));
 		
 		in = new Scanner(System.in);
-		String comando;
+		String command;
 		load();
 		
-		refreshTimer = new Timer("RefreshBacheca");
+		refreshTimer = new Timer("RefreshNoticeBoard");
 		refreshTimer.schedule(new TimerTask() {
 			public void run() {
-				bacheca.refresh();
-				//System.out.println("(Refreshed)");
+				noticeBoard.refresh();
 			}
 		}, DELAY, DELAY);
 		
-		System.out.println(NEW_LINE + MESSAGGIO_BENVENUTO);
+		System.out.println(NEW_LINE + WELCOME);
 		do {
-			System.out.print(NEW_LINE + ATTESA_COMANDO);
-			comando = in.nextLine().trim();		
+			System.out.print(NEW_LINE + WAITING);
+			command = in.nextLine().trim();		
 			System.out.print(NEW_LINE);
-			if(protocollo.contains(comando))
-				protocollo.run(comando);
+			if(protocol.contains(command))
+				protocol.run(command);
 			else
-				System.out.println(ERRORE_SCONOSCIUTO);
+				System.out.println(ERROR_UNKNOWN_COMMAND);
 		}while(true);		
 	}
 	/**
@@ -76,15 +75,15 @@ public class Main {
 	 */
 	private static void load() {
 		System.out.println("Caricamento database ...");
-		db = (Database)new FileHandler().load(DATABASE);
-		if(db == null) {
-			db = new Database();
+		database = (Database)new FileHandler().load(DATABASE);
+		if(database == null) {
+			database = new Database();
 			System.out.println("Caricato nuovo database");
 			}
 		System.out.println("Caricamento bacheca ...");
-		bacheca = (InsiemeProposte)new FileHandler().load(BACHECA);
-		if(bacheca == null) {
-			bacheca = InsiemeProposte.newBacheca();
+		noticeBoard = (ProposalSet)new FileHandler().load(NOTICEBOARD);
+		if(noticeBoard == null) {
+			noticeBoard = ProposalSet.newNoticeBoard();
 			System.out.println("Caricata nuova bacheca");
 			}
 		System.out.println("Fine caricamento");
@@ -94,21 +93,21 @@ public class Main {
 	 */
 	private static void save() {
 		System.out.print("Salvataggio bacheca... ");
-		System.out.println((new FileHandler().save(BACHECA, bacheca))?"completato":"fallito");
+		System.out.println((new FileHandler().save(NOTICEBOARD, noticeBoard))?"completato":"fallito");
 		System.out.print("Salvataggio database... ");
-		System.out.println((new FileHandler().save(DATABASE, db))?"completato":"fallito");
+		System.out.println((new FileHandler().save(DATABASE, database))?"completato":"fallito");
 	}
 	/**
 	 * Effettua operazioni sul protocollo a seguito del log in dell'utente
 	 */
 	private static void logIn() {
-		protocollo.logIn();
+		protocol.logIn();
 	}
 	/**
 	 * Effettua operazioni sul protocollo a seguito del log out dell'utente
 	 */
 	private static void logOut() {
-		protocollo.logOut();
+		protocol.logOut();
 	}
 	
 	/**
@@ -116,32 +115,32 @@ public class Main {
 	 * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
 	 *
 	 */
-	protected enum Comando {
+	protected enum Command {
 		
 		EXIT("exit", "Esci dal programma",()->System.exit(0)),
-		CATEGORIA("categoria", "Mostra la categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO);
+		CATEGORY("categoria", "Mostra la categoria disponibile", ()->{
+			Category p = CategoryCache.getInstance().getCategory(Heading.FOOTBALLMATCH);
 			System.out.print(p.getDescription());
 		}),
-		DESCRIZIONE("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO);
+		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
+			Category p = CategoryCache.getInstance().getCategory(Heading.FOOTBALLMATCH);
 			System.out.print(p.getFeatures());
 		}),
-		REGISTRA("registra", "Registra un fruitore", ()->{
+		REGISTRATION("registra", "Registra un fruitore", ()->{
 			System.out.print("Inserisci il nome: ");
-			String nome = in.nextLine();
-			if(db.registra(nome))
+			String name = in.nextLine();
+			if(database.register(name))
 				System.out.println("L'utente è stato registrato con successo");
 			else
 				System.out.println("L'utente è già esistente");
 		}),
 		LOGIN("login", "Accedi", ()->{
 			System.out.print("Inserisci il nome: ");
-			String nome = in.nextLine();
-			if(db.contains(nome)) {
-				session = new Sessione(db.getFruitore(nome));
+			String name = in.nextLine();
+			if(database.contains(name)) {
+				session = new Session(database.getUser(name));
 				logIn();
-				System.out.println("Loggato come: " + nome);
+				System.out.println("Loggato come: " + name);
 			}
 			else {
 				System.out.println("Utente non registrato");
@@ -152,69 +151,69 @@ public class Main {
 			logOut();
 			System.out.println("Logout eseguito");
 			}),
-		MODIFICA("modifica","Modifica il campo di una proposta",()->{
-			boolean annulla = false;
+		MODIFY("modifica","Modifica il campo di una proposta",()->{
+			boolean abort = false;
 			//inserisci id proposta
-			boolean valido = false;
+			boolean valid = false;
 			int id = -1;
 			do {
 				try {
 				System.out.print("Inserisci l'identificatore : ");
 				id = Integer.parseInt(in.nextLine());
-				valido = true;
-				bacheca.add(session.getProposta(id));
+				valid = true;
+				noticeBoard.add(session.getProposal(id));
 				}catch(Exception e) {
 					System.out.println("Inserisci un numero");
 				}
-			}while(!valido);
+			}while(!valid);
 			//inserisci nome del campo da modificare
-			valido = false;
-			ExpandedHeading campo = ExpandedHeading.TITOLO;
+			valid = false;
+			ExpandedHeading field = ExpandedHeading.TITOLO;
 			do {
 				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
-				String nCampo = in.nextLine();
+				String newField = in.nextLine();
 				try {
-					campo = ExpandedHeading.valueOf(nCampo.toUpperCase());
-					valido = true;
+					field = ExpandedHeading.valueOf(newField.toUpperCase());
+					valid = true;
 				}catch(IllegalArgumentException e) {
 					System.out.println("Il nome inserito non appartiene ad un campo");
 				}
-			}while(!valido);
+			}while(!valid);
 			//inserisci valore del campo da modificare
-			valido = false;
+			valid = false;
 			Object obj;
 			do {
-				System.out.print("Inserisci il nuovo valore (" + campo.getType().getSimpleName()+") : ");
-				obj = campo.getClassType().parse(in.nextLine());
+				System.out.print("Inserisci il nuovo valore (" + field.getType().getSimpleName()+") : ");
+				obj = field.getClassType().parse(in.nextLine());
 				if(obj != null)
-					valido = true;
+					valid = true;
 				else
-					System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + campo.getClassType().getSyntax());
-			}while(!valido);
+					System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
+			}while(!valid);
 			//conferma modifica
-			valido = false;
+			valid = false;
 			do {
 				System.out.println("Sei sicuro di voler modificare ?");
-				System.out.println("Proposta :" + id + ", Campo :" + campo.getName() + ", nuovo valore: " + obj.toString());
+				System.out.println("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + obj.toString());
 				System.out.print("[y/n]> ");
-				String conferma = in.nextLine();
-				if(conferma.equalsIgnoreCase("n")) {
-					annulla = true;
-					valido = true;
-				}else if(conferma.equalsIgnoreCase("y")) {
-					valido = true;
+				String confirm = in.nextLine();
+				if(confirm.equalsIgnoreCase("n")) {
+					abort = true;
+					valid = true;
+				}else if(confirm.equalsIgnoreCase("y")) {
+					valid = true;
 				}
-			}while(!valido);
+			}while(!valid);
 			//modifica effetiva
-			if(!annulla && session.modificaProposta(id, campo.getName(), obj))
+			if(!abort && session.modifyProposal(id, field.getName(), obj))
 				System.out.println("Modifica avvenuta con successo");
 			else
 				System.out.println("Modifica fallita");
 		}),
-		CREAZIONE_EVENTO("crea", "Crea un nuovo evento", ()->{
-			Category evento = CategoryCache.getInstance().getCategory(Heading.PARTITADICALCIO);
+		NEW_EVENT("crea", "Crea un nuovo evento", ()->{
+			Category event = CategoryCache.getInstance().getCategory(Heading.FOOTBALLMATCH);
 			Stream.of(ExpandedHeading.values())
-					.filter(( fd )->evento.containsField(fd.getName()))
+					.filter(( fd )->event.containsField(fd.getName()))
 					.forEachOrdered(( fd )->{
 						boolean valid = false;
 						System.out.println(fd.toString());
@@ -223,11 +222,11 @@ public class Main {
 							String value = in.nextLine();
 							if(!fd.isBinding() && value.isEmpty()) {
 								valid = true;
-								System.out.print(NEW_LINE); //Lascio uno spazio per non stampare tutto attaccato
+								System.out.print(NEW_LINE);
 							}
 							if(fd.getClassType().isValidType(value)) {
 								valid = true;
-								if(evento.setValue(fd.getName(), fd.getClassType().parse(value)))
+								if(event.setValue(fd.getName(), fd.getClassType().parse(value)))
 									System.out.println("\tDato inserito correttamente\n");
 								else
 									System.out.println("\tIl dato non è stato inserito correttamente\n");
@@ -237,47 +236,47 @@ public class Main {
 														+ fd.getClassType().getSyntax() +"\n");
 						}while(!valid);
 					});
-			if(session.aggiungiProposta(new Proposta(evento, session.getProprietario())))
+			if(session.addProposal(new Proposal(event, session.getOwner())))
 				System.out.println("La proposta è stata aggiunta alla proposte in lavorazione");
 			else
 				System.out.println("La proposta non è stata aggiunta");
 		}),
-		MOSTRA_IN_LAVORAZIONE("mostraInLavorazione", "Visualizza le tue proposte", ()->{
-			String proposte = session.showInProgress();
-			if(proposte.equals(""))
+		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte", ()->{
+			String proposals = session.showInProgress();
+			if(proposals.equals(""))
 				System.out.print("Nessuna proposta in lavorazione!");
 			else {
 				System.out.print("Le proposte in lavorazione:\n" + session.showInProgress());			
 			}
 		}),
-		MOSTRA_NOTIFICHE("mostraNotifiche","Mostra le tue notifiche", ()->System.out.println(session.showNotification())),
-		RIMUOVI_NOTIFICA("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",()->{
-			boolean valido = false;
+		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", ()->System.out.println(session.showNotification())),
+		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",()->{
+			boolean valid = false;
 			do {
 				try {
 					System.out.print("Inserisci l'id da eliminare: ");
 					int i = Integer.parseInt(in.nextLine());
-					valido = true;
-					if(!session.getProprietario().removeMsg(i))
+					valid = true;
+					if(!session.getOwner().removeMsg(i))
 						System.out.println("La rimozione non è andata a buon fine");
 				}catch(Exception e) {
 					System.out.println("Dato invalido, inserisci un numero");
 				}
-			}while(!valido);
+			}while(!valid);
 		}),
-		MOSTRA_BACHECA("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
-			bacheca.refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente vedrà la bacheca aggiornata
-			System.out.print("Le proposte in bacheca:\n" + bacheca.showContent());
+		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
+			noticeBoard.refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente vedrà la bacheca aggiornata
+			System.out.print("Le proposte in bacheca:\n" + noticeBoard.showContent());
 		}),
-		PUBBLICA("pubblica", "Pubblica un evento creato", ()->{
-			boolean valido = false;
+		PUBLISH("pubblica", "Pubblica un evento creato", ()->{
+			boolean valid = false;
 			do {
 				try {
 					System.out.print("Inserisci l'identificatore : ");
 					int id = Integer.parseInt(in.nextLine());
-					valido = true;
+					valid = true;
 					if(session.contains(id)) {
-						if(bacheca.add(session.getProposta(id)))
+						if(noticeBoard.add(session.getProposal(id)))
 							System.out.println("Proposta aggiunta con successo");
 						else
 							System.out.println("La proposta inserita non è valida");
@@ -286,48 +285,48 @@ public class Main {
 				}catch(Exception e) {
 					System.out.println("Inserisci un numero");
 				}
-			}while(!valido);
+			}while(!valid);
 		}),
-		PARTECIPA("partecipa","Partecipa ad una proposta in bacheca",()->{
-			boolean valido = false;
+		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca",()->{
+			boolean valid = false;
 			do {
 				try {
 				System.out.print("Inserisci l'identificatore : ");
 				int id = Integer.parseInt(in.nextLine());
-				valido = true;
-				if(!bacheca.iscrivi(id, session.getProprietario()))
+				valid = true;
+				if(!noticeBoard.signUp(id, session.getOwner()))
 					System.out.println("L'iscrizione non è andata a buon fine");
 				else
 					System.out.println("L'iscrizione è andata a buon fine");
 				}catch(Exception e) {
 					System.out.println("Inserisci un numero");
 				}
-			}while(!valido);
+			}while(!valid);
 		});
 		
 		/**
 		 * Il nome del comando
 		 */
-		private String nome;
+		private String name;
 		/**
 		 * La descrizione del comando
 		 */
-		private String descrizione;
+		private String description;
 		/**
 		 * L'azione che il comando deve compiere
 		 */
-		private Runnable esecuzione;
+		private Runnable runnable;
 		
 		/**
 		 * Costruttore
-		 * @param comando il nome del comando
-		 * @param descrizione la descrizione del comando
-		 * @param esecuzione ciò che il comando deve fare
+		 * @param comand il nome del comando
+		 * @param description la descrizione del comando
+		 * @param runnable ciò che il comando deve fare
 		 */
-		private Comando(String comando, String descrizione, Runnable esecuzione) {
-			this.nome = comando;
-			this.descrizione = descrizione;
-			this.esecuzione = esecuzione;
+		private Command(String comand, String description, Runnable runnable) {
+			this.name = comand;
+			this.description = description;
+			this.runnable = runnable;
 		}
 	
 		/**
@@ -335,22 +334,22 @@ public class Main {
 		 * @return il nome del comando
 		 */
 		public String getNome() {
-			return nome;
+			return name;
 		}
 	
 		/**
 		 * Restituisce la descrizione del comando
 		 * @return
 		 */
-		public String getDescrizione() {
-			return descrizione;
+		public String getDescription() {
+			return description;
 		}
 	
 		/**
 		 * Esegue il comando
 		 */
 		public void run() {
-			esecuzione.run();
+			runnable.run();
 		}
 		
 		/**
@@ -358,8 +357,8 @@ public class Main {
 		 * @param comando il nome presunto del comando
 		 * @return True - il comando ha il nome inserito<br>False - il comando non ha il nome inserito
 		 */
-		public boolean equalsName(String comando) {
-			return this.nome.equals(comando);
+		public boolean hasName(String comando) {
+			return this.name.equals(comando);
 		}
 	}	
 

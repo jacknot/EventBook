@@ -2,66 +2,66 @@ package main;
 
 import java.util.ArrayList;
 
-import main.Main.Comando;
+import main.Main.Command;
 
 /**
  * Contenitore in grado di gestire una lista di comandi e di poter fare operazioni su di essi
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-class ListaComandi extends ArrayList<Comando>{
+class CommandList extends ArrayList<Command>{
 	
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Il formato con cui vengono stampati i comandi
 	 */
-	private static final String FORMAT_TOSTRING = "\n\t%-20s%s";
+	private static final String TOSTRING_FORMAT = "\n\t%-20s%s";
 	
 	/**
 	 * Costruttore
 	 */
-	public ListaComandi() {
+	public CommandList() {
 		super();
-		add(Comando.EXIT);
-		add(Comando.REGISTRA);
-		add(Comando.LOGIN);
+		add(Command.EXIT);
+		add(Command.REGISTRATION);
+		add(Command.LOGIN);
 	}
 	
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logIn
 	 */
 	public void logIn() {
-		add(Comando.CATEGORIA);
-		add(Comando.DESCRIZIONE);
-		add(Comando.LOGOUT);
-		add(Comando.MODIFICA);
-		add(Comando.CREAZIONE_EVENTO);
-		add(Comando.MOSTRA_IN_LAVORAZIONE);
-		add(Comando.MOSTRA_NOTIFICHE);
-		add(Comando.RIMUOVI_NOTIFICA);
-		add(Comando.MOSTRA_BACHECA);
-		add(Comando.PUBBLICA);
-		add(Comando.PARTECIPA);
-		remove(Comando.REGISTRA);
-		remove(Comando.LOGIN);	
+		add(Command.CATEGORY);
+		add(Command.DESCRIPTION);
+		add(Command.LOGOUT);
+		add(Command.MODIFY);
+		add(Command.NEW_EVENT);
+		add(Command.SHOW_WORKINPROGRESS);
+		add(Command.SHOW_NOTIFICATIONS);
+		add(Command.REMOVE_NOTIFICATION);
+		add(Command.SHOW_NOTICEBOARD);
+		add(Command.PUBLISH);
+		add(Command.PARTICIPATE);
+		remove(Command.REGISTRATION);
+		remove(Command.LOGIN);	
 	}
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logOut
 	 */
 	public void logOut() {
-		add(Comando.REGISTRA);
-		add(Comando.LOGIN);
-		remove(Comando.CATEGORIA);
-		remove(Comando.DESCRIZIONE);
-		remove(Comando.LOGOUT);
-		remove(Comando.MODIFICA);
-		remove(Comando.CREAZIONE_EVENTO);
-		remove(Comando.MOSTRA_IN_LAVORAZIONE);
-		remove(Comando.MOSTRA_NOTIFICHE);
-		remove(Comando.RIMUOVI_NOTIFICA);
-		remove(Comando.MOSTRA_BACHECA);
-		remove(Comando.PUBBLICA);
-		remove(Comando.PARTECIPA);
+		add(Command.REGISTRATION);
+		add(Command.LOGIN);
+		remove(Command.CATEGORY);
+		remove(Command.DESCRIPTION);
+		remove(Command.LOGOUT);
+		remove(Command.MODIFY);
+		remove(Command.NEW_EVENT);
+		remove(Command.SHOW_WORKINPROGRESS);
+		remove(Command.SHOW_NOTIFICATIONS);
+		remove(Command.REMOVE_NOTIFICATION);
+		remove(Command.SHOW_NOTICEBOARD);
+		remove(Command.PUBLISH);
+		remove(Command.PARTICIPATE);
 	}
 	
 	/**
@@ -72,19 +72,19 @@ class ListaComandi extends ArrayList<Comando>{
 	public boolean contains(String key) {
 		if(key.equals("help")) return true;
 		return this.stream()
-				.anyMatch((c)->c.equalsName(key));
+				.anyMatch((c)->c.hasName(key));
 	}
 	
 	/**
 	 * Esegue il comando di cui si è inserito il nome, se presente
-	 * @param nomeComando il nome del comando da eseguire
+	 * @param command il nome del comando da eseguire
 	 */
-	public void run(String nomeComando) {
-		if(nomeComando.equals("help"))
+	public void run(String command) {
+		if(command.equals("help"))
 			System.out.println(toString());
-		else if(contains(nomeComando))
+		else if(contains(command))
 			this.stream()
-				.filter((c)->c.equalsName(nomeComando))
+				.filter((c)->c.hasName(command))
 				.findFirst().get().run();
 	}
 	
@@ -94,7 +94,7 @@ class ListaComandi extends ArrayList<Comando>{
 	public String toString() {
 		StringBuilder sb = new StringBuilder("I comandi a tua disposizione:");
 		this.stream()
-			.forEachOrdered((c)->sb.append(String.format(FORMAT_TOSTRING, c.getNome(), c.getDescrizione())));
+			.forEachOrdered((c)->sb.append(String.format(TOSTRING_FORMAT, c.getNome(), c.getDescription())));
 		return sb.toString();
 	}
 }

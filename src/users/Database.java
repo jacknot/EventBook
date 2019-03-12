@@ -3,8 +3,8 @@ package users;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import users.Fruitore;
-import users.Messaggio;
+import users.User;
+import users.Message;
 
 
 /**Classe che contiene la lista di tutti i Fruitori registrati al programma.<br>
@@ -16,21 +16,23 @@ public class Database implements Serializable{
 	/**
 	 * Lista contenente i fruitori registrati
 	 */
-	private ArrayList<Fruitore> fruitori;
+	private ArrayList<User> users;
 	/**
 	 * Costruttore
 	 */
 	public Database() {
-		fruitori = new ArrayList<Fruitore>();
+		this.users = new ArrayList<User>();
 	}
 	/**
 	 * Restituisce il fruitore di cui si è inserito il nome, se presente
 	 * @param name il nome del fruitore
 	 * @return il fruitore di cui si è inserito il nome, null altrimenti
 	 */
-	public Fruitore getFruitore(String name) {
+	public User getUser(String name) {
 		if(contains(name))
-			return fruitori.stream().filter((f)->f.getName().equals(name)).findFirst().get();
+			return users.stream()
+						.filter((f)->f.getName().equals(name))
+						.findFirst().get();
 		return null;
 	}
 	/**
@@ -38,9 +40,9 @@ public class Database implements Serializable{
 	 * @param name Il nome del fruitore da cercare
 	 * @return True - se esiste un fruitore con tale nome <br>False - se il fruitore non esiste
 	 */
-	public boolean contains(String nome) {
-		for(Fruitore fruitore: fruitori) {
-			if(fruitore.getName().equals(nome))
+	public boolean contains(String name) {
+		for(User fruitore: users) {
+			if(fruitore.getName().equals(name))
 				return true;
 		}
 		return false;
@@ -48,12 +50,12 @@ public class Database implements Serializable{
 	
 	/**
 	 * Registra un fruitore nella lista Registrazioni
-	 * @param nome Nome del fruitore da registrare
+	 * @param name Nome del fruitore da registrare
 	 * @return True - l'utente è stato registrato con successo<br>False - l'utente non è stato registrato
 	 */
-	public boolean registra(String nome) {
-		if(!contains(nome)) {
-			fruitori.add(new Fruitore(nome));
+	public boolean register(String name) {
+		if(!contains(name)) {
+			users.add(new User(name));
 			return true;
 		}
 		return false;
@@ -64,10 +66,10 @@ public class Database implements Serializable{
 	 * @param nome nome del fruitore
 	 * @param messaggio messaggio da inviare al fruitore
 	 */
-	public void ricevi(String nome, Messaggio messaggio) {
-		for(Fruitore fruitore: fruitori) {
+	public void ricevi(String nome, Message messaggio) {
+		for(User fruitore: users) {
 			if(fruitore.getName().equals(nome))
-				fruitore.ricevi(messaggio);
+				fruitore.receive(messaggio);
 		}
 	}
 }

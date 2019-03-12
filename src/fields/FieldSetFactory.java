@@ -30,8 +30,8 @@ public class FieldSetFactory {
 	 */
 	private FieldSetFactory() {
 		types = new HashMap<String, Supplier<FieldSet>>();
-		types.put(Heading.PARTITADICALCIO.getName(), ()->{
-			FieldSet cc = contenitoreComune();
+		types.put(Heading.FOOTBALLMATCH.getName(), ()->{
+			FieldSet cc = commonSet();
 			cc.add(new Field<>(ExpandedHeading.GENERE));
 			cc.add(new Field <>(ExpandedHeading.FASCIADIETA));
 			return cc;
@@ -52,7 +52,7 @@ public class FieldSetFactory {
 	/**Semplifica la creazione di contenitori di campi contenenti campi standard
 	 * @return un contenitore con i campi standard
 	 */
-	private FieldSet contenitoreComune() {
+	private FieldSet commonSet() {
 		FieldSet cc = new FieldSet();
 		cc.add(new Field <>(ExpandedHeading.TITOLO));
 		cc.add(new Field <>(ExpandedHeading.NUMEROPARTECIPANTI));
