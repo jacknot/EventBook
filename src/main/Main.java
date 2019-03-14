@@ -179,13 +179,16 @@ public class Main {
 				}
 			}
 			//inserisci valore del campo da modificare
-			Object obj = new Object();
+			Object obj = null;
 			if(!abort) {
 				do {
 					System.out.print("Inserisci il nuovo valore (" + field.getType().getSimpleName()+") : ");
-					obj = field.getClassType().parse(in.nextLine());
-					if(obj != null)
+					String value = in.nextLine();
+					//obj = field.getClassType().parse(value);
+					if(!field.isBinding() && value.isEmpty()) //VEDI
 						valid = true;
+					if(field.getClassType().isValidType(value)) 
+						obj = field.getClassType().parse(value);
 					else
 						System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
 				}while(!valid);
