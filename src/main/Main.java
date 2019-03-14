@@ -144,11 +144,11 @@ public class Main {
 		
 		EXIT("exit", "Esci dal programma",()->System.exit(0)),
 		CATEGORY("categoria", "Mostra la categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH);
+			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			System.out.print(p.getDescription());
 		}),
 		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH);
+			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			System.out.print(p.getFeatures());
 		}),
 		REGISTRATION("registra", "Registra un fruitore", ()->{
@@ -241,7 +241,7 @@ public class Main {
 				System.out.println("Modifica fallita");
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento", ()->{
-			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH);
+			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			Stream.of(FieldHeading.values())
 					.filter(( fd )->event.containsField(fd.getName()))
 					.forEachOrdered(( fd )->{				
