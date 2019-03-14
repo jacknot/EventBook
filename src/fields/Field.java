@@ -17,11 +17,6 @@ public class Field <T> implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Il tipo del campo
-	 */
-	private final Class<T> type;
 	
 	/**
 	 * Contiene le informazioni generali di un campo
@@ -45,8 +40,6 @@ public class Field <T> implements Serializable{
 	 */
 	public Field(ExpandedHeading head) {
 		this.heading = head;
-		//Il cast non genera problemi dato che stiamo dando un tipo consistente con l'intestazione del campo ( head )
-		this.type = (Class<T>) head.getType(); 
 		this.value = null;
 	}
 	
@@ -62,7 +55,8 @@ public class Field <T> implements Serializable{
 	 * @return il tipo di dati che il campo può contenere
 	 */
 	public Class<T> getType(){
-		return type;
+		//Il cast non genera problemi dato che stiamo dando un tipo consistente con l'intestazione del campo ( head )
+		return (Class<T>) heading.getType();
 	}
 	
 	public ClassType getClassType(){
@@ -88,7 +82,7 @@ public class Field <T> implements Serializable{
 	 */
 	public boolean setValue(Object nValue){
 		try {
-			this.value = type.cast(nValue);
+			this.value = getType().cast(nValue);
 			return true;
 		}catch(ClassCastException e) {
 			return false;
@@ -114,7 +108,7 @@ public class Field <T> implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return String.format(FORMAT_TO_STRING, heading.getName(), type.getSimpleName(), value!=null?value.toString():"");
+		return String.format(FORMAT_TO_STRING, heading.getName(), getType().getSimpleName(), value!=null?value.toString():"");
 	}
 	/**
 	 * Controlla se i campi sono uguali
@@ -122,6 +116,6 @@ public class Field <T> implements Serializable{
 	 * @return True - sono uguali<br>False - sono diversi
 	 */
 	public boolean equals(Field<?> f) {
-		return heading.getName().equals(f.getName()) && type.equals(f.type) && value.equals(f.value);
+		return heading.getName().equals(f.getName()) && getType().equals(f.getType()) && value.equals(f.value);
 	}
 }
