@@ -156,54 +156,54 @@ public class Main {
 			//inserisci id proposta
 			boolean valid = false;
 			int id = -1;
-			do {
-				try {
+			try {
 				System.out.print("Inserisci l'identificatore : ");
 				id = Integer.parseInt(in.nextLine());
-				valid = true;
-				noticeBoard.add(session.getProposal(id));
-				}catch(Exception e) {
-					System.out.println("Inserisci un numero");
+				if(!session.contains(id)) {
+					abort = true;
 				}
-			}while(!valid);
+			}catch(Exception e) {
+				System.out.println("Inserisci un numero");
+				abort = true;
+			}
 			//inserisci nome del campo da modificare
-			valid = false;
 			ExpandedHeading field = ExpandedHeading.TITOLO;
-			do {
+			if(!abort) {
 				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
 				String newField = in.nextLine();
 				try {
 					field = ExpandedHeading.valueOf(newField.toUpperCase());
-					valid = true;
 				}catch(IllegalArgumentException e) {
 					System.out.println("Il nome inserito non appartiene ad un campo");
-				}
-			}while(!valid);
-			//inserisci valore del campo da modificare
-			valid = false;
-			Object obj;
-			do {
-				System.out.print("Inserisci il nuovo valore (" + field.getType().getSimpleName()+") : ");
-				obj = field.getClassType().parse(in.nextLine());
-				if(obj != null)
-					valid = true;
-				else
-					System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
-			}while(!valid);
-			//conferma modifica
-			valid = false;
-			do {
-				System.out.println("Sei sicuro di voler modificare ?");
-				System.out.println("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + obj.toString());
-				System.out.print("[y/n]> ");
-				String confirm = in.nextLine();
-				if(confirm.equalsIgnoreCase("n")) {
 					abort = true;
-					valid = true;
-				}else if(confirm.equalsIgnoreCase("y")) {
-					valid = true;
 				}
-			}while(!valid);
+			}
+			//inserisci valore del campo da modificare
+			Object obj = new Object();
+			if(!abort) {
+				do {
+					System.out.print("Inserisci il nuovo valore (" + field.getType().getSimpleName()+") : ");
+					obj = field.getClassType().parse(in.nextLine());
+					if(obj != null)
+						valid = true;
+					else
+						System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
+				}while(!valid);
+				//conferma modifica
+				valid = false;
+				do {
+					System.out.println("Sei sicuro di voler modificare ?");
+					System.out.println("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + obj.toString());
+					System.out.print("[y/n]> ");
+					String confirm = in.nextLine();
+					if(confirm.equalsIgnoreCase("n")) {
+						abort = true;
+						valid = true;
+					}else if(confirm.equalsIgnoreCase("y")) {
+						valid = true;
+					}
+				}while(!valid);
+			}
 			//modifica effetiva
 			if(!abort && session.modifyProposal(id, field.getName(), obj))
 				System.out.println("Modifica avvenuta con successo");
@@ -244,7 +244,7 @@ public class Main {
 		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte", ()->{
 			String proposals = session.showInProgress();
 			if(proposals.equals(""))
-				System.out.print("Nessuna proposta in lavorazione!");
+				System.out.print("Nessuna proposta in lavorazione!\n");
 			else {
 				System.out.print("Le proposte in lavorazione:\n" + session.showInProgress());			
 			}
@@ -266,7 +266,13 @@ public class Main {
 		}),
 		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
 			noticeBoard.refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente vedrà la bacheca aggiornata
-			System.out.print("Le proposte in bacheca:\n" + noticeBoard.showContent());
+			String content = noticeBoard.showContent();
+			if(content.equals(""))
+				System.out.print("Nessuna proposta in bacheca!\n");
+			else {
+				System.out.print("Le proposte in bacheca:\n" + noticeBoard.showContent());		
+			}
+		
 		}),
 		PUBLISH("pubblica", "Pubblica un evento creato", ()->{
 			boolean valid = false;

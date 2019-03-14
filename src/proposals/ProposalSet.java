@@ -89,6 +89,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 					.forEachOrdered((i)->sb.append("\n" + i + " : " + get(i).toString()));
 		return sb.toString();
 	}
+	
 	/**
 	 * Genera una nuova istanza di un insieme di proposte
 	 * @return una nuova bacheca
