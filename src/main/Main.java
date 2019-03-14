@@ -184,12 +184,13 @@ public class Main {
 				do {
 					System.out.print("Inserisci il nuovo valore (" + field.getType().getSimpleName()+") : ");
 					String value = in.nextLine();
-					//obj = field.getClassType().parse(value);
-					if(!field.isBinding() && value.isEmpty()) //VEDI
+					if(!field.isBinding() && value.isEmpty())
 						valid = true;
-					if(field.getClassType().isValidType(value)) 
+					if(field.getClassType().isValidType(value)) {
 						obj = field.getClassType().parse(value);
-					else
+						valid = true;
+					}
+					if(!valid)
 						System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
 				}while(!valid);
 				//conferma modifica
