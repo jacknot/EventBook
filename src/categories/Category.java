@@ -15,6 +15,8 @@ import fields.FieldSet;
  */
 public abstract class Category implements Cloneable,Serializable{
 	
+	//Attributi
+	
 	private static final long serialVersionUID = 1L;
 	
 	/**
@@ -26,10 +28,10 @@ public abstract class Category implements Cloneable,Serializable{
 	 */
 	protected Heading heading;
 	
-	//metodi
+	//Metodi
 	
 	/**
-	 * Visualizza la struttura di quello che pu� contenere in forma testuale.<br>
+	 * Visualizza la struttura della caegoria e di quello che può contenere (in forma testuale).<br>
 	 * Non visualizza un loro eventuale contenuto.
 	 * @return La struttura in forma testuale
 	 */
