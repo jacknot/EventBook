@@ -17,6 +17,11 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 */
 	private static final long serialVersionUID = -2744536594935868510L;
 	/**
+	 * Formattazione per la visualizzazione testuale della singola proposta
+	 */
+	private static final String PROPOSAL = "\n%d : %s";
+	
+	/**
 	 * Lo stato che desidero tutte le proposte nella lista abbiano
 	 */
 	private final State state;
@@ -86,7 +91,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	public synchronized String showContent() {
 		StringBuilder sb = new StringBuilder();
 		IntStream.range(0, size())
-					.forEachOrdered((i)->sb.append("\n" + i + " : " + get(i).toString()));
+					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, get(i).toString())));
 		return sb.toString();
 	}
 	

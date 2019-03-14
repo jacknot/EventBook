@@ -21,7 +21,7 @@ public class Field <T> implements Serializable{
 	/**
 	 * Contiene le informazioni generali di un campo
 	 */
-	private ExpandedHeading heading;
+	private FieldHeading heading;
 	
 	/**
 	 * Contiene il valore del campo
@@ -38,7 +38,7 @@ public class Field <T> implements Serializable{
 	/**Costruttore del campo, imposta il suo valore a null 
 	 * @param head La descrizione del campo
 	 */
-	public Field(ExpandedHeading head) {
+	public Field(FieldHeading head) {
 		this.heading = head;
 		this.value = null;
 	}
@@ -59,6 +59,10 @@ public class Field <T> implements Serializable{
 		return (Class<T>) heading.getType();
 	}
 	
+	/**
+	 * Restituisce il tipo del campo
+	 * @return il tipo del campo
+	 */
 	public ClassType getClassType(){
 		return heading.getClassType();
 	}

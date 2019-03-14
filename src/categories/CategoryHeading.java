@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]
  *
  */
-public enum Heading implements Serializable{	
+public enum CategoryHeading implements Serializable{	
 
 	FOOTBALLMATCH("Partita di Calcio", "Una partita di calcio tra vari generi e età");
 	
@@ -30,7 +30,7 @@ public enum Heading implements Serializable{
 	 * @param nome Il nome da contenere
 	 * @param descrizione La descrizione da contenere
 	 */
-	private Heading(String nome, String descrizione) {
+	private CategoryHeading(String nome, String descrizione) {
 		this.name = nome;
 		this.description = descrizione;
 	}

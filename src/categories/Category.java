@@ -3,7 +3,7 @@ package categories;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import fields.ExpandedHeading;
+import fields.FieldHeading;
 import fields.FieldSet;
 
 
@@ -26,12 +26,12 @@ public abstract class Category implements Cloneable,Serializable{
 	/**
 	 * Contiene l'intestazione della categoria
 	 */
-	protected Heading heading;
+	protected CategoryHeading heading;
 	
 	//Metodi
 	
 	/**
-	 * Visualizza la struttura della caegoria e di quello che può contenere (in forma testuale).<br>
+	 * Visualizza la struttura della categoria e di quello che può contenere (in forma testuale).<br>
 	 * Non visualizza un loro eventuale contenuto.
 	 * @return La struttura in forma testuale
 	 */
@@ -76,8 +76,8 @@ public abstract class Category implements Cloneable,Serializable{
 	 */
 	public boolean isValid() {
 		//controllo sulla sequenzialità delle date
-		return fields.isValid() && ((LocalDate)fields.getValue(ExpandedHeading.DATA.getName()))
-										.compareTo((LocalDate)fields.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName())) >= 0;
+		return fields.isValid() && ((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
+										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())) >= 0;
 	}
 	
 	/* (non-Javadoc)

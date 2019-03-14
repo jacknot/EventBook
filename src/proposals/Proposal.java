@@ -33,7 +33,7 @@ public class Proposal implements Serializable{
 	private ArrayList<Notifiable> subscribers;
 	/**
 	 * Costruttore di una proposta
-	 * @param event L'evento a cui far� riferimento la proposta
+	 * @param event L'evento a cui farà riferimento la proposta
 	 * @param owner Il proprietario della proposta
 	 */
 	public Proposal(Category event, Notifiable owner) {
@@ -80,7 +80,7 @@ public class Proposal implements Serializable{
 		return false;
 	}
 	/**
-	 * Restituisce il contenuto del campo di cui si � inserito il nome
+	 * Restituisce il contenuto del campo di cui si è inserito il nome
 	 * @param name il nome del campo 
 	 * @return il contenuto del campo
 	 */

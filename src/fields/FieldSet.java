@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  */
 public class FieldSet extends ArrayList<Field<?>> implements Serializable{
-	private static final long serialVersionUID = 1L;	//soppressione warning
+	private static final long serialVersionUID = 1L;
 	private static final String INTERLINE = "%n*******************************%n";
 	
 	/**
@@ -35,7 +35,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	}
 	
 	/**
-	 * Restituisce il contenuto del campo di cui si � inserito il nome
+	 * Restituisce il contenuto del campo di cui si è inserito il nome
 	 * @param name il nome del campo di cui si vuole il contenuto
 	 * @return il suo contenuto ( null se non esiste campo con il nome inserito )
 	 */

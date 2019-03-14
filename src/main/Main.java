@@ -24,6 +24,12 @@ public class Main {
 	private static final String EXITMSG = "Bye Bye";
 	
 	private static final String ERROR_UNKNOWN_COMMAND = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
+	
+	private static final String SAVE_COMPLETED = "completato";
+	private static final String SAVE_FAILED = "fallito";
+	
+	private static final String INSERT_IDENTIFIER = "Inserisci l'identificatore : ";
+	private static final String INSERT_NUMBER = "Inserisci un numero";
 
 	private static Timer refreshTimer;
 	private static Scanner in;
@@ -93,9 +99,9 @@ public class Main {
 	 */
 	private static void save() {
 		System.out.print("Salvataggio bacheca... ");
-		System.out.println((new FileHandler().save(NOTICEBOARD, noticeBoard))?"completato":"fallito");
+		System.out.println((new FileHandler().save(NOTICEBOARD, noticeBoard))? SAVE_COMPLETED : SAVE_FAILED);
 		System.out.print("Salvataggio database... ");
-		System.out.println((new FileHandler().save(DATABASE, database))?"completato":"fallito");
+		System.out.println((new FileHandler().save(DATABASE, database))? SAVE_COMPLETED : SAVE_FAILED);
 	}
 	/**
 	 * Effettua operazioni sul protocollo a seguito del log in dell'utente
@@ -110,6 +116,25 @@ public class Main {
 		protocol.logOut();
 	}
 	
+	private static Object acceptValue(FieldHeading field, String message) { //NUOVO MODO
+		boolean valid = false;
+		Object obj = null;
+		do {
+			System.out.print(message);
+			String value = in.nextLine();
+			if(!field.isBinding() && value.isEmpty())
+				valid = true;
+			System.out.print(NEW_LINE);
+			if(field.getClassType().isValidType(value)) {
+				obj = field.getClassType().parse(value);
+				valid = true;
+			}
+			if(!valid)
+				System.out.println("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
+		}while(!valid);
+		return obj;
+	}
+	
 	/**
 	 * Enumerazione contente i vari comandi disponibili all'utente, comprese le loro funzionalità
 	 * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -119,11 +144,11 @@ public class Main {
 		
 		EXIT("exit", "Esci dal programma",()->System.exit(0)),
 		CATEGORY("categoria", "Mostra la categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(Heading.FOOTBALLMATCH);
+			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH);
 			System.out.print(p.getDescription());
 		}),
 		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
-			Category p = CategoryCache.getInstance().getCategory(Heading.FOOTBALLMATCH);
+			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH);
 			System.out.print(p.getFeatures());
 		}),
 		REGISTRATION("registra", "Registra un fruitore", ()->{
@@ -157,22 +182,22 @@ public class Main {
 			boolean valid = false;
 			int id = -1;
 			try {
-				System.out.print("Inserisci l'identificatore : ");
+				System.out.print(INSERT_IDENTIFIER);
 				id = Integer.parseInt(in.nextLine());
 				if(!session.contains(id)) {
 					abort = true;
 				}
 			}catch(Exception e) {
-				System.out.println("Inserisci un numero");
+				System.out.println(INSERT_NUMBER);
 				abort = true;
 			}
 			//inserisci nome del campo da modificare
-			ExpandedHeading field = ExpandedHeading.TITOLO;
+			FieldHeading field = FieldHeading.TITOLO;
 			if(!abort) {
 				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
 				String newField = in.nextLine();
 				try {
-					field = ExpandedHeading.valueOf(newField.toUpperCase());
+					field = FieldHeading.valueOf(newField.toUpperCase());
 				}catch(IllegalArgumentException e) {
 					System.out.println("Il nome inserito non appartiene ad un campo");
 					abort = true;
@@ -181,7 +206,7 @@ public class Main {
 			//inserisci valore del campo da modificare
 			Object obj = null;
 			if(!abort) {
-				do {
+				/*do {
 					System.out.print("Inserisci il nuovo valore (" + field.getType().getSimpleName()+") : ");
 					String value = in.nextLine();
 					if(!field.isBinding() && value.isEmpty())
@@ -192,7 +217,8 @@ public class Main {
 					}
 					if(!valid)
 						System.out.println("Il valore inserito non è corretto.\nInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
-				}while(!valid);
+				}while(!valid);*/
+				obj = acceptValue(field, String.format("\tInserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
 				//conferma modifica
 				valid = false;
 				do {
@@ -215,12 +241,12 @@ public class Main {
 				System.out.println("Modifica fallita");
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento", ()->{
-			Category event = CategoryCache.getInstance().getCategory(Heading.FOOTBALLMATCH);
-			Stream.of(ExpandedHeading.values())
+			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH);
+			Stream.of(FieldHeading.values())
 					.filter(( fd )->event.containsField(fd.getName()))
-					.forEachOrdered(( fd )->{
-						boolean valid = false;
+					.forEachOrdered(( fd )->{				
 						System.out.println(fd.toString());
+						/*boolean valid = false;
 						do {
 							System.out.print("\tInserisci un valore per il campo: ");
 							String value = in.nextLine();
@@ -238,7 +264,12 @@ public class Main {
 							if(!valid)
 								System.out.println(NEW_LINE + "\tIl dato inserito non è valido.\n\tInserisci qualcosa di tipo "
 														+ fd.getClassType().getSyntax() +"\n");
-						}while(!valid);
+						}while(!valid);*/
+						Object obj = acceptValue(fd, "\tInserisci un valore per il campo: ");
+						if(event.setValue(fd.getName(), obj))
+							System.out.println("\tDato inserito correttamente\n");
+						else
+							System.out.println("\tIl dato non è stato inserito correttamente\n");
 					});
 			if(session.addProposal(new Proposal(event, session.getOwner())))
 				System.out.println("La proposta è stata aggiunta alla proposte in lavorazione");
@@ -282,7 +313,7 @@ public class Main {
 			boolean valid = false;
 			do {
 				try {
-					System.out.print("Inserisci l'identificatore : ");
+					System.out.print(INSERT_IDENTIFIER);
 					int id = Integer.parseInt(in.nextLine());
 					valid = true;
 					if(session.contains(id)) {
@@ -293,7 +324,7 @@ public class Main {
 					}else
 						System.out.println("La proposta inserita non esiste");
 				}catch(Exception e) {
-					System.out.println("Inserisci un numero");
+					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
 		}),
@@ -301,7 +332,7 @@ public class Main {
 			boolean valid = false;
 			do {
 				try {
-				System.out.print("Inserisci l'identificatore : ");
+				System.out.print(INSERT_IDENTIFIER);
 				int id = Integer.parseInt(in.nextLine());
 				valid = true;
 				if(!noticeBoard.signUp(id, session.getOwner()))
@@ -309,7 +340,7 @@ public class Main {
 				else
 					System.out.println("L'iscrizione è andata a buon fine");
 				}catch(Exception e) {
-					System.out.println("Inserisci un numero");
+					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
 		});

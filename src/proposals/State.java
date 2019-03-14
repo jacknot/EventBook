@@ -3,7 +3,7 @@ package proposals;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import fields.ExpandedHeading;
+import fields.FieldHeading;
 import users.Message;
 
 /**
@@ -60,7 +60,7 @@ public enum State implements Serializable{
 		 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
 		 */
 		public boolean canSignUp(Proposal p) {
-			return p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName())) - 1; 
+			return p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMEROPARTECIPANTI.getName())) - 1; 
 		}
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
@@ -68,28 +68,28 @@ public enum State implements Serializable{
 		public boolean transition(Proposal p) {
 			LocalDate todayDate = LocalDate.now();
 			//data ultima iscrizione
-			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(ExpandedHeading.TERMINEISCRIZIONE.getName()));
+			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(FieldHeading.TERMINEISCRIZIONE.getName()));
 			//gestione titolo non inserito
-			String title = p.getValue(ExpandedHeading.TITOLO.getName()) == null?
-					UNKNOWN_TITLE:p.getValue(ExpandedHeading.TITOLO.getName()).toString();
+			String title = p.getValue(FieldHeading.TITOLO.getName()) == null?
+					UNKNOWN_TITLE:p.getValue(FieldHeading.TITOLO.getName()).toString();
 			//todayDate <= lastSubDate && subs == full
 			if(todayDate.compareTo(lastSubDate) <= 0 &&
-					p.subNumber() == Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
+					p.subNumber() == Integer.class.cast(p.getValue(FieldHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(CLOSED);
 				p.send(new Message(	//messaggio che avvisa che la proposta è chiusa
 						title,
 						CONFIRMOBJ,															
 						String.format(CONFIRMFORMAT, title,
-													p.getValue(ExpandedHeading.DATA.getName()),
-													p.getValue(ExpandedHeading.ORA.getName()),
-													p.getValue(ExpandedHeading.LUOGO.getName()),
-													p.getValue(ExpandedHeading.QUOTAINDIVIDUALE.getName()))							
+													p.getValue(FieldHeading.DATA.getName()),
+													p.getValue(FieldHeading.ORA.getName()),
+													p.getValue(FieldHeading.LUOGO.getName()),
+													p.getValue(FieldHeading.QUOTAINDIVIDUALE.getName()))							
 						));
 				return true;
 			//todayDate >= lastSubDate && subs < full
 			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
-					p.subNumber() < Integer.class.cast(p.getValue(ExpandedHeading.NUMEROPARTECIPANTI.getName()))
+					p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMEROPARTECIPANTI.getName()))
 					) {
 				p.setState(ENDED);
 				
@@ -109,9 +109,9 @@ public enum State implements Serializable{
 		 */
 		public boolean transition(Proposal p) {
 			LocalDate tDate = LocalDate.now();
-			Object tmp = p.getValue(ExpandedHeading.DATACONCLUSIVA.getName());
+			Object tmp = p.getValue(FieldHeading.DATACONCLUSIVA.getName());
 			if(tmp == null) {
-				LocalDate date = LocalDate.class.cast(p.getValue(ExpandedHeading.DATA.getName()));
+				LocalDate date = LocalDate.class.cast(p.getValue(FieldHeading.DATA.getName()));
 				if(tDate.compareTo(date) > 0) {
 					p.setState(CONCLUSA);
 					return true;
@@ -147,7 +147,7 @@ public enum State implements Serializable{
 	private static final String FAILUREOBJ = "Fallimento evento";
 	//data ora luogo importo
 	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
-													+ "\nSi ricorda di portare %s per l'organizzazione";
+													+ "\nSi ricorda di portare %s€ per l'organizzazione";
 	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
 													+ "\nL'evento è quindi annullato.";
 	/**

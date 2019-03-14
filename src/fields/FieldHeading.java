@@ -6,7 +6,7 @@ import dataTypes.ClassType;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]
  *
  */
-public enum ExpandedHeading{
+public enum FieldHeading{
 	TITOLO("Titolo", "Il titolo dell'evento", false, ClassType.STRING),
 	NUMEROPARTECIPANTI("Numero di Partecipanti", "Numero di persone da coinvolgere nell'evento", true, ClassType.INTEGER),
 	TERMINEISCRIZIONE("Termine ultimo iscrizione", "Ultimo giorno utile per iscriversi all'evento", true, ClassType.DATA),
@@ -23,7 +23,7 @@ public enum ExpandedHeading{
 			+ "\"Quota individuale\"", false,  ClassType.STRING),
 	DATACONCLUSIVA("Data conclusiva", "Data di conclusione dell'evento", false,  ClassType.DATA),
 	ORACONCLUSIVA("Ora conclusiva", "Ora di conclusione dell'evento", false,  ClassType.ORA),
-	NOTE("Note", "Informazioni aggiuntive ", false, ClassType.STRING),
+	NOTE("Note", "Informazioni aggiuntive", false, ClassType.STRING),
 	
 	//Campi FootballMatch
 	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.GENDER),
@@ -78,7 +78,7 @@ public enum ExpandedHeading{
 	 * @param obbligatorio Se obbligatorio
 	 * @param type il tipo di dato associato alla descrizione
 	 */
-	private ExpandedHeading(String nome, String descrizione, boolean obbligatorio, ClassType type) {
+	private FieldHeading(String nome, String descrizione, boolean obbligatorio, ClassType type) {
 		this.name = nome;
 		this.description = descrizione;
 		this.binding = obbligatorio;
@@ -114,7 +114,7 @@ public enum ExpandedHeading{
 	 * @param eh l'intestazione da confrontare
 	 * @return True - sono uguali<br>False - sono diversi
 	 */
-	public boolean equals(ExpandedHeading eh) {
+	public boolean equals(FieldHeading eh) {
 		return this.name.equals(eh.name);
 	} 
 }

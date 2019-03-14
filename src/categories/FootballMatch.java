@@ -15,8 +15,8 @@ public class FootballMatch extends Category{
 	 */
 	public FootballMatch() {
 		super();
-		heading = Heading.FOOTBALLMATCH;
+		heading = CategoryHeading.FOOTBALLMATCH;
 		fields = FieldSetFactory.getInstance()
-											.getSet(Heading.FOOTBALLMATCH.getName());
+											.getSet(CategoryHeading.FOOTBALLMATCH.getName());
 	}
 }

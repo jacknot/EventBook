@@ -3,7 +3,7 @@ package fields;
 import java.util.*;
 import java.util.function.Supplier;
 
-import categories.Heading;
+import categories.CategoryHeading;
 
 
 /**Implementazione Design Pattern Factory per generare diversi tipi di contenitore di campi a seconda delle esigenze.<br>
@@ -30,10 +30,10 @@ public class FieldSetFactory {
 	 */
 	private FieldSetFactory() {
 		types = new HashMap<String, Supplier<FieldSet>>();
-		types.put(Heading.FOOTBALLMATCH.getName(), ()->{
+		types.put(CategoryHeading.FOOTBALLMATCH.getName(), ()->{
 			FieldSet cc = commonSet();
-			cc.add(new Field<>(ExpandedHeading.GENERE));
-			cc.add(new Field <>(ExpandedHeading.FASCIADIETA));
+			cc.add(new Field<>(FieldHeading.GENERE));
+			cc.add(new Field <>(FieldHeading.FASCIADIETA));
 			return cc;
 		});
 	}
@@ -54,18 +54,18 @@ public class FieldSetFactory {
 	 */
 	private FieldSet commonSet() {
 		FieldSet cc = new FieldSet();
-		cc.add(new Field <>(ExpandedHeading.TITOLO));
-		cc.add(new Field <>(ExpandedHeading.NUMEROPARTECIPANTI));
-		cc.add(new Field <>(ExpandedHeading.TERMINEISCRIZIONE));
-		cc.add(new Field <>(ExpandedHeading.LUOGO));
-		cc.add(new Field <>(ExpandedHeading.DATA));
-		cc.add(new Field <>(ExpandedHeading.ORA));
-		cc.add(new Field <>(ExpandedHeading.DURATA));
-		cc.add(new Field <>(ExpandedHeading.QUOTAINDIVIDUALE));
-		cc.add(new Field <>(ExpandedHeading.COMPRESONELLAQUOTA));
-		cc.add(new Field <>(ExpandedHeading.DATACONCLUSIVA));
-		cc.add(new Field <>(ExpandedHeading.ORACONCLUSIVA));
-		cc.add(new Field <>(ExpandedHeading.NOTE));
+		cc.add(new Field <>(FieldHeading.TITOLO));
+		cc.add(new Field <>(FieldHeading.NUMEROPARTECIPANTI));
+		cc.add(new Field <>(FieldHeading.TERMINEISCRIZIONE));
+		cc.add(new Field <>(FieldHeading.LUOGO));
+		cc.add(new Field <>(FieldHeading.DATA));
+		cc.add(new Field <>(FieldHeading.ORA));
+		cc.add(new Field <>(FieldHeading.DURATA));
+		cc.add(new Field <>(FieldHeading.QUOTAINDIVIDUALE));
+		cc.add(new Field <>(FieldHeading.COMPRESONELLAQUOTA));
+		cc.add(new Field <>(FieldHeading.DATACONCLUSIVA));
+		cc.add(new Field <>(FieldHeading.ORACONCLUSIVA));
+		cc.add(new Field <>(FieldHeading.NOTE));
 		return cc;
 	}
 	/**Restituisce un contenitore di campi a seconda del tipo inserito in ingresso
