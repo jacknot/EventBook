@@ -1,6 +1,6 @@
 package categories;
 
-import java.util.Hashtable;
+import java.util.ArrayList;
 
 /**Classe che consente di implementare il Design Pattern Prototype per ottenere istanze di categorie da un set predefinito.<br>
  * Implementa il Design Pattern Singleton per non avere istanze rindondanti.<br>
@@ -15,9 +15,9 @@ public class CategoryCache {
 	 */
 	private static CategoryCache instance;
 	/**
-	 * Set contenente le istanze delle categorie da clonare
+	 * array contenente le istanze delle categorie da clonare
 	 */
-	private static Hashtable<String, Category> set = new Hashtable<String, Category>();
+	private static ArrayList<Category> set = new ArrayList<Category>();
 	
 	/**Metodo per ottenere l'istanza della classe<br>
 	 * Necessaria per il Design Pattern Singleton
@@ -38,7 +38,7 @@ public class CategoryCache {
 	 * Carica le istanze predefinite da clonare
 	 */
 	private static void loadCache() {
-		set.put(CategoryHeading.FOOTBALLMATCH.getName(), new FootballMatch());
+		set.add(new FootballMatch());
 	}
 	
 	/**Restituisce il clone di una particolare istanza di categoria
@@ -46,7 +46,9 @@ public class CategoryCache {
 	 * @return l'istanza della categoria di cui si è inserito il nome
 	 */
 	public Category getCategory(String type) {
-		Category cached = set.get(type);
+		Category cached = set.stream()
+						.filter((c)->c.equals(type))
+						.findFirst().get();
 		return (Category) cached.clone();
 	}
 }

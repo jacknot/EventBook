@@ -101,6 +101,14 @@ public abstract class Category implements Cloneable,Serializable{
 	public boolean equals(Category c) {
 		return (this.heading.getName().equals(c.heading.getName()) && this.fields.equals(c.fields));
 	}
+	/**
+	 * Controlla se il nome passato per parametro coincide con quello della categoria
+	 * @param name nome da confrontare
+	 * @return True se uguali<br>False altrimenti
+	 */
+	public boolean equals(String name) {
+		return (this.heading.getName().equals(name));
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
