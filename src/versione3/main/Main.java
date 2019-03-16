@@ -355,7 +355,7 @@ public class Main {
 			}while(!valid);
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(args)->{
-			ProposalSet userProposalSubscription = noticeBoard.getUserProposal(session.getOwner());
+			//ProposalSet userProposalSubscription = noticeBoard.getUserProposal(session.getOwner());
 		});
 		/**
 		 * Il nome del comando
