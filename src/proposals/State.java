@@ -60,22 +60,25 @@ public enum State implements Serializable{
 		 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
 		 */
 		public boolean canSignUp(Proposal p) {
-			return p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMEROPARTECIPANTI.getName())) - 1; 
+			int tol = p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())== null? 0:
+				(Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
+			return p.subNumber() - (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())	<  tol; 
 		}
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
 		public boolean transition(Proposal p) {
 			LocalDate todayDate = LocalDate.now();
-			//data ultima iscrizione
-			LocalDate lastSubDate = LocalDate.class.cast(p.getValue(FieldHeading.TERMINEISCRIZIONE.getName()));
-			//gestione titolo non inserito
-			String title = p.getValue(FieldHeading.TITOLO.getName()) == null?
-					UNKNOWN_TITLE:p.getValue(FieldHeading.TITOLO.getName()).toString();
+			LocalDate lastSubDate = (LocalDate) p.getValue(FieldHeading.TERMINEISCRIZIONE.getName());
+			LocalDate lastSigningDay = (LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName());
+			String title = p.getValue(FieldHeading.TITOLO.getName())== null? UNKNOWN_TITLE:
+															(String)p.getValue(FieldHeading.TITOLO.getName());
+			int tol = p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())== null? 0:
+				(Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
+			int max = (Integer) p.getValue(FieldHeading.NUMPARTECIPANTI.getName());
 			//todayDate <= lastSubDate && subs == full
-			if(todayDate.compareTo(lastSubDate) <= 0 &&
-					p.subNumber() == Integer.class.cast(p.getValue(FieldHeading.NUMEROPARTECIPANTI.getName()))
-					) {
+			if((todayDate.compareTo(lastSubDate) == 0 && p.subNumber() - max <= tol) || 
+					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastSigningDay) >= 0) && p.subNumber() - max == tol) {
 				p.setState(CLOSED);
 				p.send(new Message(	//messaggio che avvisa che la proposta è chiusa
 						title,
@@ -84,12 +87,12 @@ public enum State implements Serializable{
 													p.getValue(FieldHeading.DATA.getName()),
 													p.getValue(FieldHeading.ORA.getName()),
 													p.getValue(FieldHeading.LUOGO.getName()),
-													p.getValue(FieldHeading.QUOTAINDIVIDUALE.getName()))							
+													p.getValue(FieldHeading.QUOTA.getName()))							
 						));
 				return true;
 			//todayDate >= lastSubDate && subs < full
 			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
-					p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMEROPARTECIPANTI.getName()))
+					p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMPARTECIPANTI.getName()))
 					) {
 				p.setState(ENDED);
 				
@@ -102,6 +105,23 @@ public enum State implements Serializable{
 			}
 			return false;
 		}
+		/* (non-Javadoc)
+		 * @see proposals.State#withdrawal(proposals.Proposal)
+		 */
+		public boolean withdraw(Proposal p) {
+			if(LocalDate.now().compareTo((LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName())) <= 0) {
+				p.setState(WITHDRAWN);
+				String title = p.getValue(FieldHeading.TITOLO.getName())== null? UNKNOWN_TITLE:
+					(String)p.getValue(FieldHeading.TITOLO.getName());
+				p.send(new Message(	//messaggio che avvisa che la proposta è stata ritirata
+						title,
+						WITHDRAWNOBJ,															
+						String.format(WITHDRAWNFORMAT, title)							
+						));
+				return true;
+			}
+			return false;
+		}
 	},
 	CLOSED{
 		/* (non-Javadoc)
@@ -109,23 +129,23 @@ public enum State implements Serializable{
 		 */
 		public boolean transition(Proposal p) {
 			LocalDate tDate = LocalDate.now();
-			Object tmp = p.getValue(FieldHeading.DATACONCLUSIVA.getName());
+			Object tmp = p.getValue(FieldHeading.DATAFINE.getName());
 			if(tmp == null) {
 				LocalDate date = LocalDate.class.cast(p.getValue(FieldHeading.DATA.getName()));
 				if(tDate.compareTo(date) > 0) {
-					p.setState(CONCLUSA);
+					p.setState(ENDED);
 					return true;
 				}
 			}
 			LocalDate endDate = LocalDate.class.cast(tmp);
 			if(tDate.compareTo(endDate) > 0) {
-				p.setState(CONCLUSA);
+				p.setState(ENDED);
 				return true;
 			}
 			return false;
 		}		
 	},
-	CONCLUSA{
+	WITHDRAWN{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */
@@ -145,11 +165,14 @@ public enum State implements Serializable{
 	private static final String UNKNOWN_TITLE = "(titolo mancante)";
 	private static final String CONFIRMOBJ = "Conferma evento";
 	private static final String FAILUREOBJ = "Fallimento evento";
+	private static final String WITHDRAWNOBJ = "Ritiro evento";
 	//data ora luogo importo
 	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
 													+ "\nSi ricorda di portare %s€ per l'organizzazione";
 	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
 													+ "\nL'evento è quindi annullato.";
+	private static final String WITHDRAWNFORMAT = "Siamo spiacenti di informarla che l'evento %s è stato ritirato dal proprietario."
+			+ "\nL'evento è quindi annullato.";
 	/**
 	 * Modifica lo stato della proposta in modo da poterla rendere adatta al pubblico
 	 * @param p la proposta a cui fare cambiare stato
@@ -177,6 +200,14 @@ public enum State implements Serializable{
 	 * @return True - ci si può iscrivere alla proposta<br>False - non ci si può iscrivere alla proposta
 	 */
 	public boolean canSignUp(Proposal p) {
+		return false;
+	}
+	/**
+	 * Modifica lo stato della proposta in modo da ritirarla
+	 * @param p la proposta da ritirare
+	 * @return True - se è avvenuto il ritiro della proposta<br>False - la proposta non è stata ritirata
+	 */
+	public boolean withdraw(Proposal p) {
 		return false;
 	}
 }

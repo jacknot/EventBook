@@ -92,7 +92,7 @@ class CommandList extends ArrayList<Command>{
 	 */
 	public boolean contains(String key) {
 		String command = getCommand(key);
-		if(command.equals("help")) return true;
+		if(command != null && command.equals("help")) return true;
 		return this.stream()
 				.anyMatch((c)->c.hasName(command));
 	}

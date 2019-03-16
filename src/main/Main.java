@@ -378,6 +378,22 @@ public class Main {
 				}
 			}while(!valid);
 
+		}),
+		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca", (args)->{
+			boolean valid = false;
+			do {
+				try {
+					System.out.print(INSERT_IDENTIFIER);
+					int id = Integer.parseInt(in.nextLine());
+					valid = true;
+					if(noticeBoard.withdraw(id, session.getOwner()))
+						System.out.println("La proposta è stata ritirata con successo");
+					else
+						System.out.println("La proposta non è stata ritirata");
+				}catch(Exception e) {
+					System.out.println(INSERT_NUMBER);
+				}
+			}while(!valid);
 		});
 		/**
 		 * Il nome del comando

@@ -44,7 +44,6 @@ public class Field <T> implements Serializable{
 	}
 	
 	//Metodi
-	
 	/**Restituisce il nome del campo
 	 * @return Il nome del campo
 	 */

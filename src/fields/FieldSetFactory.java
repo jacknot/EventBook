@@ -33,7 +33,7 @@ public class FieldSetFactory {
 		types.put(CategoryHeading.FOOTBALLMATCH.getName(), ()->{
 			FieldSet cc = commonSet();
 			cc.add(new Field<>(FieldHeading.GENERE));
-			cc.add(new Field <>(FieldHeading.FASCIADIETA));
+			cc.add(new Field <>(FieldHeading.FASCIA_ETA));
 			return cc;
 		});
 	}
@@ -55,19 +55,19 @@ public class FieldSetFactory {
 	private FieldSet commonSet() {
 		FieldSet cc = new FieldSet();
 		cc.add(new Field <>(FieldHeading.TITOLO));
-		cc.add(new Field <>(FieldHeading.NUMEROPARTECIPANTI));
+		cc.add(new Field <>(FieldHeading.NUMPARTECIPANTI));
 		cc.add(new Field <>(FieldHeading.TERMINEISCRIZIONE));
 		cc.add(new Field <>(FieldHeading.LUOGO));
 		cc.add(new Field <>(FieldHeading.DATA));
 		cc.add(new Field <>(FieldHeading.ORA));
 		cc.add(new Field <>(FieldHeading.DURATA));
-		cc.add(new Field <>(FieldHeading.QUOTAINDIVIDUALE));
-		cc.add(new Field <>(FieldHeading.COMPRESONELLAQUOTA));
-		cc.add(new Field <>(FieldHeading.DATACONCLUSIVA));
-		cc.add(new Field <>(FieldHeading.ORACONCLUSIVA));
+		cc.add(new Field <>(FieldHeading.QUOTA));
+		cc.add(new Field <>(FieldHeading.COMPRESO_QUOTA));
+		cc.add(new Field <>(FieldHeading.DATAFINE));
+		cc.add(new Field <>(FieldHeading.ORAFINE));
 		cc.add(new Field <>(FieldHeading.NOTE));
-		cc.add(new Field <>(FieldHeading.TOLLERANZANUMEROPARTECIPANTI));
-		cc.add(new Field <>(FieldHeading.TERMINEULTIMORITIROISCRIZIONE));
+		cc.add(new Field <>(FieldHeading.TOLL_PARTECIPANTI));
+		cc.add(new Field <>(FieldHeading.TERMINE_RITIRO));
 		return cc;
 	}
 	/**Restituisce un contenitore di campi a seconda del tipo inserito in ingresso

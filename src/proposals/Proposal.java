@@ -134,6 +134,13 @@ public class Proposal implements Serializable{
 		aState.publish(this);
 	}
 	/**
+	 * Comunica che la proposta sta per essere ritirata.
+	 * @return True - la proposta è pronta ad essere ritirata<br>False - la proposta non può essere ritirata
+	 */
+	public boolean withdraw() {
+		return aState.withdraw(this);
+	}
+	/**
 	 * Invia un messaggio a tutti gli iscritti e al proprietario della risposta
 	 * @param msg il messaggio da inviare
 	 */

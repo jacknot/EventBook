@@ -71,12 +71,9 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * @return  True - se il set è valido<br>False - se il set non è valido
 	 */
 	public boolean isValid() {
-		if( this.stream()
+		return this.stream()
 				.filter((c)->c.isBinding())
-				.filter((c)->c.isEmpty())
-				.count() > 0)
-			return false;
-		return true;
+				.allMatch((c)->!c.isEmpty());
 	}
 	//Visione sottoforma di stringa del contenitore
 	
@@ -97,7 +94,9 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * @return True se tutti i valori sono uguali<br>False altrimenti
 	 */
 	public boolean equals(FieldSet set) {
-		return ((this.isValid() && set.isValid()) && this.stream().filter((f) -> f.isBinding()).allMatch((f) -> f.getValue().equals(set.getValue(f.getName()))));
+		return ((this.isValid() && set.isValid()) && this.stream()
+														.filter((f) -> f.isBinding())
+														.allMatch((f) -> f.getValue().equals(set.getValue(f.getName()))));
 	}
 	
 	/* (non-Javadoc)

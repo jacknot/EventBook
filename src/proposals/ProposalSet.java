@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import users.Notifiable;
+import users.User;
 
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato
@@ -47,6 +48,22 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		return false;
 	}
 	/**
+	 * Ritira una proposta dalla bacheca
+	 * @param id l'identificatore della proposta da ritirare
+	 * @param user l'utente che vuole rimuovere la proposta
+	 * @return True - la proposta è stata ritirata<br>False - la proposta non è stata ritirata
+	 */
+	public synchronized boolean withdraw(int id, Notifiable user) {
+		boolean outcome = false;
+		if(contains(id)) {
+			if(this.get(id).isOwner(user)) {
+				outcome = this.get(id).withdraw();
+				clear();
+			}
+		}
+		return outcome;
+	}
+	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
 	private  void clean() {
@@ -71,7 +88,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return l'esito dell'iscrizione
 	 */
 	public synchronized boolean signUp(int id, Notifiable user) {
-		if(id < size())
+		if(contains(id))
 			return get(id).signUp(user);
 		return false;
 	}
@@ -83,7 +100,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return l'esito della disiscrizione
 	 */
 	public synchronized boolean unsubscribe(int id, Notifiable user) {
-		if(id < size())
+		if(contains(id))
 			return get(id).unsubscribe(user);
 		return false;
 	}
@@ -95,7 +112,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return True se iscritto - False se non iscritto
 	 */
 	public synchronized boolean isSubscriber(int id, Notifiable user) {
-		if(id < size())
+		if(contains(id))
 			return get(id).isSubscriber(user);
 		return false;
 	}
@@ -107,6 +124,14 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	public synchronized boolean contains(Proposal p) {
 		return this.stream()
 					.anyMatch(( sp ) -> sp.equals(p));
+	}
+	/**
+	 * Controlla che la proposta di cui si è inserito l'identificatore faccia parte del set
+	 * @param id l'identificatore della proposta da controllare
+	 * @return True - il set contiene la proposta<br>False - il set non contiene la proposta
+	 */
+	public synchronized boolean contains(int id) {
+		return id >= 0 && id < size();
 	}
 	/**
 	 * Mostra il contenuto dell'insieme di proposte in forma testuale

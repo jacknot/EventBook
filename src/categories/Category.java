@@ -60,6 +60,7 @@ public abstract class Category implements Cloneable,Serializable{
 	 * @return Il valore del campo inserito. Restituisce null se il campo non esiste
 	 */
 	public Object getValue(String name) {
+		toDefault();
 		return fields.getValue(name);
 	}
 	/**
@@ -71,13 +72,20 @@ public abstract class Category implements Cloneable,Serializable{
 		return fields.contains(field);
 	}
 	/**
-	 * Controlla se un evento è valido
+	 * Controlla se l' evento è valido
 	 * @return True - se l'evento è valido<br>False - se l'evento non è valido
 	 */
 	public boolean isValid() {
-		//controllo sulla sequenzialità delle date
-		return fields.isValid() && ((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
+		toDefault();
+		boolean validSet = fields.isValid();
+		if(validSet) {
+			boolean lastSigningDay = ((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
 										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())) >= 0;
+			boolean	lastWithdrawalDay = ((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
+										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName())) >= 0;
+			return lastSigningDay && lastWithdrawalDay;
+		}
+		return false;
 	}
 	
 	/* (non-Javadoc)
@@ -99,6 +107,7 @@ public abstract class Category implements Cloneable,Serializable{
 	 * @return True se uguali<br>False altrimenti
 	 */
 	public boolean equals(Category c) {
+		toDefault();
 		return (this.heading.getName().equals(c.heading.getName()) && this.fields.equals(c.fields));
 	}
 	/**
@@ -115,7 +124,19 @@ public abstract class Category implements Cloneable,Serializable{
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("%s%n", heading.getName()));
+		toDefault();
 		sb.append(fields.toString());
 		return sb.toString();
+	}
+	/**
+	 * Porta l'evento in una condizione di default
+	 */
+	private void toDefault() {
+		if(fields.getValue(FieldHeading.TERMINE_RITIRO.getName()) == null && 
+				fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()) != null)
+			fields.setValue(FieldHeading.TERMINE_RITIRO.getName(), 
+					((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())));
+		if(fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName()) == null)
+			fields.setValue(FieldHeading.TOLL_PARTECIPANTI.getName(), 0);
 	}
 }

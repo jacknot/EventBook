@@ -8,7 +8,7 @@ import dataTypes.ClassType;
  */
 public enum FieldHeading{
 	TITOLO("Titolo", "Il titolo dell'evento", false, ClassType.STRING),
-	NUMEROPARTECIPANTI("Numero di Partecipanti", "Numero di persone da coinvolgere nell'evento", true, ClassType.INTEGER),
+	NUMPARTECIPANTI("Numero di Partecipanti", "Numero di persone da coinvolgere nell'evento", true, ClassType.INTEGER),
 	TERMINEISCRIZIONE("Termine ultimo iscrizione", "Ultimo giorno utile per iscriversi all'evento", true, ClassType.DATA),
 	LUOGO("Luogo", "Indirizzo del luogo che ospiterà l'evento oppure, se l'evento è itinerante,"
 			+ " il luogo di ritrovo dei partecipanti", true, ClassType.STRING),
@@ -17,20 +17,20 @@ public enum FieldHeading{
 	ORA("Ora", "Ora in cui i partecipanti dovranno trovarsi nel luogo \"Luogo\" in data \"Data\" per dare inizio all'evento", true, ClassType.ORA),
 	DURATA("Durata", "Durata in termini di numero (approssimativo) di ore e minuti, per gli eventi che si esauriscono in un sol giorno,"
 			+ " o in termini di numero esatto di giorni, per gli eventi che occupano più giorni	consecutivi", false, ClassType.ORA),
-	QUOTAINDIVIDUALE("Quota individuale", "Spesa (o una stima della stessa) che ogni partecipante all'iniziativa dovrà sostenere "
+	QUOTA("Quota individuale", "Spesa (o una stima della stessa) che ogni partecipante all'iniziativa dovrà sostenere "
 			+ "(Può anche essere nulla)", true, ClassType.REAL),
-	COMPRESONELLAQUOTA("Compreso nella quota", "Tutte le voci di spesa comprese nell'ammontare indicato nella "
+	COMPRESO_QUOTA("Compreso nella quota", "Tutte le voci di spesa comprese nell'ammontare indicato nella "
 			+ "\"Quota individuale\"", false,  ClassType.STRING),
-	DATACONCLUSIVA("Data conclusiva", "Data di conclusione dell'evento", false,  ClassType.DATA),
-	ORACONCLUSIVA("Ora conclusiva", "Ora di conclusione dell'evento", false,  ClassType.ORA),
+	DATAFINE("Data conclusiva", "Data di conclusione dell'evento", false,  ClassType.DATA),
+	ORAFINE("Ora conclusiva", "Ora di conclusione dell'evento", false,  ClassType.ORA),
 	NOTE("Note", "Informazioni aggiuntive", false, ClassType.STRING),
 	
 	//Nuovi campi aggiunti nella versione 3
-	TOLLERANZANUMEROPARTECIPANTI("Tolleranza numero partecipanti", "Numero di partecipanti eventualmente accettabili in esubero rispetto al \"Numero di partecipanti\"", false, ClassType.INTEGER),
-	TERMINEULTIMORITIROISCRIZIONE("Termine ultimo di ritiro iscrizione", " Data entro cui a ogni fruitore che ha aderito all’evento è concesso di cancellare la sua iscrizione e al fruitore che ha proposto l’evento di ritirare la proposta", false, ClassType.DATA),
+	TOLL_PARTECIPANTI("Tolleranza numero partecipanti", "Numero di partecipanti eventualmente accettabili in esubero rispetto al \"Numero di partecipanti\"", false, ClassType.INTEGER),
+	TERMINE_RITIRO("Termine ultimo di ritiro iscrizione", " Data entro cui a ogni fruitore che ha aderito all’evento è concesso di cancellare la sua iscrizione e al fruitore che ha proposto l’evento di ritirare la proposta", false, ClassType.DATA),
 	//Campi FootballMatch
 	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.GENDER),
-	FASCIADIETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL);
+	FASCIA_ETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL);
 	
 	//Nuovi campi aggiunti nella versione 3
 
