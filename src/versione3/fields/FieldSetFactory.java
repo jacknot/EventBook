@@ -66,6 +66,8 @@ public class FieldSetFactory {
 		cc.add(new Field <>(FieldHeading.DATACONCLUSIVA));
 		cc.add(new Field <>(FieldHeading.ORACONCLUSIVA));
 		cc.add(new Field <>(FieldHeading.NOTE));
+		cc.add(new Field <>(FieldHeading.TOLLERANZANUMEROPARTECIPANTI));
+		cc.add(new Field <>(FieldHeading.TERMINEULTIMORITIROISCRIZIONE));
 		return cc;
 	}
 	/**Restituisce un contenitore di campi a seconda del tipo inserito in ingresso

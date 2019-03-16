@@ -44,6 +44,7 @@ public class Proposal implements Serializable{
 		//gestisce il caso in cui l'evento di riferimento sia già valido
 		update();
 	}
+	
 	/**
 	 * Fa cambiare stato alla proposta
 	 */
@@ -138,6 +139,11 @@ public class Proposal implements Serializable{
 	 */
 	public boolean isValid() {
 		return event.isValid();
+	}
+	
+	public boolean isOwner(Notifiable user) {
+		//TORNA VERO SE USERNAME E' L'OWNER DELLA PROPOSTA
+		return owner.equals(user);
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

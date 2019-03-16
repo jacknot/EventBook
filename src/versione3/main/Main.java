@@ -353,8 +353,10 @@ public class Main {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
+		}),
+		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(args)->{
+			ProposalSet userProposalSubscription = noticeBoard.getUserProposal(session.getOwner());
 		});
-		
 		/**
 		 * Il nome del comando
 		 */

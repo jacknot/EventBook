@@ -48,6 +48,7 @@ class CommandList extends ArrayList<Command>{
 		add(Command.SHOW_NOTICEBOARD);
 		add(Command.PUBLISH);
 		add(Command.PARTICIPATE);
+		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		remove(Command.REGISTRATION);
 		remove(Command.LOGIN);	
 	}
@@ -68,6 +69,7 @@ class CommandList extends ArrayList<Command>{
 		remove(Command.SHOW_NOTICEBOARD);
 		remove(Command.PUBLISH);
 		remove(Command.PARTICIPATE);
+		remove(Command.UNSUBSCRIBE);
 	}
 	
 	

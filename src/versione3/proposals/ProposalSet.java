@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import users.Notifiable;
+import users.User;
 
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato
@@ -93,6 +94,16 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		IntStream.range(0, size())
 					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, get(i).toString())));
 		return sb.toString();
+	}
+	
+	public synchronized ProposalSet getUserProposal(Notifiable user) {
+		ArrayList<Proposal> userRegistration = new ArrayList<Proposal>();
+		for(int i=0; i<this.size(); i++) {
+			if(this.get(i).isOwner(user)) {
+				userRegistration.add(this.get(i));
+			}
+		}
+		return (ProposalSet) userRegistration;
 	}
 	
 	/**

@@ -99,6 +99,7 @@ public class Session {
 	public String showNotification() {
 		return owner.getPrivateSpace().toString();
 	}
+	
 	/**
 	 * Controlla se la sessione contiene la proposta di cui si è inserito l'identificatore
 	 * @param id l'identificatore della proposta

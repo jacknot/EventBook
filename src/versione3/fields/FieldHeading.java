@@ -25,9 +25,14 @@ public enum FieldHeading{
 	ORACONCLUSIVA("Ora conclusiva", "Ora di conclusione dell'evento", false,  ClassType.ORA),
 	NOTE("Note", "Informazioni aggiuntive", false, ClassType.STRING),
 	
+	//Nuovi campi aggiunti nella versione 3
+	TOLLERANZANUMEROPARTECIPANTI("Tolleranza numero partecipanti", "Numero di partecipanti eventualmente accettabili in esubero rispetto al \"Numero di partecipanti\"", false, ClassType.INTEGER),
+	TERMINEULTIMORITIROISCRIZIONE("Termine ultimo di ritiro iscrizione", " Data entro cui a ogni fruitore che ha aderito all’evento è concesso di cancellare la sua iscrizione e al fruitore che ha proposto l’evento di ritirare la proposta", false, ClassType.DATA),
 	//Campi FootballMatch
 	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.GENDER),
 	FASCIADIETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL);
+	
+	//Nuovi campi aggiunti nella versione 3
 
 	/**
 	 * Contiene il nome
