@@ -75,6 +75,12 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 			return get(id).signUp(user);
 		return false;
 	}
+	
+	public synchronized boolean isSubcriber(int id, Notifiable user) {
+		if(id < size())
+			return get(id).isSubscriber(user);
+		return false;
+	}
 	/**
 	 * Controlla che il set contenga almeno una proposta con il titolo inserito
 	 * @param p il titolo della proposta
@@ -93,6 +99,21 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		IntStream.range(0, size())
 					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, get(i).toString())));
 		return sb.toString();
+	}
+	
+	/**
+	 * Ritorna una stringa contenente tutte le proposte a cui è iscritto l'utente passato come parametro
+	 * @param user utente
+	 * @return strigna di proposte a cui l'utente è iscritto
+	 */
+	public synchronized String showUserSubscription(Notifiable user) {
+		StringBuilder userSubscription = new StringBuilder("Proposte a cui sei iscritto:");
+		for(int i=0; i<this.size(); i++) {
+			if(this.get(i).isSubscriber(user)) {
+				userSubscription.append(String.format("\n%d : %s", i, this.get(i).toString()));
+			}
+		}
+		return userSubscription.toString();
 	}
 	
 	/**

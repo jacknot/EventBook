@@ -1,6 +1,8 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import main.Main.Command;
 
@@ -16,6 +18,10 @@ class CommandList extends ArrayList<Command>{
 	 * Il formato con cui vengono stampati i comandi
 	 */
 	private static final String TOSTRING_FORMAT = "\n\t%-20s%s";
+	/**
+	 * Espressione regolare per l'estrazione del comando
+	 */
+	private static final String REGEX_COMMAND = "^[a-z]+( )?";
 	
 	/**
 	 * Costruttore
@@ -42,6 +48,7 @@ class CommandList extends ArrayList<Command>{
 		add(Command.SHOW_NOTICEBOARD);
 		add(Command.PUBLISH);
 		add(Command.PARTICIPATE);
+		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		remove(Command.REGISTRATION);
 		remove(Command.LOGIN);	
 	}
@@ -62,6 +69,20 @@ class CommandList extends ArrayList<Command>{
 		remove(Command.SHOW_NOTICEBOARD);
 		remove(Command.PUBLISH);
 		remove(Command.PARTICIPATE);
+		remove(Command.UNSUBSCRIBE);
+	}
+	
+	
+	/**
+	 * Estrae dall'input dell'utente il comando, separandolo dagli eventuali parametri
+	 * @param input input dell'utente
+	 * @return l'effettivo comando
+	 */
+	public String getCommand(String input) {
+		Matcher matcher = Pattern.compile(REGEX_COMMAND).matcher(input);
+		if(matcher.find())
+			return matcher.group().trim();
+		return null;
 	}
 	
 	/**
@@ -70,22 +91,28 @@ class CommandList extends ArrayList<Command>{
 	 * @return True - è presente un comando con il nome inserito<br>False - non è presente un comando con il nome inserito
 	 */
 	public boolean contains(String key) {
-		if(key.equals("help")) return true;
+		String command = getCommand(key);
+		if(command.equals("help")) return true;
 		return this.stream()
-				.anyMatch((c)->c.hasName(key));
+				.anyMatch((c)->c.hasName(command));
 	}
 	
 	/**
 	 * Esegue il comando di cui si è inserito il nome, se presente
-	 * @param command il nome del comando da eseguire
+	 * @param input input dell'utente, contenente il comando e gli eventuali parametri
 	 */
-	public void run(String command) {
+	public void run(String input) {
+		String command = getCommand(input);
+		String parameters = input.replaceAll(command, "").trim();
+		String[] args = new String[0];
+		if(!parameters.equals(""))
+			args = parameters.split(" ");
 		if(command.equals("help"))
 			System.out.println(toString());
 		else if(contains(command))
 			this.stream()
 				.filter((c)->c.hasName(command))
-				.findFirst().get().run();
+				.findFirst().get().run(args);
 	}
 	
 	/* (non-Javadoc)

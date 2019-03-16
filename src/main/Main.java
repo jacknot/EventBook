@@ -1,5 +1,6 @@
 package main;
 
+
 import java.util.*;
 import java.util.stream.*;
 
@@ -142,26 +143,36 @@ public class Main {
 	 */
 	protected enum Command {
 		
-		EXIT("exit", "Esci dal programma",()->System.exit(0)),
-		CATEGORY("categoria", "Mostra la categoria disponibile", ()->{
+		EXIT("exit", "Esci dal programma",(args)->System.exit(0)),
+		CATEGORY("categoria", "Mostra la categoria disponibile", (args)->{
 			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			System.out.print(p.getDescription());
 		}),
-		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", ()->{
+		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", (args)->{
 			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			System.out.print(p.getFeatures());
 		}),
-		REGISTRATION("registra", "Registra un fruitore", ()->{
-			System.out.print("Inserisci il nome: ");
-			String name = in.nextLine();
+		REGISTRATION("registra", "Registra un fruitore", (args)->{
+			String name = "";
+			if(args.length == 1) {
+				name = args[0];
+			} else {
+				System.out.print("Inserisci il nome: ");
+				name = in.nextLine();
+			}
 			if(database.register(name))
 				System.out.println("L'utente è stato registrato con successo");
 			else
 				System.out.println("L'utente è già esistente");
 		}),
-		LOGIN("login", "Accedi", ()->{
-			System.out.print("Inserisci il nome: ");
-			String name = in.nextLine();
+		LOGIN("login", "Accedi", (args)->{
+			String name = "";
+			if(args.length == 1) {
+				name = args[0];
+			} else {
+				System.out.print("Inserisci il nome: ");
+				name = in.nextLine();
+			}
 			if(database.contains(name)) {
 				session = new Session(database.getUser(name));
 				logIn();
@@ -171,12 +182,12 @@ public class Main {
 				System.out.println("Utente non registrato");
 			}
 		}),
-		LOGOUT("logout", "Per uscire", ()->{
+		LOGOUT("logout", "Per uscire", (args)->{
 			session = null;
 			logOut();
 			System.out.println("Logout eseguito");
 			}),
-		MODIFY("modifica","Modifica il campo di una proposta",()->{
+		MODIFY("modifica","Modifica il campo di una proposta",(args)->{
 			boolean abort = false;
 			//inserisci id proposta
 			boolean valid = false;
@@ -240,7 +251,7 @@ public class Main {
 			else
 				System.out.println("Modifica fallita");
 		}),
-		NEW_EVENT("crea", "Crea un nuovo evento", ()->{
+		NEW_EVENT("crea", "Crea un nuovo evento", (args)->{
 			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			Stream.of(FieldHeading.values())
 					.filter(( fd )->event.containsField(fd.getName()))
@@ -276,7 +287,7 @@ public class Main {
 			else
 				System.out.println("La proposta non è stata aggiunta");
 		}),
-		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte", ()->{
+		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte", (args)->{
 			String proposals = session.showInProgress();
 			if(proposals.equals(""))
 				System.out.print("Nessuna proposta in lavorazione!\n");
@@ -284,8 +295,8 @@ public class Main {
 				System.out.print("Le proposte in lavorazione:\n" + session.showInProgress());			
 			}
 		}),
-		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", ()->System.out.println(session.showNotification())),
-		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",()->{
+		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", (args)->System.out.println(session.showNotification())),
+		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",(args)->{
 			boolean valid = false;
 			do {
 				try {
@@ -299,7 +310,7 @@ public class Main {
 				}
 			}while(!valid);
 		}),
-		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",()->{
+		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",(args)->{
 			noticeBoard.refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente vedrà la bacheca aggiornata
 			String content = noticeBoard.showContent();
 			if(content.equals(""))
@@ -309,7 +320,7 @@ public class Main {
 			}
 		
 		}),
-		PUBLISH("pubblica", "Pubblica un evento creato", ()->{
+		PUBLISH("pubblica", "Pubblica un evento creato", (args)->{
 			boolean valid = false;
 			do {
 				try {
@@ -328,23 +339,41 @@ public class Main {
 				}
 			}while(!valid);
 		}),
-		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca",()->{
+		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca",(args)->{
 			boolean valid = false;
 			do {
 				try {
-				System.out.print(INSERT_IDENTIFIER);
-				int id = Integer.parseInt(in.nextLine());
-				valid = true;
-				if(!noticeBoard.signUp(id, session.getOwner()))
-					System.out.println("L'iscrizione non è andata a buon fine");
-				else
-					System.out.println("L'iscrizione è andata a buon fine");
+					System.out.print(INSERT_IDENTIFIER);
+					int id = Integer.parseInt(in.nextLine());
+					valid = true;
+					if(!noticeBoard.signUp(id, session.getOwner()))
+						System.out.println("L'iscrizione non è andata a buon fine");
+					else
+						System.out.println("L'iscrizione è andata a buon fine");
 				}catch(Exception e) {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
+		}),
+		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(args)->{
+			System.out.println(noticeBoard.showUserSubscription(session.getOwner()));
+			boolean valid = false;
+			do {
+				try {
+					System.out.print(INSERT_IDENTIFIER);
+					int id = Integer.parseInt(in.nextLine());
+					valid = true;
+					if(noticeBoard.isSubscriber(id, session.getOwner()))
+						noticeBoard.get(id).
+						System.out.println("L'iscrizione non è andata a buon fine");
+					else
+						System.out.println("L'iscrizione è andata a buon fine");
+				}catch(Exception e) {
+					System.out.println(INSERT_NUMBER);
+				}
+			}while(!valid);
+
 		});
-		
 		/**
 		 * Il nome del comando
 		 */
@@ -356,7 +385,7 @@ public class Main {
 		/**
 		 * L'azione che il comando deve compiere
 		 */
-		private Runnable runnable;
+		private Shell runnable;
 		
 		/**
 		 * Costruttore
@@ -364,7 +393,7 @@ public class Main {
 		 * @param description la descrizione del comando
 		 * @param runnable ciò che il comando deve fare
 		 */
-		private Command(String comand, String description, Runnable runnable) {
+		private Command(String comand, String description, Shell runnable) {
 			this.name = comand;
 			this.description = description;
 			this.runnable = runnable;
@@ -389,8 +418,8 @@ public class Main {
 		/**
 		 * Esegue il comando
 		 */
-		public void run() {
-			runnable.run();
+		public void run(String[] args) {
+			runnable.run(args);
 		}
 		
 		/**

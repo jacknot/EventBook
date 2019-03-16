@@ -1,4 +1,5 @@
-package versione3.main;
+package main;
+
 
 public interface Shell {
 
