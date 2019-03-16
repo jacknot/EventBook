@@ -103,6 +103,22 @@ public class Proposal implements Serializable{
 		}
 		return false; 
 	}
+	
+	/**
+	 * Disiscrive un fruitore alla proposta 
+	 * @param user il fruitore da iscrivere
+	 * @return True - l'utente è stato correttamente disiscritto dalla proposta<br>False - l'utente non è stato disiscritto dalla proposta
+	 */
+	public boolean unsubscribe(Notifiable user) {
+		//if(aState.canUnSign(this)){ CONTROLLO SE L'UTENTE SI PUò DISISCRIVERE -> metodo da fare in Stato
+			if(!owner.equals(user) && subscribers.contains(user)) {
+				subscribers.remove(user);
+				update();
+				return true;
+			}
+		//}
+		return false; 
+	}
 	/**
 	 * Verifica se la proposta è nello stato inserito
 	 * @param s lo stato da controllare

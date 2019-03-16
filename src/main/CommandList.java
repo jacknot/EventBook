@@ -21,7 +21,7 @@ class CommandList extends ArrayList<Command>{
 	/**
 	 * Espressione regolare per l'estrazione del comando
 	 */
-	private static final String REGEX_COMMAND = "^[a-z]+( )?";
+	private static final String REGEX_COMMAND = "^[a-z][A-Za-z]+( )?";
 	
 	/**
 	 * Costruttore

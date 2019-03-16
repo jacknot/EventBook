@@ -76,7 +76,25 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		return false;
 	}
 	
-	public synchronized boolean isSubcriber(int id, Notifiable user) {
+	/**
+	 * Discrivi un utente dalla proposta di cui si è inserito l'identificatore
+	 * @param id l'identificatore della proposta a cui aggiungere l'utente
+	 * @param user l'utente da disiscrivere alla proposta 
+	 * @return l'esito della disiscrizione
+	 */
+	public synchronized boolean unsubscribe(int id, Notifiable user) {
+		if(id < size())
+			return get(id).unsubscribe(user);
+		return false;
+	}
+	
+	/**
+	 * Verifica che l'utente passato come parametro sia iscritto alla proposta identificata da id
+	 * @param id id della proposta
+	 * @param user utente
+	 * @return True se iscritto - False se non iscritto
+	 */
+	public synchronized boolean isSubscriber(int id, Notifiable user) {
 		if(id < size())
 			return get(id).isSubscriber(user);
 		return false;

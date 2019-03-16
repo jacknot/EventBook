@@ -8,6 +8,7 @@ import categories.*;
 import fields.*;
 import proposals.*;
 import users.Database;
+import users.User;
 import utility.*;
 
 /**
@@ -356,18 +357,22 @@ public class Main {
 			}while(!valid);
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(args)->{
-			System.out.println(noticeBoard.showUserSubscription(session.getOwner()));
+			User actualUser = session.getOwner();
+			System.out.println(noticeBoard.showUserSubscription(actualUser));
 			boolean valid = false;
 			do {
 				try {
 					System.out.print(INSERT_IDENTIFIER);
 					int id = Integer.parseInt(in.nextLine());
 					valid = true;
-					if(noticeBoard.isSubscriber(id, session.getOwner()))
-						noticeBoard.get(id).
-						System.out.println("L'iscrizione non è andata a buon fine");
+					if(noticeBoard.isSubscriber(id, actualUser)) {
+						if(noticeBoard.unsubscribe(id , actualUser))
+							System.out.println("La disiscrizione è andata a buon fine");
+						else 
+							System.out.println("La disiscrizione NON è andata a buon fine");
+					}
 					else
-						System.out.println("L'iscrizione è andata a buon fine");
+						System.out.println("Non sei iscritto a questa proposta");
 				}catch(Exception e) {
 					System.out.println(INSERT_NUMBER);
 				}
