@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import categories.Category;
 import users.Message;
 import users.Notifiable;
+import users.User;
 
 /**
  * Una proposta fa riferimento ad un particolare evento e consente di potersi iscrivere ad essa
@@ -26,20 +27,20 @@ public class Proposal implements Serializable{
 	/**
 	 * Il proprietario della proposta
 	 */
-	private Notifiable owner;
+	private User owner;
 	/**
 	 * Gli iscritti alla proposta
 	 */
-	private ArrayList<Notifiable> subscribers;
+	private ArrayList<User> subscribers;
 	/**
 	 * Costruttore di una proposta
 	 * @param event L'evento a cui farà riferimento la proposta
 	 * @param owner Il proprietario della proposta
 	 */
-	public Proposal(Category event, Notifiable owner) {
+	public Proposal(Category event, User owner) {
 		this.event = event;
 		this.owner = owner;
-		this.subscribers = new ArrayList<Notifiable>();
+		this.subscribers = new ArrayList<User>();
 		this.aState = State.INVALID;
 		//gestisce il caso in cui l'evento di riferimento sia già valido
 		update();
@@ -93,9 +94,9 @@ public class Proposal implements Serializable{
 	 * @param user il fruitore da iscrivere
 	 * @return True - l'utente è stato correttamente iscritto alla proposta<br>False - l'utente non è stato iscritto alla proposta
 	 */
-	public boolean signUp(Notifiable user) {
+	public boolean signUp(User user) {
 		if(aState.canSignUp(this)){
-			if(!owner.equals(user) && !subscribers.contains(user)) {
+			if(!isSignedUp(user)) {
 				subscribers.add(user);
 				update();
 				return true;
@@ -109,14 +110,14 @@ public class Proposal implements Serializable{
 	 * @param user il fruitore da iscrivere
 	 * @return True - l'utente è stato correttamente disiscritto dalla proposta<br>False - l'utente non è stato disiscritto dalla proposta
 	 */
-	public boolean unsubscribe(Notifiable user) {
-		//if(aState.canUnSign(this)){ CONTROLLO SE L'UTENTE SI PUò DISISCRIVERE -> metodo da fare in Stato
-			if(!owner.equals(user) && subscribers.contains(user)) {
+	public boolean unsubscribe(User user) {
+		if(aState.canSignUp(this)){
+			if(!isOwner(user) && isSignedUp(user)) {
 				subscribers.remove(user);
 				update();
 				return true;
 			}
-		//}
+		}
 		return false; 
 	}
 	/**
@@ -169,7 +170,7 @@ public class Proposal implements Serializable{
 	 * @param user utente
 	 * @return True se proprietario<br> False altrimenti
 	 */
-	public boolean isOwner(Notifiable user) {
+	public boolean isOwner(User user) {
 		return owner.equals(user);
 	}
 	
@@ -178,18 +179,17 @@ public class Proposal implements Serializable{
 	 * @param user utente
 	 * @return True se iscritto<br> False altrimenti
 	 */
-	public boolean isSubscriber(Notifiable user) {
-		for(Notifiable utente: subscribers) {
-			if(utente.equals(user))
-				return true;
-		}
-		return false;
+	public boolean isSignedUp(User user) {
+		return isOwner(user) || subscribers.stream()
+											.anyMatch(( s )->s.equals(user));
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Propositore : " + owner + "\n" + event.toString();
+		return "Propositore : " + owner + "\n" + event.toString()
+					+ "\tIscritti: " + subNumber()
+					+ "\n\t" +subscribers.toString();
 	}
 
 }

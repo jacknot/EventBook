@@ -38,7 +38,7 @@ public class Main {
 	private static CommandList protocol;
 	private static Session session;
 	private static Database database;
-	private static ProposalSet noticeBoard;
+	private static NoticeBoard noticeBoard;
 	
 	private static final long DELAY = 3600000;//60MIN
 	/**
@@ -89,9 +89,9 @@ public class Main {
 			System.out.println("Caricato nuovo database");
 			}
 		System.out.println("Caricamento bacheca ...");
-		noticeBoard = (ProposalSet)new FileHandler().load(NOTICEBOARD);
+		noticeBoard = (NoticeBoard)new FileHandler().load(NOTICEBOARD);
 		if(noticeBoard == null) {
-			noticeBoard = ProposalSet.newNoticeBoard();
+			noticeBoard = NoticeBoard.newNoticeBoard();
 			System.out.println("Caricata nuova bacheca");
 			}
 		System.out.println("Fine caricamento");
@@ -365,7 +365,7 @@ public class Main {
 					System.out.print(INSERT_IDENTIFIER);
 					int id = Integer.parseInt(in.nextLine());
 					valid = true;
-					if(noticeBoard.isSubscriber(id, actualUser)) {
+					if(noticeBoard.isSignedUp(id, actualUser)) {
 						if(noticeBoard.unsubscribe(id , actualUser))
 							System.out.println("La disiscrizione è andata a buon fine");
 						else 

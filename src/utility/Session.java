@@ -97,7 +97,7 @@ public class Session {
 	 * @return L'elenco delle notifiche sottoforma di stringa
 	 */
 	public String showNotification() {
-		return owner.getPrivateSpace().toString();
+		return owner.showNotifications();
 	}
 	
 	/**

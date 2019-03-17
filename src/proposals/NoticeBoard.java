@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import users.Notifiable;
 import users.User;
 
 /**
@@ -12,7 +11,7 @@ import users.User;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class ProposalSet extends ArrayList<Proposal> implements Serializable{
+public class NoticeBoard extends ArrayList<Proposal> implements Serializable{
 	/**
 	 * 
 	 */
@@ -31,7 +30,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * Costruttore
 	 * @param nState lo stato in cui devono essere tutte le proposte inserite
 	 */
-	public ProposalSet(State nState) {
+	public NoticeBoard(State nState) {
 		super();
 		this.state = nState;
 	}
@@ -53,7 +52,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @param user l'utente che vuole rimuovere la proposta
 	 * @return True - la proposta è stata ritirata<br>False - la proposta non è stata ritirata
 	 */
-	public synchronized boolean withdraw(int id, Notifiable user) {
+	public synchronized boolean withdraw(int id, User user) {
 		boolean outcome = false;
 		if(contains(id)) {
 			if(this.get(id).isOwner(user)) {
@@ -87,7 +86,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
 	 */
-	public synchronized boolean signUp(int id, Notifiable user) {
+	public synchronized boolean signUp(int id, User user) {
 		if(contains(id))
 			return get(id).signUp(user);
 		return false;
@@ -99,7 +98,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @param user l'utente da disiscrivere alla proposta 
 	 * @return l'esito della disiscrizione
 	 */
-	public synchronized boolean unsubscribe(int id, Notifiable user) {
+	public synchronized boolean unsubscribe(int id, User user) {
 		if(contains(id))
 			return get(id).unsubscribe(user);
 		return false;
@@ -111,9 +110,9 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @param user utente
 	 * @return True se iscritto - False se non iscritto
 	 */
-	public synchronized boolean isSubscriber(int id, Notifiable user) {
+	public synchronized boolean isSignedUp(int id, User user) {
 		if(contains(id))
-			return get(id).isSubscriber(user);
+			return get(id).isSignedUp(user);
 		return false;
 	}
 	/**
@@ -149,10 +148,10 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @param user utente
 	 * @return strigna di proposte a cui l'utente è iscritto
 	 */
-	public synchronized String showUserSubscription(Notifiable user) {
+	public synchronized String showUserSubscription(User user) {
 		StringBuilder userSubscription = new StringBuilder("Proposte a cui sei iscritto:");
 		for(int i=0; i<this.size(); i++) {
-			if(this.get(i).isSubscriber(user)) {
+			if(this.get(i).isSignedUp(user)) {
 				userSubscription.append(String.format("\n%d : %s", i, this.get(i).toString()));
 			}
 		}
@@ -164,7 +163,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return una nuova bacheca
 	 */
 	//da inserire potenzialmente in una Factory
-	public static ProposalSet newNoticeBoard() {
-		return new ProposalSet(State.OPEN);
+	public static NoticeBoard newNoticeBoard() {
+		return new NoticeBoard(State.OPEN);
 	}
 }
