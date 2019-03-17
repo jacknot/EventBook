@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import categories.Category;
 import users.Message;
-import users.Notifiable;
 import users.User;
 
 /**
