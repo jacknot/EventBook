@@ -57,7 +57,7 @@ public class NoticeBoard extends ArrayList<Proposal> implements Serializable{
 		if(contains(id)) {
 			if(this.get(id).isOwner(user)) {
 				outcome = this.get(id).withdraw();
-				clear();
+				clean();
 			}
 		}
 		return outcome;

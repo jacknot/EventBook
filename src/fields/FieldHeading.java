@@ -122,4 +122,8 @@ public enum FieldHeading{
 	public boolean equals(FieldHeading eh) {
 		return this.name.equals(eh.name);
 	} 
+	
+	public static void main(String[] args) {
+		java.util.stream.Stream.of(FieldHeading.values()).filter((f)->{return false;}).findAny().isPresent();
+	}
 }

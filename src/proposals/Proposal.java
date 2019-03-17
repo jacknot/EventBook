@@ -112,9 +112,9 @@ public class Proposal implements Serializable{
 	public boolean unsubscribe(User user) {
 		if(aState.canSignUp(this)){
 			if(!isOwner(user) && isSignedUp(user)) {
-				subscribers.remove(user);
+				boolean outcome = subscribers.remove(user);
 				update();
-				return true;
+				return outcome;
 			}
 		}
 		return false; 
