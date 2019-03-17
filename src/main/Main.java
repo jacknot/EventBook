@@ -95,6 +95,7 @@ public class Main {
 			System.out.println("Caricata nuova bacheca");
 			}
 		System.out.println("Fine caricamento");
+		
 	}
 	/**
 	 * Salva la bacheca e il database
