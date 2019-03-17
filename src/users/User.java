@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Ad ogni fruitore è associato, oltre al nome, uno spazio personale inizialmente vuoto<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class User implements Serializable, Notifiable{
+public class User implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -58,7 +58,7 @@ public class User implements Serializable, Notifiable{
 	 * @return true se uguali<br>false altrimenti
 	 */
 	public boolean equals(User f) {
-		return this.name.equals(f.name);
+		return name.equals(f.name);
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -67,10 +67,10 @@ public class User implements Serializable, Notifiable{
 		return name;
 	}
 	/**
-	 * Restituisce lo spazio personale dell'utente attualmente connesso
-	 * @return lo spazio personale dell'utente
+	 * Restituisce il contenuto dello spazio personale dell'utente sotto forma di testo
+	 * @return il contenuto dello spazio personale come testo
 	 */
-	public PersonalSpace getPrivateSpace() {
-		return this.privateSpace;
+	public String showNotifications() {
+		return this.privateSpace.toString();
 	}
 }
