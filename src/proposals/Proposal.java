@@ -2,6 +2,7 @@ package proposals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import categories.Category;
 import users.Message;
@@ -112,7 +113,7 @@ public class Proposal implements Serializable{
 	public boolean unsubscribe(User user) {
 		if(aState.canSignUp(this)){
 			if(!isOwner(user) && isSignedUp(user)) {
-				boolean trovato = false;
+				/*boolean trovato = false;
 				int i=0;
 				while(!trovato) {
 					if(subscribers.get(i).equals(user)) {
@@ -120,11 +121,10 @@ public class Proposal implements Serializable{
 						trovato = true;
 					}
 					i++;
-				}
-				//boolean outcome = subscribers.remove(user);
+				}*/
+				subscribers.remove(subscribers.stream().filter((s) -> s.equals(user)).findFirst().get());
 				update();
-				//return outcome;
-				return trovato;
+				return true;
 			}
 		}
 		return false; 
