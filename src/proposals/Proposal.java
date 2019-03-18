@@ -2,8 +2,6 @@ package proposals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.stream.IntStream;
-
 import categories.Category;
 import users.Message;
 import users.User;
@@ -32,6 +30,10 @@ public class Proposal implements Serializable{
 	 * Gli iscritti alla proposta
 	 */
 	private ArrayList<User> subscribers;
+	
+	//Non so se va bene
+	private ArrayList<State> statePassages;
+	
 	/**
 	 * Costruttore di una proposta
 	 * @param event L'evento a cui farà riferimento la proposta
@@ -44,6 +46,7 @@ public class Proposal implements Serializable{
 		this.aState = State.INVALID;
 		//gestisce il caso in cui l'evento di riferimento sia già valido
 		update();
+		statePassages.add(aState);
 	}
 	
 	/**
@@ -51,6 +54,7 @@ public class Proposal implements Serializable{
 	 */
 	public void update() {
 		aState.transition(this);
+		statePassages.add(aState);
 	}
 	/**
 	 * Imposta un nuovo stato alla proposta
@@ -58,6 +62,7 @@ public class Proposal implements Serializable{
 	 */
 	public void setState(State nS) {
 		aState = nS;
+		statePassages.add(aState);
  	}
 	/**
 	 * Verifica se la proposta è uguale a quella inserita
@@ -198,7 +203,7 @@ public class Proposal implements Serializable{
 	public String toString() {
 		return "Propositore : " + owner + "\n" + event.toString()
 					+ "\tIscritti: " + subNumber()
-					+ "\n\t" +subscribers.toString();
+					+ "\n\t" +subscribers.toString() + "\n";
 	}
 
 }

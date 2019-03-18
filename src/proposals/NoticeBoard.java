@@ -152,7 +152,7 @@ public class NoticeBoard extends ArrayList<Proposal> implements Serializable{
 		StringBuilder userSubscription = new StringBuilder("Proposte a cui sei iscritto:");
 		for(int i=0; i<this.size(); i++) {
 			if(this.get(i).isSignedUp(user)) {
-				userSubscription.append(String.format("\n%d : %s", i, this.get(i).toString()));
+				userSubscription.append(String.format(PROPOSAL, i, this.get(i).toString()));
 			}
 		}
 		return userSubscription.toString();

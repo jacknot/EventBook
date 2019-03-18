@@ -49,11 +49,11 @@ public class Main {
 		protocol = new CommandList();
 		
 		//chiusura + terminazione anomala -> save
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 
-			System.out.println(EXITMSG);	
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 		
 			in.close();
 			refreshTimer.cancel();
 			save();
+			System.out.println(EXITMSG);	
 		}));
 		
 		in = new Scanner(System.in);
@@ -119,7 +119,13 @@ public class Main {
 		protocol.logOut();
 	}
 	
-	private static Object acceptValue(FieldHeading field, String message) { //NUOVO MODO
+	/**
+	 * Richiede all'utente di inserire un valore e ne verifica la validità in base al campo
+	 * @param field campo su cui verificare la validità del dato
+	 * @param message richiesta all'utente di inserire il dato
+	 * @return Oggetto correttamente elaborato in base al campo
+	 */
+	private static Object acceptValue(FieldHeading field, String message) {
 		boolean valid = false;
 		Object obj = null;
 		do {
@@ -136,6 +142,22 @@ public class Main {
 				System.out.println("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
 		}while(!valid);
 		return obj;
+	}
+	
+	/**
+	 * Rimuove una notifica dallo spazio personale in base all'id
+	 * @param id id della notifica
+	 */
+	private static void removeNotification(String id) {
+		try {
+			int i = Integer.parseInt(id);
+			if(!session.getOwner().removeMsg(i))
+				System.out.println("La rimozione non è andata a buon fine");
+			else 
+				System.out.println("Rimossa correttamente");
+		}catch(Exception e) {
+			System.out.println("Dato invalido, inserisci un numero");
+		}
 	}
 	
 	/**
@@ -209,7 +231,7 @@ public class Main {
 			if(!abort) {
 				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
 				String newField = in.nextLine();
-				if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equals(newField)))
+				if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
 					field = Stream.of(FieldHeading.values())
 							.filter((fh)->fh.getName().equals(newField))
 							.findAny()
@@ -227,7 +249,10 @@ public class Main {
 				valid = false;
 				do {
 					System.out.println("Sei sicuro di voler modificare ?");
-					System.out.println("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + obj.toString());
+					String newValue = "";
+					if(obj!=null)
+						newValue = obj.toString();
+					System.out.println("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + newValue);
 					System.out.print("[y/n]> ");
 					String confirm = in.nextLine();
 					if(confirm.equalsIgnoreCase("n")) {
@@ -271,18 +296,15 @@ public class Main {
 		}),
 		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", (args)->System.out.println(session.showNotification())),
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",(args)->{
-			boolean valid = false;
-			do {
-				try {
-					System.out.print("Inserisci l'id da eliminare: ");
-					int i = Integer.parseInt(in.nextLine());
-					valid = true;
-					if(!session.getOwner().removeMsg(i))
-						System.out.println("La rimozione non è andata a buon fine");
-				}catch(Exception e) {
-					System.out.println("Dato invalido, inserisci un numero");
-				}
-			}while(!valid);
+			if(args.length > 0) {
+				for(int i=0; i<args.length; i++) {
+					removeNotification(args[i]);
+				}		
+			} else {
+				System.out.print(INSERT_IDENTIFIER);
+				String id = in.nextLine();
+				removeNotification(id);
+			}
 		}),
 		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",(args)->{
 			noticeBoard.refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente vedrà la bacheca aggiornata
@@ -290,7 +312,7 @@ public class Main {
 			if(content.equals(""))
 				System.out.print("Nessuna proposta in bacheca!\n");
 			else {
-				System.out.print("Le proposte in bacheca:\n" + noticeBoard.showContent());		
+				System.out.print("Le proposte in bacheca:\n" + content);		
 			}
 		
 		}),
