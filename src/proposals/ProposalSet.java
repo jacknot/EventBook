@@ -22,7 +22,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * Lo stato che desidero tutte le proposte nella lista abbiano
 	 */
 	private final State state;
-	
+
 	/**
 	 * Costruttore
 	 * @param nState lo stato in cui devono essere tutte le proposte inserite
@@ -39,13 +39,13 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		this.stream()
 			.filter((p)->!p.hasState(state))
 			.forEach((p)->toClean.add(p));
-		removeAll(toClean);
+		this.removeAll(toClean);
 		return (Proposal[]) toClean.toArray();
 	}
 	/**
 	 * Effettua un refresh delle proposte nel set
 	 */
-	public synchronized Proposal[] refresh() {
+	public Proposal[] refresh() {
 		this.stream()
 				.forEach(( p ) -> p.update());
 		return clean();
@@ -54,10 +54,10 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * Mostra il contenuto dell'insieme di proposte in forma testuale
 	 * @return il contenuto dell'insieme in forma testuale
 	 */
-	public synchronized String showContent() {
+	public String showContent() {
 		StringBuilder sb = new StringBuilder();
-		IntStream.range(0, size())
-					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, get(i).toString())));
+		IntStream.range(0, this.size())
+					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, this.get(i).toString())));
 		return sb.toString();
 	}	
 	/**
@@ -72,7 +72,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @param p il titolo della proposta
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
-	public synchronized boolean contains(Proposal p) {
+	public boolean contains(Proposal p) {
 		return this.stream()
 					.anyMatch(( sp ) -> sp.equals(p));
 	}
@@ -81,7 +81,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @param id l'identificatore della proposta da controllare
 	 * @return True - il set contiene la proposta<br>False - il set non contiene la proposta
 	 */
-	public synchronized boolean contains(int id) {
+	public boolean contains(int id) {
 		return id >= 0 && id < this.size();
 	}
 }

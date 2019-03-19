@@ -1,6 +1,7 @@
 package proposals;
 
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import users.User;
 
@@ -130,5 +131,24 @@ public class ProposalHandler {
 	 */
 	public synchronized boolean contains(int id) {
 		return id >= 0 && id < bacheca.size();
+	}
+	/**
+	 * Effettua un update su tutto il set
+	 */
+	public synchronized void refresh() {
+		//ritirate fallite concluse non vanno da nessuna parte
+		//chiuse vanno in concluse
+		//aperte -> fallite/ritirate/chiuse
+		Stream.of(bacheca.refresh())
+				.forEach(( p )->{
+					if(p.hasState(proposteChiuse.getState())) 
+						proposteChiuse.add(p);
+					else if(p.hasState(proposteFallite.getState()))
+						proposteFallite.add(p);
+					else if(p.hasState(proposteRitirate.getState()))
+						proposteRitirate.add(p);
+		});
+		Stream.of(proposteChiuse.refresh())
+				.forEach(( p )->proposteConcluse.add(p));
 	}
 }
