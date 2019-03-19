@@ -46,9 +46,8 @@ public class Proposal implements Serializable{
 		this.owner = owner;
 		this.subscribers = new ArrayList<User>();
 		this.aState = State.INVALID;
-		//gestisce il caso in cui l'evento di riferimento sia già valido
-		update();
 		statePassages.add(new Pair<>(aState, LocalDate.now()));
+		update();
 	}
 	
 	/**

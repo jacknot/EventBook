@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import users.User;
-
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -20,7 +18,6 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * Formattazione per la visualizzazione testuale della singola proposta
 	 */
 	private static final String PROPOSAL = "\n%d : %s";
-	
 	/**
 	 * Lo stato che desidero tutte le proposte nella lista abbiano
 	 */
@@ -34,26 +31,25 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		super();
 		this.state = nState;
 	}
-
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
-	protected void clean() {
+	protected Proposal[] clean() {
 		ArrayList<Proposal> toClean = new ArrayList<Proposal>();
 		this.stream()
 			.filter((p)->!p.hasState(state))
 			.forEach((p)->toClean.add(p));
 		removeAll(toClean);
+		return (Proposal[]) toClean.toArray();
 	}
 	/**
 	 * Effettua un refresh delle proposte nel set
 	 */
-	public synchronized void refresh() {
+	public synchronized Proposal[] refresh() {
 		this.stream()
 				.forEach(( p ) -> p.update());
-		clean();
+		return clean();
 	}
-
 	/**
 	 * Mostra il contenuto dell'insieme di proposte in forma testuale
 	 * @return il contenuto dell'insieme in forma testuale
@@ -63,23 +59,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		IntStream.range(0, size())
 					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, get(i).toString())));
 		return sb.toString();
-	}
-	
-	/**
-	 * Ritorna una stringa contenente tutte le proposte a cui è iscritto l'utente passato come parametro
-	 * @param user utente
-	 * @return strigna di proposte a cui l'utente è iscritto
-	 */
-	public synchronized String showUserSubscription(User user) {
-		StringBuilder userSubscription = new StringBuilder("Proposte a cui sei iscritto:");
-		for(int i=0; i<this.size(); i++) {
-			if(this.get(i).isSignedUp(user)) {
-				userSubscription.append(String.format(PROPOSAL, i, this.get(i).toString()));
-			}
-		}
-		return userSubscription.toString();
-	}
-	
+	}	
 	/**
 	 * Restuisce lo stato che devono avere tutte le proposte
 	 * @return stato
@@ -87,13 +67,21 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	public State getState() {
 		return state;
 	}
-	
 	/**
-	 * Genera una nuova istanza di un insieme di proposte
-	 * @return una nuova bacheca
+	 * Controlla che il set contenga almeno una proposta con il titolo inserito
+	 * @param p il titolo della proposta
+	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
-	//da inserire potenzialmente in una Factory
-	public static ProposalSet newNoticeBoard() {
-		return new ProposalSet(State.OPEN);
+	public synchronized boolean contains(Proposal p) {
+		return this.stream()
+					.anyMatch(( sp ) -> sp.equals(p));
+	}
+	/**
+	 * Controlla che la proposta di cui si è inserito l'identificatore faccia parte del set
+	 * @param id l'identificatore della proposta da controllare
+	 * @return True - il set contiene la proposta<br>False - il set non contiene la proposta
+	 */
+	public synchronized boolean contains(int id) {
+		return id >= 0 && id < this.size();
 	}
 }

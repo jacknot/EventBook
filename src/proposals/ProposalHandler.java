@@ -1,9 +1,14 @@
 package proposals;
 
+import java.util.stream.IntStream;
+
 import users.User;
 
 public class ProposalHandler {
-
+	/**
+	 * Formattazione per la visualizzazione testuale della singola proposta
+	 */
+	private static final String PROPOSAL = "\n%d : %s";
 	/**
 	 * ArrayList contenente le proposte concluse
 	 */
@@ -48,7 +53,6 @@ public class ProposalHandler {
 		}
 		return false;
 	}
-	
 	/**
 	 * Ritira una proposta dalla bacheca
 	 * @param id l'identificatore della proposta da ritirare
@@ -65,7 +69,6 @@ public class ProposalHandler {
 		}
 		return outcome;
 	}
-	
 	/**
 	 * Iscrivi un utente nella proposta di cui si è inserito l'identificatore
 	 * @param id l'identificatore della proposta a cui aggiungere l'utente
@@ -77,7 +80,6 @@ public class ProposalHandler {
 			return bacheca.get(id).signUp(user);
 		return false;
 	}
-	
 	/**
 	 * Discrivi un utente dalla proposta di cui si è inserito l'identificatore
 	 * @param id l'identificatore della proposta a cui aggiungere l'utente
@@ -89,7 +91,6 @@ public class ProposalHandler {
 			return bacheca.get(id).unsubscribe(user);
 		return false;
 	}
-	
 	/**
 	 * Verifica che l'utente passato come parametro sia iscritto alla proposta identificata da id
 	 * @param id id della proposta
@@ -101,7 +102,18 @@ public class ProposalHandler {
 			return bacheca.get(id).isSignedUp(user);
 		return false;
 	}
-	
+	/**
+	 * Ritorna una stringa contenente tutte le proposte a cui è iscritto l'utente passato come parametro
+	 * @param user utente
+	 * @return strigna di proposte a cui l'utente è iscritto
+	 */
+	public synchronized String showUserSubscription(User user) {
+		StringBuilder sb = new StringBuilder("Proposte a cui sei iscritto:");
+		IntStream.range(0, bacheca.size())
+					.filter((i)->bacheca.get(i).isSignedUp(user))
+					.forEach((i)->sb.append(String.format(PROPOSAL, i, bacheca.get(i).toString())));
+		return sb.toString();
+	}
 	/**
 	 * Controlla che il set contenga almeno una proposta con il titolo inserito
 	 * @param p il titolo della proposta
