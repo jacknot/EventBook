@@ -1,8 +1,10 @@
 package proposals;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import categories.Category;
+import dataTypes.Pair;
 import users.Message;
 import users.User;
 
@@ -32,7 +34,7 @@ public class Proposal implements Serializable{
 	private ArrayList<User> subscribers;
 	
 	//Non so se va bene
-	private ArrayList<State> statePassages;
+	private ArrayList<Pair<State, LocalDate>> statePassages;
 	
 	/**
 	 * Costruttore di una proposta
@@ -46,15 +48,15 @@ public class Proposal implements Serializable{
 		this.aState = State.INVALID;
 		//gestisce il caso in cui l'evento di riferimento sia già valido
 		update();
-		statePassages.add(aState);
+		statePassages.add(new Pair<>(aState, LocalDate.now()));
 	}
 	
 	/**
 	 * Fa cambiare stato alla proposta
 	 */
 	public void update() {
-		aState.transition(this);
-		statePassages.add(aState);
+		if(aState.transition(this));
+			statePassages.add(new Pair<>(aState, LocalDate.now()));
 	}
 	/**
 	 * Imposta un nuovo stato alla proposta
@@ -62,7 +64,7 @@ public class Proposal implements Serializable{
 	 */
 	public void setState(State nS) {
 		aState = nS;
-		statePassages.add(aState);
+		statePassages.add(new Pair<>(aState, LocalDate.now()));
  	}
 	/**
 	 * Verifica se la proposta è uguale a quella inserita
@@ -118,15 +120,6 @@ public class Proposal implements Serializable{
 	public boolean unsubscribe(User user) {
 		if(aState.canSignUp(this)){
 			if(!isOwner(user) && isSignedUp(user)) {
-				/*boolean trovato = false;
-				int i=0;
-				while(!trovato) {
-					if(subscribers.get(i).equals(user)) {
-						subscribers.remove(i);
-						trovato = true;
-					}
-					i++;
-				}*/
 				subscribers.remove(subscribers.stream().filter((s) -> s.equals(user)).findFirst().get());
 				update();
 				return true;

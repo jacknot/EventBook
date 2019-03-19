@@ -1,6 +1,5 @@
 package main;
 
-
 public interface Shell {
 
 	/**

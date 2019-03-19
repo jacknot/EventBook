@@ -30,9 +30,12 @@ public enum FieldHeading{
 	TERMINE_RITIRO("Termine ultimo di ritiro iscrizione", " Data entro cui a ogni fruitore che ha aderito all’evento è concesso di cancellare la sua iscrizione e al fruitore che ha proposto l’evento di ritirare la proposta", false, ClassType.DATA),
 	//Campi FootballMatch
 	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.GENDER),
-	FASCIA_ETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL);
+	FASCIA_ETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL),
 	
-	//Nuovi campi aggiunti nella versione 3
+	//Nuovi campi aggiunti per la versione 4 (Per l'utente)
+	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso",true, ClassType.STRING),
+	FASCIA_ETA_UTENTE("Fascia di età", "Estremo inferiore e superiore di un intervallo di età entro cui cade quella del fruitore", false, ClassType.INTERVAL),
+	CATEGORIE_INTERESSE("Categorie di interesse","Elenca le categorie di eventi a cui il fruitore è particolarmente interessato", false, ClassType.STRING);
 
 	/**
 	 * Contiene il nome

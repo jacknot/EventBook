@@ -3,6 +3,7 @@ package dataTypes;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import utility.Parser;
@@ -32,7 +33,8 @@ public enum ClassType {
 	}),
 	GENDER(Gender.class, "[MF]" ,"M/F", (gender)->{
 		return new Gender(gender.matches("F"));
-	});
+	}),
+	STRING_ARRAY(ArrayList.class, "[^\\n]+", "Lista", (str) -> str );
 	
 	/**
 	 * Tipo di ritorno

@@ -63,13 +63,22 @@ public class Database implements Serializable{
 	
 	/**
 	 * Permette al fruitore specificato di ricevere il Messaggio inviato come parametro
-	 * @param nome nome del fruitore
-	 * @param messaggio messaggio da inviare al fruitore
+	 * @param name nome del fruitore
+	 * @param message messaggio da inviare al fruitore
 	 */
-	public void ricevi(String nome, Message messaggio) {
-		for(User fruitore: users) {
-			if(fruitore.getName().equals(nome))
-				fruitore.receive(messaggio);
+	public void receive(String name, Message message) {
+		for(User user: users) {
+			if(user.getName().equals(name))
+				user.receive(message);
 		}
+	}
+	
+	public ArrayList<User> searchBy(String categoryName){
+		ArrayList<User> userList = new ArrayList<User>();
+		for(User user: users) {
+			if(user.containsCategory(categoryName))
+				userList.add(user);
+		}
+		return userList;
 	}
 }

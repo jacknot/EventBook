@@ -36,6 +36,14 @@ public class FieldSetFactory {
 			cc.add(new Field <>(FieldHeading.FASCIA_ETA));
 			return cc;
 		});
+		//Aggiunta per la versione 4
+		types.put("Profile", ()->{
+			FieldSet cc = new FieldSet();
+			cc.add(new Field<>(FieldHeading.NOMIGNOLO));
+			cc.add(new Field <>(FieldHeading.FASCIA_ETA_UTENTE));
+			cc.add(new Field <>(FieldHeading.CATEGORIE_INTERESSE));
+			return cc;
+		});
 	}
 	/**Metodo per ottenere un'istanza della factory di contenitori<br>
 	 * Necessario per l'implementazione del design pattern singleton

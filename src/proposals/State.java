@@ -81,7 +81,7 @@ public enum State implements Serializable{
 					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastSigningDay) >= 0) && p.subNumber() - max == tol) {
 				p.setState(CLOSED);
 				p.send(new Message(	//messaggio che avvisa che la proposta è chiusa
-						title,
+						title+": "+LocalDate.now(),
 						CONFIRMOBJ,															
 						String.format(CONFIRMFORMAT, title,
 													p.getValue(FieldHeading.DATA.getName()),
@@ -94,10 +94,10 @@ public enum State implements Serializable{
 			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
 					p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMPARTECIPANTI.getName()))
 					) {
-				p.setState(ENDED);
+				p.setState(FAILED);
 				
 				p.send(new Message(	//messaggio che avvisa che la proposta è fallita
-						title,	
+						title+": "+LocalDate.now(),	
 						FAILUREOBJ,
 						String.format(FAILUREFORMAT, title)
 						));
@@ -114,7 +114,7 @@ public enum State implements Serializable{
 				String title = p.getValue(FieldHeading.TITOLO.getName())== null? UNKNOWN_TITLE:
 					(String)p.getValue(FieldHeading.TITOLO.getName());
 				p.send(new Message(	//messaggio che avvisa che la proposta è stata ritirata
-						title,
+						title+": "+ LocalDate.now(),
 						WITHDRAWNOBJ,															
 						String.format(WITHDRAWNFORMAT, title)							
 						));
@@ -154,6 +154,14 @@ public enum State implements Serializable{
 		}		
 	},
 	ENDED{
+		/* (non-Javadoc)
+		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
+		 */
+		public boolean transition(Proposal p) {
+			return false;
+		}
+	},
+	FAILED{
 		/* (non-Javadoc)
 		 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
 		 */

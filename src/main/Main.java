@@ -38,7 +38,7 @@ public class Main {
 	private static CommandList protocol;
 	private static Session session;
 	private static Database database;
-	private static NoticeBoard noticeBoard;
+	private static ProposalSet noticeBoard;
 	
 	private static final long DELAY = 3600000;//60MIN
 	/**
@@ -89,9 +89,9 @@ public class Main {
 			System.out.println("Caricato nuovo database");
 			}
 		System.out.println("Caricamento bacheca ...");
-		noticeBoard = (NoticeBoard)new FileHandler().load(NOTICEBOARD);
+		noticeBoard = (ProposalSet)new FileHandler().load(NOTICEBOARD);
 		if(noticeBoard == null) {
-			noticeBoard = NoticeBoard.newNoticeBoard();
+			noticeBoard = ProposalSet.newNoticeBoard();
 			System.out.println("Caricata nuova bacheca");
 			}
 		System.out.println("Fine caricamento");
