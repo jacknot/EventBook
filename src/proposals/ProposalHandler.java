@@ -1,7 +1,5 @@
 package proposals;
 
-import java.util.ArrayList;
-
 import users.User;
 
 public class ProposalHandler {
@@ -9,7 +7,7 @@ public class ProposalHandler {
 	/**
 	 * ArrayList contenente le proposte concluse
 	 */
-	ProposalSet proposteConcluse; //Vedere se mettere anche le chiuse
+	ProposalSet proposteConcluse;
 	/**
 	 * ArrayList contenente le proposte fallite
 	 */

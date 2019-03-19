@@ -38,7 +38,7 @@ public class Main {
 	private static CommandList protocol;
 	private static Session session;
 	private static Database database;
-	private static ProposalSet noticeBoard;
+	private static ProposalHandler noticeBoard;
 	
 	private static final long DELAY = 3600000;//60MIN
 	/**
@@ -89,7 +89,7 @@ public class Main {
 			System.out.println("Caricato nuovo database");
 			}
 		System.out.println("Caricamento bacheca ...");
-		noticeBoard = (ProposalSet)new FileHandler().load(NOTICEBOARD);
+		noticeBoard = (ProposalHandler)new FileHandler().load(NOTICEBOARD);
 		if(noticeBoard == null) {
 			noticeBoard = ProposalSet.newNoticeBoard();
 			System.out.println("Caricata nuova bacheca");
@@ -199,6 +199,17 @@ public class Main {
 			}
 			if(database.contains(name)) {
 				session = new Session(database.getUser(name));
+				if(session.getOwner().isFirstAccess()) {
+					FieldSet fields = session.getOwner().getFields();
+					for(Field<?> field: fields) {
+						System.out.println(field.toString());
+						Object obj = acceptValue(field.getHead(), "\tInserisci un valore per il campo: ");
+						if(session.getOwner().setValue(field.getName(), obj))
+							System.out.println("\tDato inserito correttamente\n");
+						else
+							System.out.println("\tIl dato non è stato inserito correttamente\n");
+					}
+				}
 				logIn();
 				System.out.println("Loggato come: " + name);
 			}
@@ -372,6 +383,13 @@ public class Main {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
+
+		}),
+		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo",(args)->{
+				FieldSet editableFields = session.getOwner().getEditableFields();
+				System.out.println(editableFields.getFeatures());
+				System.out.println("Quale campo modificare?");
+				///.......
 
 		}),
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca", (args)->{

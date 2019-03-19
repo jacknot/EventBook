@@ -35,11 +35,10 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 		this.state = nState;
 	}
 
-
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
-	private  void clean() {
+	protected void clean() {
 		ArrayList<Proposal> toClean = new ArrayList<Proposal>();
 		this.stream()
 			.filter((p)->!p.hasState(state))
@@ -54,11 +53,6 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 				.forEach(( p ) -> p.update());
 		clean();
 	}
-
-	
-
-	
-
 
 	/**
 	 * Mostra il contenuto dell'insieme di proposte in forma testuale
@@ -84,6 +78,14 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 			}
 		}
 		return userSubscription.toString();
+	}
+	
+	/**
+	 * Restuisce lo stato che devono avere tutte le proposte
+	 * @return stato
+	 */
+	public State getState() {
+		return state;
 	}
 	
 	/**

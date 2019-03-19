@@ -2,8 +2,8 @@ package users;
 
 import java.io.Serializable;
 
-import ClassiPerV4.Profilo;
 import fields.FieldHeading;
+import fields.FieldSet;
 
 /**La classe User ha il compito di fornire una struttura adatta a gestire un fruitore del social network.<br>
  * Ad ogni fruitore è associato, oltre al nome, uno spazio personale inizialmente vuoto<br>
@@ -18,7 +18,7 @@ public class User implements Serializable{
 	 */
 	//Modifica e aggiunta per la versione 4
 	//private String name;
-	private Profilo profile;
+	private Profile profile;
 	/**
 	 * Lo spazio personale del fruitore
 	 */
@@ -29,7 +29,7 @@ public class User implements Serializable{
 	 * @param name Il nome del fruitore
 	 */
 	public User(String name) {
-		this.profile = new Profilo(name);
+		this.profile = new Profile(name);
 		this.privateSpace = new PersonalSpace();
 	}
 	
@@ -94,6 +94,45 @@ public class User implements Serializable{
 		return profile.toString();
 	}
 	
+	/**
+	 * Verifica se l'utente è al primo accesso nella Piattaforma
+	 * @return True se al primo accesso <br> False altrimenti
+	 */
+	public boolean isFirstAccess() {
+		return profile.isFirstAccess();
+	}
+	
+	/**
+	 * Restituisce tutti i campi del Profilo
+	 * @return campi del Profilo
+	 */
+	public FieldSet getFields() {
+		return profile.getFields();
+	}
+	
+	/**
+	 * Restituisce solo i campi modificabili del Profilo
+	 * @return campi modificabili del Profilo
+	 */
+	public FieldSet getEditableFields() {
+		return profile.getEditableFields();
+	}
+	
+	/**
+	 * Modifica il valore del campo di cui si è inserito il nome
+	 * @param name il nome del campo
+	 * @param nValue il nuovo valore del campo
+	 * @return True - il campo è stato modificato<br>False - il campo non è stato modificato
+	 */
+	public boolean setValue(String categoryName, Object nValue) {
+		return profile.setValue(categoryName, nValue);
+	}
+	
+	/**
+	 * Verifica se tra le categorie di interesse dell'utente compare la categoria cercata
+	 * @param categoryName nome della categoria
+	 * @return True se presente <br> False altrimenti
+	 */
 	public boolean containsCategory(String categoryName) {
 		return profile.containsCategory(categoryName);
 	}

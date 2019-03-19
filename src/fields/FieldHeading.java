@@ -35,7 +35,7 @@ public enum FieldHeading{
 	//Nuovi campi aggiunti per la versione 4 (Per l'utente)
 	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso",true, ClassType.STRING),
 	FASCIA_ETA_UTENTE("Fascia di età", "Estremo inferiore e superiore di un intervallo di età entro cui cade quella del fruitore", false, ClassType.INTERVAL),
-	CATEGORIE_INTERESSE("Categorie di interesse","Elenca le categorie di eventi a cui il fruitore è particolarmente interessato", false, ClassType.STRING);
+	CATEGORIE_INTERESSE("Categorie di interesse","Elenca le categorie di eventi a cui il fruitore è particolarmente interessato", false, ClassType.ARRAY_STRING);
 
 	/**
 	 * Contiene il nome
