@@ -46,6 +46,7 @@ public class Proposal implements Serializable{
 		this.owner = owner;
 		this.subscribers = new ArrayList<User>();
 		this.aState = State.INVALID;
+		statePassages = new ArrayList<Pair<State, LocalDate>>();
 		statePassages.add(new Pair<>(aState, LocalDate.now()));
 		update();
 	}
@@ -203,5 +204,9 @@ public class Proposal implements Serializable{
 
 	public ArrayList<User> getSubscribers(){
 		return subscribers;
+	}
+	
+	public String getCategoryName() {
+		return event.getName();
 	}
 }

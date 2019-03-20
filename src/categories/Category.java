@@ -46,6 +46,13 @@ public abstract class Category implements Cloneable,Serializable{
 		return heading.toString();
 	}
 	/**
+	 * Restituisce il nome della categoria di evento.
+	 * @return nome della categoria
+	 */
+	public String getName() {
+		return heading.getName();
+	}
+	/**
 	 * Modifica il valore del campo di cui si è inserito il nome
 	 * @param name il nome del campo
 	 * @param nValue il nuovo valore del campo

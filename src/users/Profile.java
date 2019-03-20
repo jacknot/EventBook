@@ -102,8 +102,8 @@ public class Profile implements Serializable{
 	 * @return campi modificabili del Profilo
 	 */
 	public FieldSet getEditableFields() {
-		FieldSet editableFields =  FieldSetFactory.getInstance().getSet("Profile");
-		editableFields.remove(new Field<String>(FieldHeading.NOMIGNOLO));
+		FieldSet editableFields = FieldSetFactory.getInstance().getSet("Profile");		
+		editableFields.remove(0); //Rimuove nomignolo
 		return editableFields;
 	}
 	

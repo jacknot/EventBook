@@ -7,6 +7,19 @@ import users.User;
 
 public class MessageHandler {
 
+	private static MessageHandler instance;
+	
+	private MessageHandler() {
+		
+	}
+	
+	public static MessageHandler getInstance() {
+		if(instance == null)
+			instance = new MessageHandler();
+		return instance;
+	}
+
+	
 	public void notifyByInterest(ArrayList<User> userList, String categoryName) {
 		for(User user: userList) {
 			user.receive(new Message(
@@ -20,7 +33,7 @@ public class MessageHandler {
 	public void inviteUsers(ArrayList<User> userList, String owner) {
 		for(User user: userList) {
 			user.receive(new Message(
-					"Invito da " + owner,
+					owner,
 					"Sei stato invitato ad un evento",
 					"Sei stato invitato all'evento tot"
 					));

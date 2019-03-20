@@ -12,7 +12,6 @@ public class ProposalHandler implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String categoryName = null;
 	/**
 	 * ArrayList contenente le proposte concluse
 	 */
@@ -136,7 +135,7 @@ public class ProposalHandler implements Serializable{
 		//ritirate fallite concluse non vanno da nessuna parte
 		//chiuse vanno in concluse
 		//aperte -> fallite/ritirate/chiuse
-		Stream.of(bacheca.refresh())
+		bacheca.refresh().stream()
 				.forEach(( p )->{
 					if(p.hasState(proposteChiuse.getState())) 
 						proposteChiuse.add(p);
@@ -145,7 +144,7 @@ public class ProposalHandler implements Serializable{
 					else if(p.hasState(proposteRitirate.getState()))
 						proposteRitirate.add(p);
 		});
-		Stream.of(proposteChiuse.refresh())
+		proposteChiuse.refresh().stream()
 				.forEach(( p )->proposteConcluse.add(p));
 	}
 	/**

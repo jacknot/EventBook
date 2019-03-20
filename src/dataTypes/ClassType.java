@@ -34,12 +34,17 @@ public enum ClassType {
 	GENDER(Gender.class, "[MF]" ,"M/F", (gender)->{
 		return new Gender(gender.matches("F"));
 	}),
-	ARRAY_STRING(CategoriesInterest.class, "[^\\n;]+(;[^\\n;]+)*", "Elenco di stringhe separate da ;", (array) -> {
-		StringTokenizer tokenizer = new StringTokenizer(array, ";");
+	INTEREST_CATEGORIES(CategoriesInterest.class, "[^\\n;]+(;[^\\n;]+)*", "Elenco di stringhe separate da ;", (array) -> {
 		CategoriesInterest arrayString = new CategoriesInterest();
-		while(tokenizer.hasMoreTokens()) {
-			arrayString.add(tokenizer.nextToken());
-		}
+			StringTokenizer tokenizer = new StringTokenizer(array, ";");
+			int i = 0;
+			while(tokenizer.hasMoreTokens()) {
+				String str = tokenizer.nextToken();
+				System.out.println(str + " : " + i);
+				i++;
+				arrayString.add(str);
+			}
+		
 		return arrayString;
 	});
 	

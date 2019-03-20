@@ -212,7 +212,7 @@ public class Main {
 			if(database.contains(name)) {
 				session = new Session(database.getUser(name));
 				if(session.getOwner().isFirstAccess()) {
-					FieldSet fields = session.getOwner().getFields();
+					FieldSet fields = session.getOwner().getEditableFields();
 					for(Field<?> field: fields) {
 						System.out.println(field.toString());
 						Object obj = acceptValue(field.getHead(), "\tInserisci un valore per il campo: ");
@@ -347,8 +347,11 @@ public class Main {
 					int id = Integer.parseInt(in.nextLine());
 					valid = true;
 					if(session.contains(id)) {
-						if(noticeBoard.add(session.getProposal(id)))
+						if(noticeBoard.add(session.getProposal(id))) {
+							String categoryName = session.getProposal(id).getCategoryName();
 							System.out.println("Proposta aggiunta con successo");
+							MessageHandler.getInstance().notifyByInterest(database.searchBy(categoryName, session.getOwner()), categoryName);
+						}					
 						else
 							System.out.println("La proposta inserita non è valida");
 					}else
@@ -421,6 +424,8 @@ public class Main {
 			}while(!valid);
 		}),
 		PRIVATE_SPACE_IN("privateSpace", "Accedi al private space", (args)->{
+			noticeBoard.refresh();
+			System.out.println("Accesso completato allo spazio personale ('help' per i comandi)");
 			privateSpaceIn();
 		}),
 		PRIVATE_SPACE_OUT("back", "Esci dal private space", (args)->{

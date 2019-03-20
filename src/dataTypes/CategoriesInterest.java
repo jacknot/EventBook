@@ -12,9 +12,9 @@ public class CategoriesInterest extends ArrayList<String>{
 		if(!contains(categoryName)) {
 			CategoryHeading[] cats = CategoryHeading.values();
 			
-			for(int i=0; i< cats.length; i++) {
+			for(int i=0; i < cats.length; i++) {
 				if(cats[i].getName().equalsIgnoreCase(categoryName)) {
-					add(categoryName);
+					super.add(categoryName);
 					return true;
 				}
 			}

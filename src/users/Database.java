@@ -3,6 +3,7 @@ package users;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import proposals.Proposal;
 import users.User;
 import users.Message;
 
@@ -73,10 +74,10 @@ public class Database implements Serializable{
 		}
 	}
 	
-	public ArrayList<User> searchBy(String categoryName){
+	public ArrayList<User> searchBy(String categoryName, User owner){
 		ArrayList<User> userList = new ArrayList<User>();
 		for(User user: users) {
-			if(user.containsCategory(categoryName))
+			if(user.containsCategory(categoryName) && !user.equals(owner))
 				userList.add(user);
 		}
 		return userList;

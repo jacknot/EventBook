@@ -36,18 +36,18 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
-	protected Proposal[] clean() {
+	protected ArrayList<Proposal> clean() {
 		ArrayList<Proposal> toClean = new ArrayList<Proposal>();
 		this.stream()
 			.filter((p)->!p.hasState(state))
 			.forEach((p)->toClean.add(p));
 		this.removeAll(toClean);
-		return (Proposal[]) toClean.toArray();
+		return toClean;
 	}
 	/**
 	 * Effettua un refresh delle proposte nel set
 	 */
-	public Proposal[] refresh() {
+	public ArrayList<Proposal> refresh() {
 		this.stream()
 				.forEach(( p ) -> p.update());
 		return clean();
