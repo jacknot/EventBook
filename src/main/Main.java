@@ -430,6 +430,13 @@ public class Main {
 		}),
 		PRIVATE_SPACE_OUT("back", "Esci dal private space", (args)->{
 			privateSpaceOut();
+		}),
+		INVITE("invite", "Invita utenti ad una proposta",(args)->{
+			//inserisci l'id della proposta a cui invitare
+			//controlla sia il proprietario
+			//ottenere utenti 
+			//operazioni su utenti in base alla scelta
+			//invia inviti
 		});
 		/**
 		 * Il nome del comando

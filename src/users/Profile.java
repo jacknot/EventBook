@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import dataTypes.CategoriesInterest;
-import fields.Field;
 import fields.FieldHeading;
 import fields.FieldSet;
 import fields.FieldSetFactory;
