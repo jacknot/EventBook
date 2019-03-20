@@ -115,7 +115,7 @@ public abstract class Category implements Cloneable,Serializable{
 	 * @param name nome da confrontare
 	 * @return True se uguali<br>False altrimenti
 	 */
-	public boolean equals(String name) {
+	public boolean hasName(String name) {
 		return (this.heading.getName().equals(name));
 	}
 	/* (non-Javadoc)

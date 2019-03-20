@@ -43,14 +43,14 @@ class CommandList extends ArrayList<Command>{
 		add(Command.MODIFY);
 		add(Command.NEW_EVENT);
 		add(Command.SHOW_WORKINPROGRESS);
-		add(Command.SHOW_NOTIFICATIONS);
-		add(Command.REMOVE_NOTIFICATION);
+		//add(Command.SHOW_NOTIFICATIONS);
+		//add(Command.REMOVE_NOTIFICATION);
 		add(Command.SHOW_NOTICEBOARD);
 		add(Command.PUBLISH);
 		add(Command.PARTICIPATE);
 		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
-		add(Command.MODIFY_PROFILE);
 		add(Command.WITHDRAW_PROPOSAL);
+		add(Command.PRIVATE_SPACE_IN); //Accesso al private space
 		remove(Command.REGISTRATION);
 		remove(Command.LOGIN);	
 	}
@@ -66,14 +66,55 @@ class CommandList extends ArrayList<Command>{
 		remove(Command.MODIFY);
 		remove(Command.NEW_EVENT);
 		remove(Command.SHOW_WORKINPROGRESS);
-		remove(Command.SHOW_NOTIFICATIONS);
-		remove(Command.REMOVE_NOTIFICATION);
+		//remove(Command.SHOW_NOTIFICATIONS);
+		//remove(Command.REMOVE_NOTIFICATION);
 		remove(Command.SHOW_NOTICEBOARD);
 		remove(Command.PUBLISH);
 		remove(Command.PARTICIPATE);
 		remove(Command.UNSUBSCRIBE);
-		remove(Command.MODIFY_PROFILE);
 		remove(Command.WITHDRAW_PROPOSAL);
+		remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
+	}
+	
+	/**
+	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un accesso al private space
+	 */
+	public void privateSpaceIn() {
+		add(Command.SHOW_NOTIFICATIONS);
+		add(Command.REMOVE_NOTIFICATION);
+		add(Command.PRIVATE_SPACE_OUT); //Uscita dal private space
+		remove(Command.CATEGORY);
+		remove(Command.DESCRIPTION);
+		remove(Command.LOGOUT);
+		remove(Command.MODIFY);
+		remove(Command.NEW_EVENT);
+		remove(Command.SHOW_WORKINPROGRESS);
+		remove(Command.SHOW_NOTICEBOARD);
+		remove(Command.PUBLISH);
+		remove(Command.PARTICIPATE);
+		remove(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
+		remove(Command.WITHDRAW_PROPOSAL);
+		remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
+	}
+	/**
+	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un uscita dal private space
+	 */
+	public void privateSpaceOut() {
+		add(Command.CATEGORY);
+		add(Command.DESCRIPTION);
+		add(Command.LOGOUT);
+		add(Command.MODIFY);
+		add(Command.NEW_EVENT);
+		add(Command.SHOW_WORKINPROGRESS);
+		add(Command.SHOW_NOTICEBOARD);
+		add(Command.PUBLISH);
+		add(Command.PARTICIPATE);
+		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
+		add(Command.WITHDRAW_PROPOSAL);
+		add(Command.PRIVATE_SPACE_IN); //Accesso al private space
+		remove(Command.SHOW_NOTIFICATIONS);
+		remove(Command.REMOVE_NOTIFICATION);
+		remove(Command.PRIVATE_SPACE_OUT); //Accesso al private space
 	}
 	
 	

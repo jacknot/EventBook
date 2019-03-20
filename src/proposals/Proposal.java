@@ -197,5 +197,11 @@ public class Proposal implements Serializable{
 					+ "\tIscritti: " + subNumber()
 					+ "\n\t" +subscribers.toString() + "\n";
 	}
+	public boolean isCategory(String name) {
+		return event.hasName(name);
+	}
 
+	public ArrayList<User> getSubscribers(){
+		return subscribers;
+	}
 }

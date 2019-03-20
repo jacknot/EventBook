@@ -47,7 +47,7 @@ public class CategoryCache {
 	 */
 	public Category getCategory(String type) {
 		Category cached = set.stream()
-						.filter((c)->c.equals(type))
+						.filter((c)->c.hasName(type))
 						.findFirst().get();
 		return (Category) cached.clone();
 	}

@@ -91,7 +91,7 @@ public class Main {
 		System.out.println("Caricamento bacheca ...");
 		noticeBoard = (ProposalHandler)new FileHandler().load(NOTICEBOARD);
 		if(noticeBoard == null) {
-			noticeBoard = ProposalSet.newNoticeBoard();
+			noticeBoard = new ProposalHandler();
 			System.out.println("Caricata nuova bacheca");
 			}
 		System.out.println("Fine caricamento");
@@ -117,6 +117,18 @@ public class Main {
 	 */
 	private static void logOut() {
 		protocol.logOut();
+	}
+	/**
+	 * Effettua operazioni sul protocollo a seguito dell'accesso al private space dell'utente
+	 */
+	private static void privateSpaceIn() {
+		protocol.privateSpaceIn();
+	}
+	/**
+	 * Effettua operazioni sul protocollo a seguito dell'uscita dal private space dell'utente
+	 */
+	private static void privateSpaceOut() {
+		protocol.privateSpaceOut();
 	}
 	
 	/**
@@ -407,6 +419,12 @@ public class Main {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
+		}),
+		PRIVATE_SPACE_IN("privateSpace", "Accedi al private space", (args)->{
+			privateSpaceIn();
+		}),
+		PRIVATE_SPACE_OUT("back", "Esci dal private space", (args)->{
+			privateSpaceOut();
 		});
 		/**
 		 * Il nome del comando

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
+import users.User;
+
 /**
  * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -83,5 +85,28 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 */
 	public boolean contains(int id) {
 		return id >= 0 && id < this.size();
+	}
+	/**
+	 * Ritorna una stringa contenente tutte le proposte a cui è iscritto l'utente passato come parametro
+	 * @param user utente
+	 * @return strigna di proposte a cui l'utente è iscritto
+	 */
+	public String showUserSubscription(User user) {
+		StringBuilder sb = new StringBuilder("Proposte a cui sei iscritto:");
+		IntStream.range(0, this.size())
+					.filter((i)->this.get(i).isSignedUp(user))
+					.forEach((i)->sb.append(String.format(PROPOSAL, i, this.get(i).toString())));
+		return sb.toString();
+	}
+	/**
+	 * Verifica che l'utente passato come parametro sia iscritto alla proposta identificata da id
+	 * @param id id della proposta
+	 * @param user utente
+	 * @return True se iscritto - False se non iscritto
+	 */
+	public boolean isSignedUp(int id, User user) {
+		if(contains(id))
+			return this.get(id).isSignedUp(user);
+		return false;
 	}
 }

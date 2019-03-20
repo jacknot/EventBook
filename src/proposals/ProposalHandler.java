@@ -1,15 +1,18 @@
 package proposals;
 
-import java.util.stream.IntStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import users.User;
 
-public class ProposalHandler {
+public class ProposalHandler implements Serializable{
+
 	/**
-	 * Formattazione per la visualizzazione testuale della singola proposta
+	 * 
 	 */
-	private static final String PROPOSAL = "\n%d : %s";
+	private static final long serialVersionUID = 1L;
+	private static final String categoryName = null;
 	/**
 	 * ArrayList contenente le proposte concluse
 	 */
@@ -99,9 +102,8 @@ public class ProposalHandler {
 	 * @return True se iscritto - False se non iscritto
 	 */
 	public synchronized boolean isSignedUp(int id, User user) {
-		if(contains(id))
-			return bacheca.get(id).isSignedUp(user);
-		return false;
+		return bacheca.isSignedUp(id,user);
+
 	}
 	/**
 	 * Ritorna una stringa contenente tutte le proposte a cui è iscritto l'utente passato come parametro
@@ -109,11 +111,7 @@ public class ProposalHandler {
 	 * @return strigna di proposte a cui l'utente è iscritto
 	 */
 	public synchronized String showUserSubscription(User user) {
-		StringBuilder sb = new StringBuilder("Proposte a cui sei iscritto:");
-		IntStream.range(0, bacheca.size())
-					.filter((i)->bacheca.get(i).isSignedUp(user))
-					.forEach((i)->sb.append(String.format(PROPOSAL, i, bacheca.get(i).toString())));
-		return sb.toString();
+		return bacheca.showUserSubscription(user);
 	}
 	/**
 	 * Controlla che il set contenga almeno una proposta con il titolo inserito
@@ -121,8 +119,7 @@ public class ProposalHandler {
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
 	public synchronized boolean contains(Proposal p) {
-		return bacheca.stream()
-					.anyMatch(( sp ) -> sp.equals(p));
+		return bacheca.contains(p);
 	}
 	/**
 	 * Controlla che la proposta di cui si è inserito l'identificatore faccia parte del set
@@ -130,7 +127,7 @@ public class ProposalHandler {
 	 * @return True - il set contiene la proposta<br>False - il set non contiene la proposta
 	 */
 	public synchronized boolean contains(int id) {
-		return id >= 0 && id < bacheca.size();
+		return bacheca.contains(id);
 	}
 	/**
 	 * Effettua un update su tutto il set
@@ -150,5 +147,25 @@ public class ProposalHandler {
 		});
 		Stream.of(proposteChiuse.refresh())
 				.forEach(( p )->proposteConcluse.add(p));
+	}
+	/**
+	 * Mostra il contenuto dell'insieme di proposte in forma testuale
+	 * @return il contenuto dell'insieme in forma testuale
+	 */
+	public synchronized String showContent() {
+		return bacheca.showContent();
+	}
+	
+	public ArrayList<User> searchBy(User user, String categoryName){
+		ArrayList<User> listaInvitati = new ArrayList<User>();
+		Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
+			.filter((p)->p.isOwner(user))
+			.filter((p)->p.isCategory(categoryName))
+			.map((p) -> p.getSubscribers())
+			.forEach((l) -> l.stream().forEach((u) -> {
+				if(!listaInvitati.contains(u))
+					listaInvitati.add(u);
+				}));
+		return listaInvitati;
 	}
 }

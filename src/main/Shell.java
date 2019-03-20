@@ -1,5 +1,9 @@
 package main;
 
+/**
+ * Interfaccia funzionale con il compito di definire il comportamento dei comandi attraverso l'utilizzo di parametri
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]a
+ */
 public interface Shell {
 
 	/**

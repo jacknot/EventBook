@@ -1,7 +1,9 @@
 package users;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import dataTypes.CategoriesInterest;
 import fields.Field;
 import fields.FieldHeading;
 import fields.FieldSet;
@@ -11,7 +13,12 @@ import fields.FieldSetFactory;
  * Ad ogni profilo è associato un nomignolo, una fascia d'età ed un insieme di categorie di interesse<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Profile {
+public class Profile implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Contiene i campi
 	 */
@@ -34,8 +41,8 @@ public class Profile {
 		return fields.getValue(name);
 	}
 	
-	private ArrayList<String> getCategories(){
-		return (ArrayList<String>)fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName());
+	private CategoriesInterest getCategories(){
+		return (CategoriesInterest)fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName());
 	}
 	
 	/**
@@ -45,7 +52,7 @@ public class Profile {
 	 * @return True se operazione completata correttamente <br> False altrimenti
 	 */
 	public boolean modifyCategory(String category, boolean add) {
-		ArrayList<String> cat = getCategories();
+		CategoriesInterest cat = getCategories();
 		if(add)
 			cat.add(category);
 		else 	cat.remove(category);
