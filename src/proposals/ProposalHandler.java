@@ -155,6 +155,21 @@ public class ProposalHandler implements Serializable{
 		return bacheca.showContent();
 	}
 	
+	/**
+	 * Verifica che l'utente passato per parametro sia il proprietario della proposta identificata dall'id
+	 * @return True se proprietario <br> False altrimenti
+	 */
+	public synchronized boolean isOwner(int id, User user) {
+		return bacheca.get(id).isOwner(user);
+	}
+	
+	/**
+	 * Restituisce una lista di utenti papabili per un invito in base a quelli che sono stati iscritti alle proposte
+	 * dell'utente identificato da user relative alla categoria indentificata da categoryName
+	 * @param user utente proprietario di proposte
+	 * @param categoryName nome della Categoria
+	 * @return lista contente utenti da invitare
+	 */
 	public ArrayList<User> searchBy(User user, String categoryName){
 		ArrayList<User> listaInvitati = new ArrayList<User>();
 		Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
@@ -166,5 +181,17 @@ public class ProposalHandler implements Serializable{
 					listaInvitati.add(u);
 				}));
 		return listaInvitati;
+	}
+	
+	/**
+	 * Restituisce una lista di utenti papabili per un invito in base a quelli che sono stati iscritti alle proposte
+	 * dell'utente identificato da user relative alla categoria a cui appartiene la proposta identificata da id
+	 * @param user utente proprietario di proposte
+	 * @param id indetificatore della proposta
+	 * @return lista contente utenti da invitare
+	 */
+	public ArrayList<User> searchBy(int id, User user){
+		String categoryName = bacheca.get(id).getCategoryName();
+		return searchBy(user, categoryName);
 	}
 }

@@ -74,9 +74,11 @@ public class Profile implements Serializable{
 	 */
 	public boolean containsCategory(String categoryName) {
 		ArrayList<String> cat = getCategories();
-		for(String str: cat) {
-			if(str.equals(categoryName)) return true;
-		}
+		if(cat != null) {
+			for(String str: cat) {
+				if(str.equals(categoryName)) return true;
+			}
+		}		
 		return false;
 	}
 	
@@ -86,14 +88,6 @@ public class Profile implements Serializable{
 	 */
 	public FieldSet getFields() {
 		return fields;
-	}
-	
-	/**
-	 * Verifica se l'utente è al primo accesso nella Piattaforma
-	 * @return True se al primo accesso <br> False altrimenti
-	 */
-	public boolean isFirstAccess() {
-		return fields.getValue(FieldHeading.FASCIA_ETA_UTENTE.getName())==null && fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName())==null;
 	}
 	
 	/**

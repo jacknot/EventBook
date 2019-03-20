@@ -95,14 +95,6 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * Verifica se l'utente è al primo accesso nella Piattaforma
-	 * @return True se al primo accesso <br> False altrimenti
-	 */
-	public boolean isFirstAccess() {
-		return profile.isFirstAccess();
-	}
-	
-	/**
 	 * Restituisce tutti i campi del Profilo
 	 * @return campi del Profilo
 	 */

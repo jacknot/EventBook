@@ -141,7 +141,7 @@ public class Main {
 		boolean valid = false;
 		Object obj = null;
 		do {
-			System.out.print(message);
+			System.out.print("\t" + message);
 			String value = in.nextLine();
 			if(!field.isBinding() && value.isEmpty())
 				valid = true;
@@ -167,7 +167,7 @@ public class Main {
 				System.out.println("La rimozione non è andata a buon fine");
 			else 
 				System.out.println("Rimossa correttamente");
-		}catch(Exception e) {
+		}catch(NumberFormatException e) {
 			System.out.println("Dato invalido, inserisci un numero");
 		}
 	}
@@ -189,15 +189,22 @@ public class Main {
 			System.out.print(p.getFeatures());
 		}),
 		REGISTRATION("registra", "Registra un fruitore", (args)->{
-			String name = "";
-			if(args.length == 1) {
-				name = args[0];
-			} else {
-				System.out.print("Inserisci il nome: ");
-				name = in.nextLine();
-			}
-			if(database.register(name))
+			System.out.println(FieldHeading.NOMIGNOLO.toString());
+			String name = (String)acceptValue(FieldHeading.NOMIGNOLO, "Inserisci il nomignolo: ");
+			if(database.register(name)) {
 				System.out.println("L'utente è stato registrato con successo");
+				System.out.println("Compilare, se si vuole, il proprio Profilo personale:\n");
+				User user = database.getUser(name);
+				FieldSet fields = user.getEditableFields();
+				for(Field<?> field: fields) {
+					System.out.println(field.getHead().toString());
+					Object obj = acceptValue(field.getHead(), "Inserisci un valore per il campo: ");
+					if(user.setValue(field.getName(), obj))
+						System.out.println("\tDato inserito correttamente\n");
+					else
+						System.out.println("\tIl dato non è stato inserito correttamente\n");
+				}
+			}			
 			else
 				System.out.println("L'utente è già esistente");
 		}),
@@ -211,17 +218,6 @@ public class Main {
 			}
 			if(database.contains(name)) {
 				session = new Session(database.getUser(name));
-				if(session.getOwner().isFirstAccess()) {
-					FieldSet fields = session.getOwner().getEditableFields();
-					for(Field<?> field: fields) {
-						System.out.println(field.toString());
-						Object obj = acceptValue(field.getHead(), "\tInserisci un valore per il campo: ");
-						if(session.getOwner().setValue(field.getName(), obj))
-							System.out.println("\tDato inserito correttamente\n");
-						else
-							System.out.println("\tIl dato non è stato inserito correttamente\n");
-					}
-				}
 				logIn();
 				System.out.println("Loggato come: " + name);
 			}
@@ -245,7 +241,7 @@ public class Main {
 				if(!session.contains(id)) {
 					abort = true;
 				}
-			}catch(Exception e) {
+			}catch(NumberFormatException e) {
 				System.out.println(INSERT_NUMBER);
 				abort = true;
 			}
@@ -256,7 +252,7 @@ public class Main {
 				String newField = in.nextLine();
 				if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
 					field = Stream.of(FieldHeading.values())
-							.filter((fh)->fh.getName().equals(newField))
+							.filter((fh)->fh.getName().equalsIgnoreCase(newField))
 							.findAny()
 							.get();
 				else {
@@ -267,7 +263,7 @@ public class Main {
 			//inserisci valore del campo da modificare
 			Object obj = null;
 			if(!abort) {
-				obj = acceptValue(field, String.format("\tInserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+				obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
 				//conferma modifica
 				valid = false;
 				do {
@@ -298,7 +294,7 @@ public class Main {
 					.filter(( fd )->event.containsField(fd.getName()))
 					.forEachOrdered(( fd )->{				
 						System.out.println(fd.toString());
-						Object obj = acceptValue(fd, "\tInserisci un valore per il campo: ");
+						Object obj = acceptValue(fd, "Inserisci un valore per il campo: ");
 						if(event.setValue(fd.getName(), obj))
 							System.out.println("\tDato inserito correttamente\n");
 						else
@@ -356,7 +352,7 @@ public class Main {
 							System.out.println("La proposta inserita non è valida");
 					}else
 						System.out.println("La proposta inserita non esiste");
-				}catch(Exception e) {
+				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
@@ -372,7 +368,7 @@ public class Main {
 						System.out.println("L'iscrizione non è andata a buon fine");
 					else
 						System.out.println("L'iscrizione è andata a buon fine");
-				}catch(Exception e) {
+				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
@@ -394,7 +390,7 @@ public class Main {
 					}
 					else
 						System.out.println("Non sei iscritto a questa proposta");
-				}catch(Exception e) {
+				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
@@ -403,8 +399,46 @@ public class Main {
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo",(args)->{
 				FieldSet editableFields = session.getOwner().getEditableFields();
 				System.out.println(editableFields.getFeatures());
-				System.out.println("Quale campo modificare?");
-				///.......
+				//inserisci nome del campo da modificare
+				boolean abort = false;
+				FieldHeading field = FieldHeading.TITOLO;
+				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
+				String newField = in.nextLine();
+				if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
+					field = Stream.of(FieldHeading.values())
+							.filter((fh)->fh.getName().equalsIgnoreCase(newField))
+							.findAny()
+							.get();
+				else {
+					System.out.println("Il nome inserito non appartiene ad un campo");
+					abort = true;
+				}
+				//inserisci valore del campo da modificare
+				Object obj = null;
+				boolean valid = false;
+				if(!abort) {
+					obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+					do {
+						System.out.println("Sei sicuro di voler modificare ?");
+						String newValue = "";
+						if(obj!=null)
+							newValue = obj.toString();
+						System.out.println("Campo : " + field.getName() + ", nuovo valore: " + newValue);
+						System.out.print("[y/n]> ");
+						String confirm = in.nextLine();
+						if(confirm.equalsIgnoreCase("n")) {
+							abort = true;
+							valid = true;
+						}else if(confirm.equalsIgnoreCase("y")) {
+							valid = true;
+						}
+					}while(!valid);
+				}
+				//modifica effetiva
+				if(!abort && session.getOwner().setValue(field.getName(), obj))
+					System.out.println("Modifica avvenuta con successo");
+				else
+					System.out.println("Modifica fallita");
 
 		}),
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca", (args)->{
@@ -418,12 +452,12 @@ public class Main {
 						System.out.println("La proposta è stata ritirata con successo");
 					else
 						System.out.println("La proposta non è stata ritirata");
-				}catch(Exception e) {
+				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
 				}
 			}while(!valid);
 		}),
-		PRIVATE_SPACE_IN("privateSpace", "Accedi al private space", (args)->{
+		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", (args)->{
 			noticeBoard.refresh();
 			System.out.println("Accesso completato allo spazio personale ('help' per i comandi)");
 			privateSpaceIn();
@@ -432,11 +466,34 @@ public class Main {
 			privateSpaceOut();
 		}),
 		INVITE("invite", "Invita utenti ad una proposta",(args)->{
-			//inserisci l'id della proposta a cui invitare
-			//controlla sia il proprietario
-			//ottenere utenti 
-			//operazioni su utenti in base alla scelta
-			//invia inviti
+			boolean valid = false;
+			do {
+				try {
+					System.out.print(INSERT_IDENTIFIER);
+					int id = Integer.parseInt(in.nextLine());
+					valid = true;
+					User owner = session.getOwner();
+					if(noticeBoard.isOwner(id, owner)) {
+						ArrayList<User> userList = noticeBoard.searchBy(id, owner);
+						System.out.println("Vuoi mandare un invito a tutti?");
+						System.out.print("[y/n]> ");
+						String confirm = in.nextLine();
+						if(confirm.equalsIgnoreCase("n")) {
+							for(int i=0; i<userList.size(); i++) {
+								System.out.println(i + ") " + userList.get(i));
+							}
+							System.out.println("Scegli quelli che vuoi");
+							//Far scegliere quali
+						}else if(confirm.equalsIgnoreCase("y")) {
+							MessageHandler.getInstance().inviteUsers(userList, owner.getName());
+						}
+					}					
+					else
+						System.out.println("La proposta non è di tua proprietà");
+				}catch(NumberFormatException e) {
+					System.out.println(INSERT_NUMBER);
+				}
+			}while(!valid);
 		});
 		/**
 		 * Il nome del comando

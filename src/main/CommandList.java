@@ -50,6 +50,8 @@ class CommandList extends ArrayList<Command>{
 		add(Command.PARTICIPATE);
 		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		add(Command.WITHDRAW_PROPOSAL);
+		add(Command.MODIFY_PROFILE);
+		add(Command.INVITE);
 		add(Command.PRIVATE_SPACE_IN); //Accesso al private space
 		remove(Command.REGISTRATION);
 		remove(Command.LOGIN);	
@@ -73,6 +75,8 @@ class CommandList extends ArrayList<Command>{
 		remove(Command.PARTICIPATE);
 		remove(Command.UNSUBSCRIBE);
 		remove(Command.WITHDRAW_PROPOSAL);
+		remove(Command.MODIFY_PROFILE);
+		remove(Command.INVITE);
 		remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
 	}
 	
@@ -94,6 +98,8 @@ class CommandList extends ArrayList<Command>{
 		remove(Command.PARTICIPATE);
 		remove(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		remove(Command.WITHDRAW_PROPOSAL);
+		remove(Command.MODIFY_PROFILE);
+		remove(Command.INVITE);
 		remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
 	}
 	/**
@@ -111,6 +117,8 @@ class CommandList extends ArrayList<Command>{
 		add(Command.PARTICIPATE);
 		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		add(Command.WITHDRAW_PROPOSAL);
+		add(Command.MODIFY_PROFILE);
+		add(Command.INVITE);
 		add(Command.PRIVATE_SPACE_IN); //Accesso al private space
 		remove(Command.SHOW_NOTIFICATIONS);
 		remove(Command.REMOVE_NOTIFICATION);
