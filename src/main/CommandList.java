@@ -159,10 +159,15 @@ class CommandList extends ArrayList<Command>{
 	public void run(String input) {
 		String command = getCommand(input);
 		String parameters = input.replaceAll(command, "").trim();
-		String[] args = new String[1];
+		String[] args = new String[0];
 		if(!parameters.equals(""))
-			//inserisci sempre un solo parametro, inserendone tanti devi gestire le stringhe in qualche modo
-			args[0] = parameters;//.split(" ");
+			args = parameters.split(" "); //prende tutti i parametri inseriti dall'utente, nel Main in base al comando quelli superflui possono essere ignorati	
+			/* OPPURE prende solo il primo parametro e gli altri vengono tagliati, non servirebbe neanche più array ma basterebbe una stringa
+			 *  {
+			 * 		args = new String[1];
+			 * 		args[0] = parameters.split(" ")[0];
+			 *  }
+			 */
 		if(command.equals("help"))
 			System.out.println(toString());
 		else if(contains(command)) {
