@@ -106,30 +106,6 @@ public class Main {
 		System.out.print("Salvataggio database... ");
 		System.out.println((new FileHandler().save(DATABASE, database))? SAVE_COMPLETED : SAVE_FAILED);
 	}
-	/**
-	 * Effettua operazioni sul protocollo a seguito del log in dell'utente
-	 */
-	private static void logIn() {
-		protocol.logIn();
-	}
-	/**
-	 * Effettua operazioni sul protocollo a seguito del log out dell'utente
-	 */
-	private static void logOut() {
-		protocol.logOut();
-	}
-	/**
-	 * Effettua operazioni sul protocollo a seguito dell'accesso al private space dell'utente
-	 */
-	private static void privateSpaceIn() {
-		protocol.privateSpaceIn();
-	}
-	/**
-	 * Effettua operazioni sul protocollo a seguito dell'uscita dal private space dell'utente
-	 */
-	private static void privateSpaceOut() {
-		protocol.privateSpaceOut();
-	}
 	
 	/**
 	 * Richiede all'utente di inserire un valore e ne verifica la validità in base al campo
@@ -179,15 +155,40 @@ public class Main {
 	 */
 	protected enum Command {
 		
-		EXIT("exit", "Esci dal programma",(args)->System.exit(0)),
+		EXIT("exit", "Esci dal programma",(args)->{
+			System.exit(0);
+			return true;
+			}),
+		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", (args)->{
+			System.out.println("Le categorie disponibili: ");
+			Stream.of(CategoryHeading.values()).forEach((ch)->System.out.println("\t" + ch.toString()));
+			return true;
+		}),
+		//syntax : categoria [category]
 		CATEGORY("categoria", "Mostra la categoria disponibile", (args)->{
+			/*
+			 * 	if(args.length = 0){
+			 * 		System.out.println("Inserisci il nome di una categoria");
+			 * 		return false;
+			 * 	}else if(Stream.of(CategoryHeading.values()).anyMatch((fh)->fh.getName().equals(args[1]))){
+			 * 		System.out.print(Stream.of(CategoryHeading.values()).filter((fh)->fh.getName().equals(args[1])).findFirst().get().toString());
+			 * 		return true;
+			 * 	}else{
+			 * 		System.out.println("Il nome inserito non appartiene ad una categoria");
+			 * 		return false;
+			 * 	}
+			 * */
 			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			System.out.print(p.getDescription());
+			return true;
 		}),
+		//syntax : descrizione [category]
 		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", (args)->{
 			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 			System.out.print(p.getFeatures());
+			return true;
 		}),
+		//syntax : registra [name]
 		REGISTRATION("registra", "Registra un fruitore", (args)->{
 			System.out.println(FieldHeading.NOMIGNOLO.toString());
 			String name = (String)acceptValue(FieldHeading.NOMIGNOLO, "Inserisci il nomignolo: ");
@@ -195,19 +196,23 @@ public class Main {
 				System.out.println("L'utente è stato registrato con successo");
 				System.out.println("Compilare, se si vuole, il proprio Profilo personale:\n");
 				User user = database.getUser(name);
-				FieldSet fields = user.getEditableFields();
-				for(Field<?> field: fields) {
-					System.out.println(field.getHead().toString());
-					Object obj = acceptValue(field.getHead(), "Inserisci un valore per il campo: ");
-					if(user.setValue(field.getName(), obj))
-						System.out.println("\tDato inserito correttamente\n");
-					else
-						System.out.println("\tIl dato non è stato inserito correttamente\n");
-				}
-			}			
-			else
+				FieldHeading[] fields = user.getEditableFields();
+				Stream.of(fields)
+						.forEach((fh)->{
+							System.out.println(fh.toString());
+							Object obj = acceptValue(fh, "Inserisci un valore per il campo: ");
+							if(user.setValue(fh.getName(), obj))
+								System.out.println("\tDato inserito correttamente\n");
+							else
+								System.out.println("\tIl dato non è stato inserito correttamente\n");
+						});
+				return true;
+			}else {
 				System.out.println("L'utente è già esistente");
+				return false;
+			}
 		}),
+		//syntax : login [name]
 		LOGIN("login", "Accedi", (args)->{
 			String name = "";
 			if(args.length == 1) {
@@ -218,17 +223,18 @@ public class Main {
 			}
 			if(database.contains(name)) {
 				session = new Session(database.getUser(name));
-				logIn();
 				System.out.println("Loggato come: " + name);
+				return true;
 			}
 			else {
 				System.out.println("Utente non registrato");
+				return false;
 			}
 		}),
 		LOGOUT("logout", "Per uscire", (args)->{
 			session = null;
-			logOut();
 			System.out.println("Logout eseguito");
+			return true;
 			}),
 		MODIFY("modifica","Modifica il campo di una proposta",(args)->{
 			boolean abort = false;
@@ -240,10 +246,12 @@ public class Main {
 				id = Integer.parseInt(in.nextLine());
 				if(!session.contains(id)) {
 					abort = true;
+					return false;
 				}
 			}catch(NumberFormatException e) {
 				System.out.println(INSERT_NUMBER);
 				abort = true;
+				return false;
 			}
 			//inserisci nome del campo da modificare
 			FieldHeading field = FieldHeading.TITOLO;
@@ -258,6 +266,7 @@ public class Main {
 				else {
 					System.out.println("Il nome inserito non appartiene ad un campo");
 					abort = true;
+					return false;
 				}
 			}
 			//inserisci valore del campo da modificare
@@ -283,10 +292,13 @@ public class Main {
 				}while(!valid);
 			}
 			//modifica effetiva
-			if(!abort && session.modifyProposal(id, field.getName(), obj))
+			if(!abort && session.modifyProposal(id, field.getName(), obj)) {
 				System.out.println("Modifica avvenuta con successo");
-			else
+				return true;
+			}else {
 				System.out.println("Modifica fallita");
+				return false;
+			}
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento", (args)->{
 			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
@@ -300,29 +312,37 @@ public class Main {
 						else
 							System.out.println("\tIl dato non è stato inserito correttamente\n");
 					});
-			if(session.addProposal(new Proposal(event, session.getOwner())))
+			if(session.addProposal(new Proposal(event, session.getOwner()))) {
 				System.out.println("La proposta è stata aggiunta alla proposte in lavorazione");
-			else
+				return true;
+			}else {
 				System.out.println("La proposta non è stata aggiunta");
+				return false;
+			}
 		}),
 		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte", (args)->{
 			String proposals = session.showInProgress();
 			if(proposals.equals(""))
 				System.out.print("Nessuna proposta in lavorazione!\n");
-			else {
-				System.out.print("Le proposte in lavorazione:\n" + session.showInProgress());			
-			}
+			else 
+				System.out.print("Le proposte in lavorazione:\n" + session.showInProgress());
+			return true;
 		}),
-		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", (args)->System.out.println(session.showNotification())),
+		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", (args)->{
+			System.out.println(session.showNotification());
+			return true;
+		}),
+		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",(args)->{
-			if(args.length > 0) {
-				for(int i=0; i<args.length; i++) {
-					removeNotification(args[i]);
-				}		
-			} else {
+			if(args.length > 0) { 
+				IntStream.range(0,args.length)
+							.forEach((i)->removeNotification(args[i]));
+				return true;
+			}else {
 				System.out.print(INSERT_IDENTIFIER);
 				String id = in.nextLine();
 				removeNotification(id);
+				return true;
 			}
 		}),
 		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",(args)->{
@@ -330,11 +350,11 @@ public class Main {
 			String content = noticeBoard.showContent();
 			if(content.equals(""))
 				System.out.print("Nessuna proposta in bacheca!\n");
-			else {
-				System.out.print("Le proposte in bacheca:\n" + content);		
-			}
-		
+			else 
+				System.out.print("Le proposte in bacheca:\n" + content);
+			return true;
 		}),
+		//syntax : pubblica [id]
 		PUBLISH("pubblica", "Pubblica un evento creato", (args)->{
 			boolean valid = false;
 			do {
@@ -346,17 +366,25 @@ public class Main {
 						if(noticeBoard.add(session.getProposal(id))) {
 							String categoryName = session.getProposal(id).getCategoryName();
 							System.out.println("Proposta aggiunta con successo");
-							MessageHandler.getInstance().notifyByInterest(database.searchBy(categoryName, session.getOwner()), categoryName);
-						}					
-						else
+							ArrayList<User> receivers = database.searchBy(categoryName);
+							receivers.remove(session.getOwner());
+							MessageHandler.getInstance().notifyByInterest(receivers, categoryName);
+							return true;
+						}else {
 							System.out.println("La proposta inserita non è valida");
-					}else
+							return false;
+						}
+					}else {
 						System.out.println("La proposta inserita non esiste");
+						return false;
+					}
 				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
+					return false;
 				}
 			}while(!valid);
 		}),
+		// syntax : partecipa [id]
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca",(args)->{
 			boolean valid = false;
 			do {
@@ -364,12 +392,16 @@ public class Main {
 					System.out.print(INSERT_IDENTIFIER);
 					int id = Integer.parseInt(in.nextLine());
 					valid = true;
-					if(!noticeBoard.signUp(id, session.getOwner()))
+					if(!noticeBoard.signUp(id, session.getOwner())) {
 						System.out.println("L'iscrizione non è andata a buon fine");
-					else
+						return false;
+					}else {
 						System.out.println("L'iscrizione è andata a buon fine");
+						return true;
+					}
 				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
+					return false;
 				}
 			}while(!valid);
 		}),
@@ -383,64 +415,72 @@ public class Main {
 					int id = Integer.parseInt(in.nextLine());
 					valid = true;
 					if(noticeBoard.isSignedUp(id, actualUser)) {
-						if(noticeBoard.unsubscribe(id , actualUser))
+						if(noticeBoard.unsubscribe(id , actualUser)) {
 							System.out.println("La disiscrizione è andata a buon fine");
-						else 
+							return true;
+						}else {
 							System.out.println("La disiscrizione NON è andata a buon fine");
-					}
-					else
+							return false;
+						}
+					}else {
 						System.out.println("Non sei iscritto a questa proposta");
+						return false;
+					}
 				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
+					return false;
 				}
 			}while(!valid);
 
 		}),
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo",(args)->{
-				FieldSet editableFields = session.getOwner().getEditableFields();
-				System.out.println(editableFields.getFeatures());
-				//inserisci nome del campo da modificare
-				boolean abort = false;
-				FieldHeading field = FieldHeading.TITOLO;
-				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
-				String newField = in.nextLine();
-				if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
-					field = Stream.of(FieldHeading.values())
-							.filter((fh)->fh.getName().equalsIgnoreCase(newField))
-							.findAny()
-							.get();
-				else {
-					System.out.println("Il nome inserito non appartiene ad un campo");
-					abort = true;
-				}
-				//inserisci valore del campo da modificare
-				Object obj = null;
-				boolean valid = false;
-				if(!abort) {
-					obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
-					do {
-						System.out.println("Sei sicuro di voler modificare ?");
-						String newValue = "";
-						if(obj!=null)
-							newValue = obj.toString();
-						System.out.println("Campo : " + field.getName() + ", nuovo valore: " + newValue);
-						System.out.print("[y/n]> ");
-						String confirm = in.nextLine();
-						if(confirm.equalsIgnoreCase("n")) {
-							abort = true;
-							valid = true;
-						}else if(confirm.equalsIgnoreCase("y")) {
-							valid = true;
-						}
-					}while(!valid);
-				}
-				//modifica effetiva
-				if(!abort && session.getOwner().setValue(field.getName(), obj))
-					System.out.println("Modifica avvenuta con successo");
-				else
-					System.out.println("Modifica fallita");
-
+			FieldHeading[] fields = session.getOwner().getEditableFields();
+			boolean abort = false;
+			boolean valid = false;
+			FieldHeading field = FieldHeading.TITOLO;
+			System.out.print("Inserisci il nome del campo che vuoi modificare : ");
+			String newField = in.nextLine();
+			if(Stream.of(fields).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
+					field = Stream.of(fields)
+									.filter((fh)->fh.getName().equalsIgnoreCase(newField))
+									.findAny()
+									.get();
+			else {
+				System.out.println("Il nome inserito non appartiene ad un campo");
+				abort = true;
+			}
+			//inserisci valore del campo da modificare
+			Object obj = null;
+			if(!abort) {
+				obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+				//conferma modifica
+				valid = false;
+				do {
+					System.out.println("Sei sicuro di voler modificare ?");
+					String newValue = "";
+					if(obj!=null)
+						newValue = obj.toString();
+					System.out.println("Campo :" + field.getName() + ", nuovo valore: " + newValue);
+					System.out.print("[y/n]> ");
+					String confirm = in.nextLine();
+					if(confirm.equalsIgnoreCase("n")) {
+						abort = true;
+						valid = true;
+					}else if(confirm.equalsIgnoreCase("y")) {
+						valid = true;
+					}
+				}while(!valid);
+			}
+			//modifica effetiva
+			if(!abort && session.getOwner().setValue(field.getName(), obj)) {
+				System.out.println("Modifica avvenuta con successo");
+				return true;
+			}else {
+				System.out.println("Modifica fallita");
+				return false;
+			}
 		}),
+		//syntax : ritira [id]
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca", (args)->{
 			boolean valid = false;
 			do {
@@ -448,22 +488,27 @@ public class Main {
 					System.out.print(INSERT_IDENTIFIER);
 					int id = Integer.parseInt(in.nextLine());
 					valid = true;
-					if(noticeBoard.withdraw(id, session.getOwner()))
+					if(noticeBoard.withdraw(id, session.getOwner())) {
 						System.out.println("La proposta è stata ritirata con successo");
-					else
+						return true;
+					}else {
 						System.out.println("La proposta non è stata ritirata");
+						return false;
+					}
 				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
+					return false;
 				}
 			}while(!valid);
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", (args)->{
 			noticeBoard.refresh();
 			System.out.println("Accesso completato allo spazio personale ('help' per i comandi)");
-			privateSpaceIn();
+			return true;
 		}),
 		PRIVATE_SPACE_OUT("back", "Esci dal private space", (args)->{
-			privateSpaceOut();
+			System.out.println("Sei uscito dal tuo spazio personale");
+			return true;
 		}),
 		INVITE("invite", "Invita utenti ad una proposta",(args)->{
 			boolean valid = false;
@@ -475,23 +520,41 @@ public class Main {
 					User owner = session.getOwner();
 					if(noticeBoard.isOwner(id, owner)) {
 						ArrayList<User> userList = noticeBoard.searchBy(id, owner);
+						System.out.println("Potenziali utenti da invitare: " + userList.toString());
 						System.out.println("Vuoi mandare un invito a tutti?");
-						System.out.print("[y/n]> ");
+						System.out.print("[y|n]> ");
 						String confirm = in.nextLine();
-						if(confirm.equalsIgnoreCase("n")) {
-							for(int i=0; i<userList.size(); i++) {
-								System.out.println(i + ") " + userList.get(i));
-							}
-							System.out.println("Scegli quelli che vuoi");
-							//Far scegliere quali
-						}else if(confirm.equalsIgnoreCase("y")) {
-							MessageHandler.getInstance().inviteUsers(userList, owner.getName());
+						
+						if(confirm.equalsIgnoreCase("y")) {
+							MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+							return true;
+						}else if(confirm.equalsIgnoreCase("n")) {							
+							ArrayList<User> receivers = new ArrayList<>();
+							userList.stream()
+										.forEach(( u )->{
+											System.out.print("Invitare " + u.getName() + " ? [y|n]> ");
+											String answer = in.nextLine();
+											if(answer.equalsIgnoreCase("y")) {
+												receivers.add(u);
+												System.out.println("L'utente verrà notificato");
+											}else if(answer.equalsIgnoreCase("n"))
+												System.out.println(u.getName() + " non verrà invitato ");
+											else
+												System.out.println("Inserito valore non valido. L'utente non verrà notificato");
+										});
+							MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+							return true;
+						}else {
+							System.out.println("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
+							return false;
 						}
-					}					
-					else
+					}else {
 						System.out.println("La proposta non è di tua proprietà");
+						return false;
+					}
 				}catch(NumberFormatException e) {
 					System.out.println(INSERT_NUMBER);
+					return false;
 				}
 			}while(!valid);
 		});
@@ -538,9 +601,11 @@ public class Main {
 	
 		/**
 		 * Esegue il comando
+		 * @param args gli argomenti del comando
+		 * @return l'esito del comando
 		 */
-		public void run(String[] args) {
-			runnable.run(args);
+		public boolean run(String[] args) {
+			return runnable.run(args);
 		}
 		
 		/**

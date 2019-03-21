@@ -27,8 +27,8 @@ public class MessageHandler {
 		for(User user: userList) {
 			user.receive(new Message(
 					"Messaggio di sistema",
-					"E' stato creato evento che ti può interessare",
-					"un evento di tipo " + categoryName + "è stato creato"
+					"Nuovo evento di tuo interesse",
+					"E' stato creato un nuovo evento di tipo " + categoryName + " .\nConsulta la bacheca per ulteriori informazioni "
 					));
 		}
 	}
@@ -37,15 +37,17 @@ public class MessageHandler {
 	 * Manda un invito all'evento agli utenti nella lista userList
 	 * @param userList lista di utenti
 	 * @param owner Proprietario della proposta
+	 * @param id l'identificativo della proposta a cui ti sei stato invitato
 	 */
-	public void inviteUsers(ArrayList<User> userList, String owner) {
-		for(User user: userList) {
-			user.receive(new Message(
+	public void inviteUsers(ArrayList<User> userList, String owner, int id) {
+		userList.stream().forEach((u)->	u.receive(
+				new Message(
 					owner,
-					"Sei stato invitato ad un evento",
-					"Sei stato invitato all'evento tot"
-					));
-		}
+					"Invito",
+					"Sei stato invitato all'evento con identificativo " + id + " .\nConsulta la bacheca per più informazioni"
+					))
+				);
+
 		
 	}
 }

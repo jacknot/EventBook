@@ -36,15 +36,14 @@ class CommandList extends ArrayList<Command>{
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logIn
 	 */
-	public void logIn() {
+	private void logIn() {
+		add(Command.SHOW_CATEGORIES);
 		add(Command.CATEGORY);
 		add(Command.DESCRIPTION);
 		add(Command.LOGOUT);
 		add(Command.MODIFY);
 		add(Command.NEW_EVENT);
 		add(Command.SHOW_WORKINPROGRESS);
-		//add(Command.SHOW_NOTIFICATIONS);
-		//add(Command.REMOVE_NOTIFICATION);
 		add(Command.SHOW_NOTICEBOARD);
 		add(Command.PUBLISH);
 		add(Command.PARTICIPATE);
@@ -59,17 +58,16 @@ class CommandList extends ArrayList<Command>{
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logOut
 	 */
-	public void logOut() {
+	private void logOut() {
 		add(Command.REGISTRATION);
 		add(Command.LOGIN);
+		remove(Command.SHOW_CATEGORIES);
 		remove(Command.CATEGORY);
 		remove(Command.DESCRIPTION);
 		remove(Command.LOGOUT);
 		remove(Command.MODIFY);
 		remove(Command.NEW_EVENT);
 		remove(Command.SHOW_WORKINPROGRESS);
-		//remove(Command.SHOW_NOTIFICATIONS);
-		//remove(Command.REMOVE_NOTIFICATION);
 		remove(Command.SHOW_NOTICEBOARD);
 		remove(Command.PUBLISH);
 		remove(Command.PARTICIPATE);
@@ -83,10 +81,11 @@ class CommandList extends ArrayList<Command>{
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un accesso al private space
 	 */
-	public void privateSpaceIn() {
+	private void privateSpaceIn() {
 		add(Command.SHOW_NOTIFICATIONS);
 		add(Command.REMOVE_NOTIFICATION);
 		add(Command.PRIVATE_SPACE_OUT); //Uscita dal private space
+		remove(Command.SHOW_CATEGORIES);
 		remove(Command.CATEGORY);
 		remove(Command.DESCRIPTION);
 		remove(Command.LOGOUT);
@@ -105,7 +104,8 @@ class CommandList extends ArrayList<Command>{
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un uscita dal private space
 	 */
-	public void privateSpaceOut() {
+	private void privateSpaceOut() {
+		add(Command.SHOW_CATEGORIES);
 		add(Command.CATEGORY);
 		add(Command.DESCRIPTION);
 		add(Command.LOGOUT);
@@ -145,11 +145,12 @@ class CommandList extends ArrayList<Command>{
 	 */
 	public boolean contains(String key) {
 		String command = getCommand(key);
-		if(command != null && command.equals("help")) return true;
+		if(command != null && command.equals("help")) 
+			return true;
 		return this.stream()
 				.anyMatch((c)->c.hasName(command));
 	}
-	
+
 	/**
 	 * Esegue il comando di cui si è inserito il nome, se presente
 	 * @param input input dell'utente, contenente il comando e gli eventuali parametri
@@ -162,10 +163,20 @@ class CommandList extends ArrayList<Command>{
 			args = parameters.split(" ");
 		if(command.equals("help"))
 			System.out.println(toString());
-		else if(contains(command))
-			this.stream()
+		else if(contains(command)) {
+			if(this.stream()
 				.filter((c)->c.hasName(command))
-				.findFirst().get().run(args);
+				.findFirst().get().run(args)) {
+					if(Command.LOGIN.hasName(command))
+						logIn();
+					else if(Command.LOGOUT.hasName(command))
+						logOut();
+					else if(Command.PRIVATE_SPACE_IN.hasName(command))
+						privateSpaceIn();
+					else if(Command.PRIVATE_SPACE_OUT.hasName(command))
+						privateSpaceOut();
+			}
+		}
 	}
 	
 	/* (non-Javadoc)

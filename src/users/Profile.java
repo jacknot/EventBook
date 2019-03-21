@@ -2,6 +2,8 @@ package users;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import dataTypes.CategoriesInterest;
 import fields.FieldHeading;
@@ -17,12 +19,10 @@ public class Profile implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Contiene i campi
 	 */
 	private FieldSet fields;
-	
 	private final static String TOSTRING_FORMAT = "Nomignolo: %s%nFascia d'età: %s%nCategorie d'interesse:%n%s%n"; 
 	/**
 	 * Costruttore
@@ -54,7 +54,8 @@ public class Profile implements Serializable{
 		CategoriesInterest cat = getCategories();
 		if(add)
 			cat.add(category);
-		else 	cat.remove(category);
+		else 	
+			cat.remove(category);
 		return setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), cat);
 	}
 	/**
@@ -64,7 +65,9 @@ public class Profile implements Serializable{
 	 * @return True - il campo è stato modificato<br>False - il campo non è stato modificato
 	 */
 	public boolean setValue(String name, Object nValue) {
-		return fields.setValue(name, nValue);
+		if(!name.equals(FieldHeading.NOMIGNOLO.getName()))
+			return fields.setValue(name, nValue);
+		return false;
 	}
 	
 	/**
@@ -81,30 +84,24 @@ public class Profile implements Serializable{
 		}		
 		return false;
 	}
-	
 	/**
-	 * Restituisce tutti i campi del Profilo
-	 * @return campi del Profilo
+	 * Restituisce l'intestazione dei campi modificabili del profilo
+	 * @return l'intestazione dei campi modificabili del Profilo
 	 */
-	public FieldSet getFields() {
-		return fields;
+	public FieldHeading[] getEditableFields() {
+		return Stream.of(FieldHeading.values())
+				.filter(( fh )-> fields.contains(fh.getName()))
+				.filter(( fh )-> !fh.equals(FieldHeading.NOMIGNOLO))
+				.collect(Collectors.toCollection(ArrayList::new))
+				.toArray(new FieldHeading[0]);
 	}
-	
-	/**
-	 * Restituisce solo i campi modificabili del Profilo
-	 * @return campi modificabili del Profilo
-	 */
-	public FieldSet getEditableFields() {
-		FieldSet editableFields = FieldSetFactory.getInstance().getSet("Profile");		
-		editableFields.remove(0); //Rimuove nomignolo
-		return editableFields;
-	}
-	
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return String.format(TOSTRING_FORMAT, fields.getValue(FieldHeading.NOMIGNOLO.getName()), fields.getValue(FieldHeading.FASCIA_ETA_UTENTE.getName()), fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName()));
+		return String.format(TOSTRING_FORMAT, fields.getValue(FieldHeading.NOMIGNOLO.getName()), 
+												fields.getValue(FieldHeading.FASCIA_ETA_UTENTE.getName()), 
+												fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName())).toString();
 	}
 }

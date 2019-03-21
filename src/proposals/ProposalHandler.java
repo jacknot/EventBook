@@ -164,23 +164,24 @@ public class ProposalHandler implements Serializable{
 	}
 	
 	/**
-	 * Restituisce una lista di utenti papabili per un invito in base a quelli che sono stati iscritti alle proposte
-	 * dell'utente identificato da user relative alla categoria indentificata da categoryName
+	 * Restituisce una lista di utenti papabili per un invito in base a quelli che hanno partecipate a proposte
+	 * presentate dall'utente inserito
 	 * @param user utente proprietario di proposte
 	 * @param categoryName nome della Categoria
 	 * @return lista contente utenti da invitare
 	 */
-	public ArrayList<User> searchBy(User user, String categoryName){
-		ArrayList<User> listaInvitati = new ArrayList<User>();
+	public synchronized ArrayList<User> searchBy(User user, String categoryName){
+		ArrayList<User> userList = new ArrayList<User>();
 		Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
 			.filter((p)->p.isOwner(user))
 			.filter((p)->p.isCategory(categoryName))
 			.map((p) -> p.getSubscribers())
-			.forEach((l) -> l.stream().forEach((u) -> {
-				if(!listaInvitati.contains(u))
-					listaInvitati.add(u);
+			.forEach((l) -> l.stream()
+								.forEach((u) -> {
+									if(!userList.contains(u))
+										userList.add(u);
 				}));
-		return listaInvitati;
+		return userList;
 	}
 	
 	/**
@@ -190,7 +191,7 @@ public class ProposalHandler implements Serializable{
 	 * @param id indetificatore della proposta
 	 * @return lista contente utenti da invitare
 	 */
-	public ArrayList<User> searchBy(int id, User user){
+	public synchronized ArrayList<User> searchBy(int id, User user){
 		String categoryName = bacheca.get(id).getCategoryName();
 		return searchBy(user, categoryName);
 	}

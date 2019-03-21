@@ -3,7 +3,6 @@ package users;
 import java.io.Serializable;
 
 import fields.FieldHeading;
-import fields.FieldSet;
 
 /**La classe User ha il compito di fornire una struttura adatta a gestire un fruitore del social network.<br>
  * Ad ogni fruitore è associato, oltre al nome, uno spazio personale inizialmente vuoto<br>
@@ -14,10 +13,8 @@ public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Il nome del fruitore
+	 * Il profilo legato al fruitore
 	 */
-	//Modifica e aggiunta per la versione 4
-	//private String name;
 	private Profile profile;
 	/**
 	 * Lo spazio personale del fruitore
@@ -64,7 +61,6 @@ public class User implements Serializable{
 	 * @return true se uguali<br>false altrimenti
 	 */
 	public boolean equals(User f) {
-		//Modifica per la versione 4
 		return getName().equals(f.getName());
 	}
 	/**
@@ -74,7 +70,6 @@ public class User implements Serializable{
 	public String showNotifications() {
 		return this.privateSpace.toString();
 	}
-	//Metodo aggiunto per la versione 4
 	/**
 	 * Modifica il valore del campo (del profilo) di cui si è inserito il nome
 	 * @param name il nome del campo
@@ -95,18 +90,10 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * Restituisce tutti i campi del Profilo
-	 * @return campi del Profilo
+	 * Restituisce l'intestazione dei campi modificabili del Profilo
+	 * @return l'intestazione dei campi modificabili del Profilo
 	 */
-	public FieldSet getFields() {
-		return profile.getFields();
-	}
-	
-	/**
-	 * Restituisce solo i campi modificabili del Profilo
-	 * @return campi modificabili del Profilo
-	 */
-	public FieldSet getEditableFields() {
+	public FieldHeading[] getEditableFields() {
 		return profile.getEditableFields();
 	}
 	

@@ -55,4 +55,10 @@ public class Pair<T1, T2> implements Serializable{
 	public void setSecond(T2 second) {
 		this.second = second;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return first.toString() + " : " + second.toString();
+	}
 }

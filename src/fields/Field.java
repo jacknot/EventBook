@@ -121,8 +121,4 @@ public class Field <T> implements Serializable{
 	public boolean equals(Field<?> f) {
 		return heading.getName().equals(f.getName()) && getType().equals(f.getType()) && value.equals(f.value);
 	}
-	
-	public FieldHeading getHead() { //TEMPORANEO: MI SERVE PER IL MAIN NEL LOGIN
-		return heading;
-	}
 }

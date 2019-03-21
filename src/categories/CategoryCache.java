@@ -43,12 +43,23 @@ public class CategoryCache {
 	
 	/**Restituisce il clone di una particolare istanza di categoria
 	 * @param type l'intestazione della categoria di cui si vuole l'istanza
-	 * @return l'istanza della categoria di cui si è inserito il nome
+	 * @return l'istanza della categoria di cui si è inserito il nome, null se si è inserito un tipo sbagliato
 	 */
 	public Category getCategory(String type) {
+		if(!contains(type))
+			return null;
 		Category cached = set.stream()
 						.filter((c)->c.hasName(type))
 						.findFirst().get();
 		return (Category) cached.clone();
+	}
+	/**
+	 * Controlla se contiene la categoria di cui si è inserito il nome
+	 * @param key il nome della categoria
+	 * @return True - la contiene<br>False - non la contiene
+	 */
+	public boolean contains(String key) {
+		return set.stream()
+					.anyMatch((c)->c.hasName(key));
 	}
 }

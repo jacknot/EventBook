@@ -2,8 +2,8 @@ package users;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-import proposals.Proposal;
 import users.User;
 import users.Message;
 
@@ -74,12 +74,14 @@ public class Database implements Serializable{
 		}
 	}
 	
-	public ArrayList<User> searchBy(String categoryName, User owner){
-		ArrayList<User> userList = new ArrayList<User>();
-		for(User user: users) {
-			if(user.containsCategory(categoryName) && !user.equals(owner))
-				userList.add(user);
-		}
-		return userList;
+	/**
+	 * Restitusice la lista di utenti a cui interessa la categoria di cui si è inserito il nome
+	 * @param categoryName il nome della categoria
+	 * @return la lista contenente tutti gli utenti interessati nella categoria inserita
+	 */
+	public ArrayList<User> searchBy(String categoryName){
+		return users.stream()
+						.filter((u)->u.containsCategory(categoryName))
+						.collect(Collectors.toCollection(ArrayList::new));
 	}
 }
