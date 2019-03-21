@@ -30,14 +30,14 @@ public class FieldSetFactory {
 	 */
 	private FieldSetFactory() {
 		types = new HashMap<String, Supplier<FieldSet>>();
-		types.put(CategoryHeading.FOOTBALLMATCH.getName(), ()->{
+		types.put(CategoryHeading.FOOTBALLMATCH.getName().toUpperCase(), ()->{
 			FieldSet cc = commonSet();
 			cc.add(new Field<>(FieldHeading.GENERE));
 			cc.add(new Field <>(FieldHeading.FASCIA_ETA));
 			return cc;
 		});
 		//Aggiunta per la versione 4
-		types.put("Profile", ()->{
+		types.put("PROFILE", ()->{
 			FieldSet cc = new FieldSet();
 			cc.add(new Field<>(FieldHeading.NOMIGNOLO));
 			cc.add(new Field <>(FieldHeading.FASCIA_ETA_UTENTE));
@@ -83,9 +83,9 @@ public class FieldSetFactory {
 	 * @return il contenitore di campi del tipo desiderato (null se il tipo inserito non è contemplato)
 	 */
 	public FieldSet getSet(String type){
-		if(!types.containsKey(type))
+		if(!types.containsKey(type.toUpperCase()))
 			return null;
-		return types.get(type).get();
+		return types.get(type.toUpperCase()).get();
 	} 
 	//End Factory
 }

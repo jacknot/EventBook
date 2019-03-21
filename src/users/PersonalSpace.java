@@ -48,7 +48,7 @@ public class PersonalSpace implements Serializable{
 	 * @return l'esito della rimozione
 	 */
 	public boolean remove(int index) {
-		if(index < messageList.size()) {
+		if(index >= 0 && index < messageList.size()) {
 			messageList.remove(index);
 			return true;
 		}

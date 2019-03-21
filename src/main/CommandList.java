@@ -21,6 +21,7 @@ class CommandList extends ArrayList<Command>{
 	/**
 	 * Espressione regolare per l'estrazione del comando
 	 */
+	//regex: comando ("string"|int)?
 	private static final String REGEX_COMMAND = "^[a-z][A-Za-z]+( )?";
 	
 	/**
@@ -158,9 +159,10 @@ class CommandList extends ArrayList<Command>{
 	public void run(String input) {
 		String command = getCommand(input);
 		String parameters = input.replaceAll(command, "").trim();
-		String[] args = new String[0];
+		String[] args = new String[1];
 		if(!parameters.equals(""))
-			args = parameters.split(" ");
+			//inserisci sempre un solo parametro, inserendone tanti devi gestire le stringhe in qualche modo
+			args[0] = parameters;//.split(" ");
 		if(command.equals("help"))
 			System.out.println(toString());
 		else if(contains(command)) {

@@ -107,46 +107,7 @@ public class Main {
 		System.out.println((new FileHandler().save(DATABASE, database))? SAVE_COMPLETED : SAVE_FAILED);
 	}
 	
-	/**
-	 * Richiede all'utente di inserire un valore e ne verifica la validità in base al campo
-	 * @param field campo su cui verificare la validità del dato
-	 * @param message richiesta all'utente di inserire il dato
-	 * @return Oggetto correttamente elaborato in base al campo
-	 */
-	private static Object acceptValue(FieldHeading field, String message) {
-		boolean valid = false;
-		Object obj = null;
-		do {
-			System.out.print("\t" + message);
-			String value = in.nextLine();
-			if(!field.isBinding() && value.isEmpty())
-				valid = true;
-			System.out.print(NEW_LINE);
-			if(field.getClassType().isValidType(value)) {
-				obj = field.getClassType().parse(value);
-				valid = true;
-			}
-			if(!valid)
-				System.out.println("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
-		}while(!valid);
-		return obj;
-	}
 	
-	/**
-	 * Rimuove una notifica dallo spazio personale in base all'id
-	 * @param id id della notifica
-	 */
-	private static void removeNotification(String id) {
-		try {
-			int i = Integer.parseInt(id);
-			if(!session.getOwner().removeMsg(i))
-				System.out.println("La rimozione non è andata a buon fine");
-			else 
-				System.out.println("Rimossa correttamente");
-		}catch(NumberFormatException e) {
-			System.out.println("Dato invalido, inserisci un numero");
-		}
-	}
 	
 	/**
 	 * Enumerazione contente i vari comandi disponibili all'utente, comprese le loro funzionalità
@@ -161,41 +122,49 @@ public class Main {
 			}),
 		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", (args)->{
 			System.out.println("Le categorie disponibili: ");
-			Stream.of(CategoryHeading.values()).forEach((ch)->System.out.println("\t" + ch.toString()));
+			Stream.of(CategoryHeading.values()).forEach((ch)->System.out.println("\t" + ch.getName()));
 			return true;
 		}),
 		//syntax : categoria [category]
-		CATEGORY("categoria", "Mostra la categoria disponibile", (args)->{
-			/*
-			 * 	if(args.length = 0){
-			 * 		System.out.println("Inserisci il nome di una categoria");
-			 * 		return false;
-			 * 	}else if(Stream.of(CategoryHeading.values()).anyMatch((fh)->fh.getName().equals(args[1]))){
-			 * 		System.out.print(Stream.of(CategoryHeading.values()).filter((fh)->fh.getName().equals(args[1])).findFirst().get().toString());
-			 * 		return true;
-			 * 	}else{
-			 * 		System.out.println("Il nome inserito non appartiene ad una categoria");
-			 * 		return false;
-			 * 	}
-			 * */
-			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
-			System.out.print(p.getDescription());
-			return true;
+		CATEGORY("categoria", "Mostra la categoria disponibile\tSintassi: categoria [name]", (args)->{
+
+			  	if(args.length == 0){
+			 		System.out.println("Inserisci il nome di una categoria");
+			  		return false;
+			  	}else if(Stream.of(CategoryHeading.values())
+			  					.anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
+			  		System.out.print(Stream.of(CategoryHeading.values())
+			  								.filter((fh)->fh.getName().equalsIgnoreCase(args[0]))
+			  								.findFirst().get().toString());
+			  		return true;
+			 	}else{
+			  		System.out.println("Il nome inserito non appartiene ad una categoria");
+			  		return false;
+			  	}
 		}),
 		//syntax : descrizione [category]
-		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", (args)->{
-			Category p = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
-			System.out.print(p.getFeatures());
-			return true;
+		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile\tSintassi: descrizione [name]", (args)->{
+			if(args.length == 0){
+		 		System.out.println("Inserisci il nome di una categoria");
+		  		return false;
+		  	}else if(Stream.of(CategoryHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
+		  		System.out.print(FieldSetFactory.getInstance().getSet(args[0]).getFeatures());
+		  		return true;
+		 	}else{
+		  		System.out.println("Il nome inserito non appartiene ad una categoria");
+		  		return false;
+		  	}
 		}),
 		//syntax : registra [name]
-		REGISTRATION("registra", "Registra un fruitore", (args)->{
-			System.out.println(FieldHeading.NOMIGNOLO.toString());
-			String name = (String)acceptValue(FieldHeading.NOMIGNOLO, "Inserisci il nomignolo: ");
-			if(database.register(name)) {
+		REGISTRATION("registra", "Registra un fruitore\tSintassi: registra [name]", (args)->{
+			if(args.length == 0){
+		 		System.out.println("Inserisci il nomignolo dell'utente da registrare");
+		  		return false;
+		  	}else if(args.length > 0 && !database.contains(args[0])){
+		  		database.register(args[0]);
 				System.out.println("L'utente è stato registrato con successo");
 				System.out.println("Compilare, se si vuole, il proprio Profilo personale:\n");
-				User user = database.getUser(name);
+				User user = database.getUser(args[0]);
 				FieldHeading[] fields = user.getEditableFields();
 				Stream.of(fields)
 						.forEach((fh)->{
@@ -207,10 +176,10 @@ public class Main {
 								System.out.println("\tIl dato non è stato inserito correttamente\n");
 						});
 				return true;
-			}else {
-				System.out.println("L'utente è già esistente");
-				return false;
-			}
+		 	}else{
+		  		System.out.println("Il nome inserito è già esistente");
+		  		return false;
+		  	}
 		}),
 		//syntax : login [name]
 		LOGIN("login", "Accedi", (args)->{
@@ -236,6 +205,7 @@ public class Main {
 			System.out.println("Logout eseguito");
 			return true;
 			}),
+		//syntax : modifica [id]
 		MODIFY("modifica","Modifica il campo di una proposta",(args)->{
 			boolean abort = false;
 			//inserisci id proposta
@@ -335,14 +305,10 @@ public class Main {
 		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo",(args)->{
 			if(args.length > 0) { 
-				IntStream.range(0,args.length)
-							.forEach((i)->removeNotification(args[i]));
-				return true;
+				return removeNotification(args[0]);
 			}else {
-				System.out.print(INSERT_IDENTIFIER);
-				String id = in.nextLine();
-				removeNotification(id);
-				return true;
+				System.out.print("Inserisci un parametro");
+				return false;
 			}
 		}),
 		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",(args)->{
@@ -431,7 +397,6 @@ public class Main {
 					return false;
 				}
 			}while(!valid);
-
 		}),
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo",(args)->{
 			FieldHeading[] fields = session.getOwner().getEditableFields();
@@ -606,6 +571,52 @@ public class Main {
 		 */
 		public boolean run(String[] args) {
 			return runnable.run(args);
+		}
+		
+		/**
+		 * Richiede all'utente di inserire un valore e ne verifica la validità in base al campo
+		 * @param field campo su cui verificare la validità del dato
+		 * @param message richiesta all'utente di inserire il dato
+		 * @return Oggetto correttamente elaborato in base al campo
+		 */
+		private static Object acceptValue(FieldHeading field, String message) {
+			boolean valid = false;
+			Object obj = null;
+			do {
+				System.out.print("\t" + message);
+				String value = in.nextLine();
+				if(!field.isBinding() && value.isEmpty())
+					valid = true;
+				System.out.print(NEW_LINE);
+				if(field.getClassType().isValidType(value)) {
+					obj = field.getClassType().parse(value);
+					valid = true;
+				}
+				if(!valid)
+					System.out.println("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
+			}while(!valid);
+			return obj;
+		}
+		
+		/**
+		 * Rimuove una notifica dallo spazio personale in base all'id
+		 * @param id id della notifica
+		 * @return Esito della rimozione
+		 */
+		private static boolean removeNotification(String id) {
+			try {
+				int i = Integer.parseInt(id);
+				if(!session.getOwner().removeMsg(i)) {
+					System.out.println("La rimozione non è andata a buon fine");
+					return false;
+				}else {
+					System.out.println("Rimossa correttamente");
+					return true;
+				}
+			}catch(NumberFormatException e) {
+				System.out.println("Dato invalido, inserisci un numero");
+				return false;
+			}
 		}
 		
 		/**
