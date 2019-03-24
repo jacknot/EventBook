@@ -203,7 +203,6 @@ public class Main {
 		MODIFY("modifica","Modifica il campo di una proposta\tSintassi: modifica [id]",(args)->{
 			if(args.length == 1) {
 				//inserisci id proposta
-				boolean abort = false;
 				boolean valid = false;
 				int id = -1;
 				try {
@@ -244,13 +243,13 @@ public class Main {
 					String confirm = in.nextLine();
 					if(confirm.equalsIgnoreCase("n")) {
 						valid = true;
-						abort = true;
-					}else if(confirm.equalsIgnoreCase("y")) {
+						System.out.println("La modifica è stata annullata");
+						return false;
+					}else if(confirm.equalsIgnoreCase("y"))
 						valid = true;
-					}
 				}while(!valid);
 				//modifica effetiva
-				if(!abort && session.modifyProposal(id, field.getName(), obj)) {
+				if(session.modifyProposal(id, field.getName(), obj)) {
 					System.out.println("Modifica avvenuta con successo");
 					return true;
 				}else {
@@ -264,70 +263,6 @@ public class Main {
 				System.out.print("Inserisci un parametro");
 				return false;
 			}
-			
-			
-//			boolean abort = false;
-//			//inserisci id proposta
-//			boolean valid = false;
-//			int id = -1;
-//			try {
-//				System.out.print(INSERT_IDENTIFIER);
-//				id = Integer.parseInt(in.nextLine());
-//				if(!session.contains(id)) {
-//					abort = true;
-//					return false;
-//				}
-//			}catch(NumberFormatException e) {
-//				System.out.println(INSERT_NUMBER);
-//				abort = true;
-//				return false;
-//			}
-//			//inserisci nome del campo da modificare
-//			FieldHeading field = FieldHeading.TITOLO;
-//			if(!abort) {
-//				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
-//				String newField = in.nextLine();
-//				if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
-//					field = Stream.of(FieldHeading.values())
-//							.filter((fh)->fh.getName().equalsIgnoreCase(newField))
-//							.findAny()
-//							.get();
-//				else {
-//					System.out.println("Il nome inserito non appartiene ad un campo");
-//					abort = true;
-//					return false;
-//				}
-//			}
-//			//inserisci valore del campo da modificare
-//			Object obj = null;
-//			if(!abort) {
-//				obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
-//				//conferma modifica
-//				valid = false;
-//				do {
-//					System.out.println("Sei sicuro di voler modificare ?");
-//					String newValue = "";
-//					if(obj!=null)
-//						newValue = obj.toString();
-//					System.out.println("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + newValue);
-//					System.out.print("[y/n]> ");
-//					String confirm = in.nextLine();
-//					if(confirm.equalsIgnoreCase("n")) {
-//						abort = true;
-//						valid = true;
-//					}else if(confirm.equalsIgnoreCase("y")) {
-//						valid = true;
-//					}
-//				}while(!valid);
-//			}
-//			//modifica effetiva
-//			if(!abort && session.modifyProposal(id, field.getName(), obj)) {
-//				System.out.println("Modifica avvenuta con successo");
-//				return true;
-//			}else {
-//				System.out.println("Modifica fallita");
-//				return false;
-//			}
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento", (args)->{
 			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
@@ -364,7 +299,19 @@ public class Main {
 		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo\tSintassi: rimuoviNotifica [id]",(args)->{
 			if(args.length == 1) { 
-				return removeNotification(args[0]);
+				try {
+					int i = Integer.parseInt(args[0]);
+					if(!session.getOwner().removeMsg(i)) {
+						System.out.println("La rimozione non è andata a buon fine");
+						return false;
+					}else {
+						System.out.println("Rimossa correttamente");
+						return true;
+					}
+				}catch(NumberFormatException e) {
+					System.out.println("Dato invalido, inserisci un numero");
+					return false;
+				}
 			}else if(args.length > 1){
 				System.out.print("Inserisci un solo parametro");
 				return false;
@@ -669,28 +616,6 @@ public class Main {
 			}while(!valid);
 			return obj;
 		}
-		
-		/**
-		 * Rimuove una notifica dallo spazio personale in base all'id
-		 * @param id id della notifica
-		 * @return Esito della rimozione
-		 */
-		private static boolean removeNotification(String id) {
-			try {
-				int i = Integer.parseInt(id);
-				if(!session.getOwner().removeMsg(i)) {
-					System.out.println("La rimozione non è andata a buon fine");
-					return false;
-				}else {
-					System.out.println("Rimossa correttamente");
-					return true;
-				}
-			}catch(NumberFormatException e) {
-				System.out.println("Dato invalido, inserisci un numero");
-				return false;
-			}
-		}
-		
 		/**
 		 * Controlla se il comando ha il nome inserito
 		 * @param comando il nome presunto del comando
