@@ -50,7 +50,6 @@ class CommandList extends ArrayList<Command>{
 		add(Command.PARTICIPATE);
 		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		add(Command.WITHDRAW_PROPOSAL);
-		add(Command.MODIFY_PROFILE);
 		add(Command.INVITE);
 		add(Command.PRIVATE_SPACE_IN); //Accesso al private space
 		remove(Command.REGISTRATION);
@@ -74,7 +73,6 @@ class CommandList extends ArrayList<Command>{
 		remove(Command.PARTICIPATE);
 		remove(Command.UNSUBSCRIBE);
 		remove(Command.WITHDRAW_PROPOSAL);
-		remove(Command.MODIFY_PROFILE);
 		remove(Command.INVITE);
 		remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
 	}
@@ -86,6 +84,8 @@ class CommandList extends ArrayList<Command>{
 		add(Command.SHOW_NOTIFICATIONS);
 		add(Command.REMOVE_NOTIFICATION);
 		add(Command.PRIVATE_SPACE_OUT); //Uscita dal private space
+		add(Command.SHOW_PROFILE);
+		add(Command.MODIFY_PROFILE);
 		remove(Command.SHOW_CATEGORIES);
 		remove(Command.CATEGORY);
 		remove(Command.DESCRIPTION);
@@ -98,7 +98,6 @@ class CommandList extends ArrayList<Command>{
 		remove(Command.PARTICIPATE);
 		remove(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		remove(Command.WITHDRAW_PROPOSAL);
-		remove(Command.MODIFY_PROFILE);
 		remove(Command.INVITE);
 		remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
 	}
@@ -118,11 +117,12 @@ class CommandList extends ArrayList<Command>{
 		add(Command.PARTICIPATE);
 		add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
 		add(Command.WITHDRAW_PROPOSAL);
-		add(Command.MODIFY_PROFILE);
 		add(Command.INVITE);
 		add(Command.PRIVATE_SPACE_IN); //Accesso al private space
 		remove(Command.SHOW_NOTIFICATIONS);
 		remove(Command.REMOVE_NOTIFICATION);
+		remove(Command.SHOW_PROFILE);
+		remove(Command.MODIFY_PROFILE);
 		remove(Command.PRIVATE_SPACE_OUT); //Accesso al private space
 	}
 	
@@ -160,14 +160,10 @@ class CommandList extends ArrayList<Command>{
 		String command = getCommand(input);
 		String parameters = input.replaceAll(command, "").trim();
 		String[] args = new String[0];
-		if(!parameters.equals(""))
-			args = parameters.split(" "); //prende tutti i parametri inseriti dall'utente, nel Main in base al comando quelli superflui possono essere ignorati	
-			/* OPPURE prende solo il primo parametro e gli altri vengono tagliati, non servirebbe neanche più array ma basterebbe una stringa
-			 *  {
-			 * 		args = new String[1];
-			 * 		args[0] = parameters.split(" ")[0];
-			 *  }
-			 */
+		if(!parameters.equals("")) {
+			args = new String[1];
+			args[0] = parameters;
+		}
 		if(command.equals("help"))
 			System.out.println(toString());
 		else if(contains(command)) {

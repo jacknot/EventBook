@@ -23,7 +23,7 @@ public class Profile implements Serializable{
 	 * Contiene i campi
 	 */
 	private FieldSet fields;
-	private final static String TOSTRING_FORMAT = "Nomignolo: %s%nFascia d'età: %s%nCategorie d'interesse:%n%s%n"; 
+	private final static String TOSTRING_FORMAT = "Nomignolo: %s%nFascia di età utente: %s%nCategorie di interesse:%n%s%n"; 
 	/**
 	 * Costruttore
 	 */
@@ -103,5 +103,10 @@ public class Profile implements Serializable{
 		return String.format(TOSTRING_FORMAT, fields.getValue(FieldHeading.NOMIGNOLO.getName()), 
 												fields.getValue(FieldHeading.FASCIA_ETA_UTENTE.getName()), 
 												fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName())).toString();
+	}
+	public static void main(String[] args) {
+		Stream.of(new Profile("marco").getEditableFields())
+				.map((fh)->fh.getName())
+				.forEach(System.out::println);
 	}
 }
