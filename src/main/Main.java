@@ -541,6 +541,10 @@ public class Main {
 					return false;
 				}
 			}while(!valid);
+		}),
+		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente",(args)->{
+			System.out.println(session.getOwner().showProfile());
+			return true;
 		});
 		/**
 		 * Il nome del comando
