@@ -182,22 +182,6 @@ public class Main {
 		}),
 		//syntax : login [name]
 		LOGIN("login", "Accedi\tSintassi: login [name]", (args)->{
-//			String name = "";
-//			if(args.length == 1) {
-//				name = args[0];
-//			} else {
-//				System.out.print("Inserisci il nome: ");
-//				name = in.nextLine();
-//			}
-//			if(database.contains(name)) {
-//				session = new Session(database.getUser(name));
-//				System.out.println("Loggato come: " + name);
-//				return true;
-//			}
-//			else {
-//				System.out.println("Utente non registrato");
-//				return false;
-//			}
 			if(args.length == 0){
 		 		System.out.println("Inserisci il nomignolo di un utente contenuto nel database");
 		  		return false;
@@ -273,12 +257,10 @@ public class Main {
 					System.out.println("Modifica fallita");
 					return false;
 				}		
-			}
-			else if(args.length > 1) {
+			}else if(args.length > 1) {
 				System.out.print("Inserisci un solo parametro");
 				return false;	
-			}
-			else {
+			}else {
 				System.out.print("Inserisci un parametro");
 				return false;
 			}

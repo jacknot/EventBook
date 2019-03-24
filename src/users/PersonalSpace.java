@@ -16,11 +16,18 @@ public class PersonalSpace implements Serializable{
 	 */
 	private ArrayList <Message> messageList;
 	
+	/**
+	 * Formato in stringa dello spazio personale
+	 */
 	private final static String TOSTRING_FORMAT ="Spazio personale : %n%n";	
 	/**
 	 * Formattazione per la visualizzazione testuale dell singolo messaggio
 	 */
 	private static final String MESSAGE = "\n%d : %s";
+	/**
+	 * Rappresentazione testuale della classe quand non ci sono messaggi non ci sono messaggi
+	 */
+	private static final String EMPTY = "Non hai messaggi";
 	
 	/**
 	 * Costruttore per la classe PrivateSpace
@@ -59,8 +66,11 @@ public class PersonalSpace implements Serializable{
 	 */
 	public String toString() {
 		StringBuffer tmp = new StringBuffer(TOSTRING_FORMAT);
-		IntStream.range(0, messageList.size())
-					.forEachOrdered((i)->tmp.append(String.format(MESSAGE, i, messageList.get(i).toString())));
+		if(messageList.size() == 0)
+			tmp.append(EMPTY);
+		else
+			IntStream.range(0, messageList.size())
+						.forEachOrdered((i)->tmp.append(String.format(MESSAGE, i, messageList.get(i).toString())));
 		return String.format(tmp.toString());
 	}
 }
