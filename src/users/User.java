@@ -115,6 +115,15 @@ public class User implements Serializable{
 	public boolean containsCategory(String categoryName) {
 		return profile.containsCategory(categoryName);
 	}
+	
+	/**
+	 * Verifica la presenza o meno di messaggi nello spazio personale
+	 * @return True se nessun messaggio presente <br> False altrimenti
+	 */
+	public boolean noMessages() {
+		return privateSpace.noMessages();
+	}	
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

@@ -101,6 +101,14 @@ public class Session {
 	}
 	
 	/**
+	 * Verifica la presenza o meno di messaggi nello spazio personale
+	 * @return True se nessun messaggio presente <br> False altrimenti
+	 */
+	public boolean noMessages() {
+		return owner.noMessages();
+	}	
+	
+	/**
 	 * Controlla se la sessione contiene la proposta di cui si è inserito l'identificatore
 	 * @param id l'identificatore della proposta
 	 * @return True - contiene la proposta<br>False - non contiene la proposta

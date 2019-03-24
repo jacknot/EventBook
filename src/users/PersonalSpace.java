@@ -54,6 +54,15 @@ public class PersonalSpace implements Serializable{
 		}
 		return false;
 	}
+	
+	/**
+	 * Verifica la presenza o meno di messaggi
+	 * @return True se nessun messaggio presente <br> False altrimenti
+	 */
+	public boolean noMessages() {
+		return messageList.isEmpty();
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

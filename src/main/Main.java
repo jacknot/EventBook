@@ -376,7 +376,10 @@ public class Main {
 			return true;
 		}),
 		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", (args)->{
-			System.out.println(session.showNotification());
+			if(session.noMessages()) 
+				System.out.println("Nessun messaggio.");
+			else
+				System.out.println(session.showNotification());
 			return true;
 		}),
 		//syntax : rimuoviNotifica [id]
