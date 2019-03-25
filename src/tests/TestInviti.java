@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.Test;
-
 import categories.Category;
 import categories.CategoryCache;
 import categories.CategoryHeading;
@@ -20,12 +18,11 @@ class TestInviti {
 
 	@org.junit.jupiter.api.Test
 	void notificaInteresse() { 
-		User pinco = new User("pinco");
-		User proposer = new User("Mario"); //Propone l'evento
-		pinco.setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), FieldHeading.CATEGORIE_INTERESSE.getClassType().parse("Partita di Calcio")); //Interessato a calcio
 		Database database = new Database(); //creazione database utenti
-		database.register(pinco.getName());
-		database.register(proposer.getName()); //registrati nel database
+		database.register("pinco");
+		database.register("Mario"); //registrati nel database
+		database.getUser("pinco").setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), FieldHeading.CATEGORIE_INTERESSE.getClassType().parse("Partita di Calcio")); //Interessato a calcio
+		
 		ProposalHandler noticeBoard = new ProposalHandler(); //creazione bacheca
 		//Creazione nuova categoria
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
@@ -37,12 +34,14 @@ class TestInviti {
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
-		Proposal proposal = new Proposal(event, proposer);
+		Proposal proposal = new Proposal(event, database.getUser("Mario"));
+		
 		noticeBoard.add(proposal); //Proposta aggiunta in bacheca
 		ArrayList<User> receivers = database.searchBy(proposal.getCategoryName()); //Lista di utenti interessati in base alla categoria
-		receivers.remove(proposer); //rimosso il proprietario proposta
+		receivers.remove(database.getUser("Mario")); //rimosso il proprietario proposta
 		MessageHandler.getInstance().notifyByInterest(receivers, proposal.getCategoryName()); //invio messaggio alla lista di utenti
-		assertFalse(pinco.noMessages()); //Pinco ha ricevuto il messaggio
+		assertFalse(database.getUser("pinco").noMessages()); //Pinco ha ricevuto il messaggio
 	}
+	
 
 }

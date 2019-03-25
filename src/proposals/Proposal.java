@@ -47,15 +47,15 @@ public class Proposal implements Serializable{
 		this.subscribers = new ArrayList<User>();
 		this.aState = State.INVALID;
 		statePassages = new ArrayList<Pair<State, LocalDate>>();
-		statePassages.add(new Pair<>(aState, LocalDate.now()));
 		update();
+		statePassages.add(new Pair<>(aState, LocalDate.now()));
 	}
 	
 	/**
 	 * Fa cambiare stato alla proposta
 	 */
 	public void update() {
-		if(aState.transition(this));
+		if(aState.transition(this))
 			statePassages.add(new Pair<>(aState, LocalDate.now()));
 	}
 	/**
