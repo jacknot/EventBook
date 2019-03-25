@@ -19,7 +19,7 @@ public class CategoriesInterest extends ArrayList<String>{
 			
 			for(int i=0; i < cats.length; i++) {
 				if(cats[i].getName().equalsIgnoreCase(categoryName)) {		
-					return super.add(categoryName);
+					return super.add(cats[i].getName());
 				}
 			}
 		}

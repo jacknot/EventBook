@@ -86,7 +86,6 @@ class CommandList extends ArrayList<Command>{
 		add(Command.PRIVATE_SPACE_OUT); //Uscita dal private space
 		add(Command.SHOW_PROFILE);
 		add(Command.MODIFY_PROFILE);
-		remove(Command.SHOW_CATEGORIES);
 		remove(Command.CATEGORY);
 		remove(Command.DESCRIPTION);
 		remove(Command.LOGOUT);
@@ -105,7 +104,6 @@ class CommandList extends ArrayList<Command>{
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un uscita dal private space
 	 */
 	private void privateSpaceOut() {
-		add(Command.SHOW_CATEGORIES);
 		add(Command.CATEGORY);
 		add(Command.DESCRIPTION);
 		add(Command.LOGOUT);

@@ -70,15 +70,6 @@ public class User implements Serializable{
 	public String showNotifications() {
 		return this.privateSpace.toString();
 	}
-	/**
-	 * Modifica il valore del campo (del profilo) di cui si è inserito il nome
-	 * @param name il nome del campo
-	 * @param nValue il nuovo valore del campo
-	 * @return True - il campo è stato modificato<br>False - il campo non è stato modificato
-	 */
-	public boolean modifyProfileField(String name, Object nValue) {
-		return profile.setValue(name, nValue);
-	}
 	
 	//Metodo aggiunto per la versione 4
 	/**
@@ -105,6 +96,16 @@ public class User implements Serializable{
 	 */
 	public boolean setValue(String categoryName, Object nValue) {
 		return profile.setValue(categoryName, nValue);
+	}
+	
+	/**
+	 * Modifica la lista di categoria di interesse dell'utente
+	 * @param category categoria di riferimento
+	 * @param add True se categoria è da aggiungere <br> False se da rimuovere
+	 * @return True se operazione completata correttamente <br> False altrimenti
+	 */
+	public boolean modifyCategory(String category, boolean add) {
+		return profile.modifyCategory(category, add);
 	}
 	
 	/**

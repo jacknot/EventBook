@@ -392,34 +392,28 @@ public class Main {
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(args)->{
 			User actualUser = session.getOwner();
 			System.out.println(noticeBoard.showUserSubscription(actualUser));
-			boolean valid = false;
-			do {
-				try {
-					System.out.print(INSERT_IDENTIFIER);
-					int id = Integer.parseInt(in.nextLine());
-					valid = true;
-					if(noticeBoard.isSignedUp(id, actualUser)) {
-						if(noticeBoard.unsubscribe(id , actualUser)) {
-							System.out.println("La disiscrizione è andata a buon fine");
-							return true;
-						}else {
-							System.out.println("La disiscrizione NON è andata a buon fine");
-							return false;
-						}
+			try {
+				System.out.print(INSERT_IDENTIFIER);
+				int id = Integer.parseInt(in.nextLine());
+				if(noticeBoard.isSignedUp(id, actualUser)) {
+					if(noticeBoard.unsubscribe(id , actualUser)) {
+						System.out.println("La disiscrizione è andata a buon fine");
+						return true;
 					}else {
-						System.out.println("Non sei iscritto a questa proposta");
+						System.out.println("La disiscrizione NON è andata a buon fine");
 						return false;
 					}
-				}catch(NumberFormatException e) {
-					System.out.println(INSERT_NUMBER);
+				}else {
+					System.out.println("Non sei iscritto a questa proposta");
 					return false;
 				}
-			}while(!valid);
+			}catch(NumberFormatException e) {
+				System.out.println(INSERT_NUMBER);
+				return false;
+			}
 		}),
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo",(args)->{
 			FieldHeading[] fields = session.getOwner().getEditableFields();
-			boolean abort = false;
-			boolean valid = false;
 			FieldHeading field = FieldHeading.TITOLO;
 			System.out.print("Inserisci il nome del campo che vuoi modificare : ");
 			String newField = in.nextLine();
@@ -429,39 +423,55 @@ public class Main {
 									.findAny()
 									.get();
 			else {
-				System.out.println("Il nome inserito non appartiene ad un campo");
-				abort = true;
-			}
-			//inserisci valore del campo da modificare
-			Object obj = null;
-			if(!abort) {
-				obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
-				//conferma modifica
-				valid = false;
-				do {
-					System.out.println("Sei sicuro di voler modificare ?");
-					String newValue = "";
-					if(obj!=null)
-						newValue = obj.toString();
-					System.out.println("Campo :" + field.getName() + ", nuovo valore: " + newValue);
-					System.out.print("[y/n]> ");
-					String confirm = in.nextLine();
-					if(confirm.equalsIgnoreCase("n")) {
-						abort = true;
-						valid = true;
-					}else if(confirm.equalsIgnoreCase("y")) {
-						valid = true;
-					}
-				}while(!valid);
-			}
-			//modifica effetiva
-			if(!abort && session.getOwner().setValue(field.getName(), obj)) {
-				System.out.println("Modifica avvenuta con successo");
-				return true;
-			}else {
-				System.out.println("Modifica fallita");
+				System.out.println("Il nome inserito non appartiene ad un campo modificabile");
 				return false;
 			}
+			
+			if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
+				boolean add = true;
+				System.out.print("Inserisci modalità di modifica: \"a\" aggiungi - \"r\" togli> ");
+				String confirm = in.nextLine();
+				if(confirm.equalsIgnoreCase("a")) {
+					
+				}
+				else if(confirm.equalsIgnoreCase("r")) {
+					add = false;
+				}
+				else {
+					System.out.println("Errore");
+					return false;
+				}
+				System.out.print("Inserisci il nome della categoria da " + (add? "aggiungere" : "rimuovere") + "> ");
+				String categoryName = in.nextLine();
+				if(Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
+					String cat = Stream.of(CategoryHeading.values()).filter((fh) -> fh.getName().equalsIgnoreCase(categoryName)).findFirst().get().getName();
+					if(session.getOwner().modifyCategory(cat, add)) {
+						System.out.println("Categoria modificata con successo");
+						return true;
+					}
+					else {
+						System.out.println("La modifica non è andata a buon fine");
+						return false;
+					}
+				}
+				else {
+					System.out.println("Il nome inserito non appartiene ad una categoria");
+					return false;
+				}
+			}
+			else {
+				//inserisci valore del campo da modificare
+				Object obj = null;
+				obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+				if(session.getOwner().setValue(field.getName(), obj)) {
+					System.out.println("Modifica avvenuta con successo");
+					return true;
+				}else {
+					System.out.println("Modifica fallita");
+					return false;
+				}
+			}
+
 		}),
 		//syntax : ritira [id]
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca\tSintassi: ritira [id]", (args)->{
@@ -546,7 +556,7 @@ public class Main {
 			}while(!valid);
 		}),
 		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente",(args)->{
-			System.out.println(session.getOwner().showProfile());
+			System.out.print(session.getOwner().showProfile());
 			return true;
 		});
 		/**
