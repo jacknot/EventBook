@@ -15,13 +15,13 @@ class TestProposta {
 	void propostaInvalidaTermineIscrizione() {
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), "30/06/2019");
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("30/06/2019"));
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), "25/06/2019"); //Viene prima di termine iscrizone: Invalida
-		event.setValue(FieldHeading.ORA.getName(), "20:00");
-		event.setValue(FieldHeading.QUOTA.getName(), "10.00");
-		event.setValue(FieldHeading.GENERE.getName(), "M");
-		event.setValue(FieldHeading.FASCIA_ETA.getName(), "10-50");
+		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019")); //Viene prima di termine iscrizone: Invalida
+		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
+		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
+		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event, new User("Mario"));
 		assertFalse(proposal.isValid()); //deve essere invalida
 	}
@@ -29,29 +29,29 @@ class TestProposta {
 	@org.junit.jupiter.api.Test
 	void propostaInvalidaObbligatoriNonCompilati() {
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
-		//event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20); Campo obbligatorio non compilato
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), "21/06/2019");
+		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), null); // Campo obbligatorio non compilato
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(),  FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), "25/06/2019");
-		event.setValue(FieldHeading.ORA.getName(), "20:00");
-		event.setValue(FieldHeading.QUOTA.getName(), "10.00");
-		event.setValue(FieldHeading.GENERE.getName(), "M");
-		event.setValue(FieldHeading.FASCIA_ETA.getName(), "10-50");
+		event.setValue(FieldHeading.DATA.getName(),  FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.ORA.getName(),  FieldHeading.ORA.getClassType().parse("20:00"));
+		event.setValue(FieldHeading.QUOTA.getName(),  FieldHeading.QUOTA.getClassType().parse("10.00"));
+		event.setValue(FieldHeading.GENERE.getName(),  FieldHeading.GENERE.getClassType().parse("M"));
+		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse( "10-50"));
 		Proposal proposal = new Proposal(event, new User("Mario"));
 		assertFalse(proposal.isValid()); //deve essere invalida
 	}
 	
 	@org.junit.jupiter.api.Test
-	void propostaValida() { //BOH NON FUNZIONA MA DOVREBBE FUZNIONARE
+	void propostaValida() { 
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), "21/06/2019");
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), "25/06/2019");
-		event.setValue(FieldHeading.ORA.getName(), "20:00");
-		event.setValue(FieldHeading.QUOTA.getName(), "10.00");
-		event.setValue(FieldHeading.GENERE.getName(), "M");
-		event.setValue(FieldHeading.FASCIA_ETA.getName(), "10-50");
+		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
+		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
+		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event, new User("Mario"));
 		assertTrue(proposal.isValid()); //deve essere valida
 	}

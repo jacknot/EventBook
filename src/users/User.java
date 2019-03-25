@@ -94,8 +94,8 @@ public class User implements Serializable{
 	 * @param nValue il nuovo valore del campo
 	 * @return True - il campo è stato modificato<br>False - il campo non è stato modificato
 	 */
-	public boolean setValue(String categoryName, Object nValue) {
-		return profile.setValue(categoryName, nValue);
+	public boolean setValue(String name, Object nValue) {
+		return profile.setValue(name, nValue);
 	}
 	
 	/**
