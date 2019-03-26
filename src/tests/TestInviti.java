@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import categories.Category;
@@ -12,6 +13,7 @@ import proposals.Proposal;
 import proposals.ProposalHandler;
 import proposals.State;
 import users.Database;
+import users.Message;
 import users.User;
 import utility.MessageHandler;
 
@@ -47,51 +49,77 @@ class TestInviti {
 	
 	@org.junit.jupiter.api.Test
 	void invitaTutti() {
-		Database database = new Database(); //creazione database utenti
-		database.register("pinco");
-		database.register("Mario"); //registrati nel database
-		database.register("Piero");
+//		idea:
+//			1. creo proposta
+//			2. aggiungo proposta in bacheca
+//			3. iscrivo gente
+//			4. raggiungo il limite
+//			5. farla passare APERTA - > CHIUSA
+//			6. creo nuova proposta
+//			7. invito gente
+//			8. controllo che la gente sia stata corretamente invitata
 		
-		ProposalHandler noticeBoard = new ProposalHandler(); //creazione bacheca
-		//Creazione nuova categoria
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
-		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 3);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
-		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
-		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
-		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
-		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
-		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
-		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), FieldHeading.DATA.getClassType().parse("25/03/2019"));
+		Database db = new Database();
+		ProposalHandler ph = new ProposalHandler();
+		db.register("mario");
+		db.register("carlo");
+		assertTrue(db.contains("mario"));
+		assertTrue(db.contains("carlo"));
+		assertFalse(db.contains("pluto"));
 		
-		Proposal proposal = new Proposal(event, database.getUser("Mario"));
+		//creo proposta
+		Category c1 = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		c1.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
+		c1.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
+		c1.setValue(FieldHeading.LUOGO.getName(), "Brescia");
+		c1.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(2));
+		c1.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		c1.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
+		c1.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
+		c1.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
+		c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1));
+		assertTrue(c1.isValid());
 		
-		Category event1 = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
-		event1.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 3);
-		event1.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
-		event1.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event1.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
-		event1.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
-		event1.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
-		event1.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
-		event1.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
-
-		Proposal proposal1 = new Proposal(event1, database.getUser("Mario"));
+		Proposal p1 = new Proposal(c1, db.getUser("mario"));
+		assertTrue(p1.hasState(State.VALID));
+		//aggiungo la proposta al gestore
+		assertTrue(ph.add(p1));
+		assertTrue(p1.hasState(State.OPEN));
+		assertTrue(ph.contains(p1));
+		assertTrue(ph.isSignedUp(0, db.getUser("mario")));
+		//ho iscritto gente fino a far riempire la proposta (APERTA -> CHIUSA)
+		ph.signUp(0, db.getUser("carlo"));
+		assertTrue(p1.hasState(State.CLOSED));
+		assertFalse(ph.contains(p1));
 		
-		System.out.println(noticeBoard.add(proposal)); //Proposta aggiunta in bacheca
+		//creo nuova proposta
+		Category c2 = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		c2.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
+		c2.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
+		c2.setValue(FieldHeading.LUOGO.getName(), "Lograto");
+		c2.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(2));
+		c2.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		c2.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
+		c2.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
+		c2.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
+		c2.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1));
+		assertTrue(c2.isValid());
 		
-		noticeBoard.add(proposal1); //Proposta aggiunta in bacheca
+		Proposal p2 = new Proposal(c2, db.getUser("mario"));
+		assertTrue(p2.hasState(State.VALID));
 		
-		System.out.println(noticeBoard.signUp(0, database.getUser("pinco")));
+		//aggiungo la proposta al gestore
+		assertTrue(ph.add(p2));
+		assertTrue(p2.hasState(State.OPEN));
+		assertTrue(ph.contains(p2));
+		assertTrue(ph.isSignedUp(0, db.getUser("mario")));
 		
-		noticeBoard.signUp(0, database.getUser("Piero"));
-		
-		noticeBoard.refresh();
-		ArrayList<User> listaUt = noticeBoard.searchBy(database.getUser("Mario"), "Partita di Calcio");
-		MessageHandler.getInstance().inviteUsers(listaUt,"Mario", 0);
-		assertFalse(database.getUser("pinco").noMessages()); //Pinco ha ricevuto il messaggio
-		//assertFalse(database.getUser("Piero").noMessages()); //Pinco ha ricevuto il messaggio
+		//invito gente (carlo)
+		ArrayList<User> receivers = ph.searchBy(db.getUser("mario"), p2.getCategoryName());
+		assertTrue(receivers.contains(db.getUser("carlo")));
+		receivers.stream().forEach((u)->u.receive(new Message("prova","prova","prova")));
+		assertFalse(db.getUser("carlo").noMessages());
+		System.out.println(db.getUser("carlo").showNotifications());
 	}
 
 }

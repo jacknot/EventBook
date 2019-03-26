@@ -136,13 +136,15 @@ public enum State implements Serializable{
 					p.setState(ENDED);
 					return true;
 				}
+				return false;
+			}else {
+				LocalDate endDate = LocalDate.class.cast(tmp);
+				if(tDate.compareTo(endDate) > 0) {
+					p.setState(ENDED);
+					return true;
+				}
+				return false;
 			}
-			LocalDate endDate = LocalDate.class.cast(tmp);
-			if(tDate.compareTo(endDate) > 0) {
-				p.setState(ENDED);
-				return true;
-			}
-			return false;
 		}		
 	},
 	WITHDRAWN{

@@ -79,8 +79,11 @@ public class ProposalHandler implements Serializable{
 	 * @return l'esito dell'iscrizione
 	 */
 	public synchronized boolean signUp(int id, User user) {
-		if(bacheca.contains(id))
-			return bacheca.get(id).signUp(user);
+		if(bacheca.contains(id)) 
+			if(bacheca.get(id).signUp(user)) {
+				this.refresh();
+				return true;
+			}
 		return false;
 	}
 	/**
@@ -172,26 +175,15 @@ public class ProposalHandler implements Serializable{
 	 */
 	public synchronized ArrayList<User> searchBy(User owner, String categoryName){
 		ArrayList<User> userList = new ArrayList<User>();
-		/*Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
-			.filter((p)->p.isOwner(user))
+		Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
+			.filter((p)->p.isOwner(owner))
 			.filter((p)->p.isCategory(categoryName))
 			.map((p) -> p.getSubscribers())
 			.forEach((l) -> l.stream()
 								.forEach((u) -> {
 									if(!userList.contains(u))
 										userList.add(u);
-				}));*/
-		ArrayList<Proposal> p = new ArrayList<Proposal>();
-		
-		p.addAll(proposteConcluse);
-		p.addAll(proposteChiuse);
-		
-		for(Proposal prop : p) {
-			if(prop.isOwner(owner) && prop.isCategory(categoryName)) {
-				userList.addAll(prop.getSubscribers());
-			}
-		}
-		
+				}));
 		return userList;
 	}
 
@@ -200,7 +192,7 @@ public class ProposalHandler implements Serializable{
 	 * @param id id della proposta
 	 * @return Nome della categoria
 	 */
-	public String getCategory(int id) {
+	public synchronized String getCategory(int id) {
 		if(bacheca.contains(id))
 			return bacheca.get(id).getCategoryName();
 		return null;
