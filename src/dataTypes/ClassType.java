@@ -36,12 +36,9 @@ public enum ClassType {
 	INTEREST_CATEGORIES(CategoriesInterest.class, "[^\\n;]+(;[^\\n;]+)*", "Elenco di stringhe separate da ;", (array) -> {
 		CategoriesInterest arrayString = new CategoriesInterest();
 			StringTokenizer tokenizer = new StringTokenizer(array, ";");
-
 			while(tokenizer.hasMoreTokens()) {
-
 				arrayString.add(tokenizer.nextToken());
 			}
-		
 		return arrayString;
 	});
 	

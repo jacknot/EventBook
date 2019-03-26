@@ -84,13 +84,21 @@ public abstract class Category implements Cloneable,Serializable{
 	 */
 	public boolean isValid() {
 		toDefault();
-		boolean validSet = fields.isValid();
-		if(validSet) {
-			boolean lastSigningDay = ((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
-										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())) >= 0;
-			boolean	lastWithdrawalDay = ((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
-										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName())) >= 0;
-			return lastSigningDay && lastWithdrawalDay;
+		//contenuto è valido
+		if(fields.isValid()) {
+			//la data è seguente o uguale al termine ultimo iscrizione
+			if(((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
+									.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())) >= 0) {
+				//il termine ultimo iscrizione segue o egualia il termine di ritiro
+				if(((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
+										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName())) >= 0){
+					//E' possibile iscriversi all'evento quando questo viene pubblicato
+					if(((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
+											.compareTo(LocalDate.now()) >= 0) {
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}

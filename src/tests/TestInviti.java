@@ -21,7 +21,8 @@ class TestInviti {
 		Database database = new Database(); //creazione database utenti
 		database.register("pinco");
 		database.register("Mario"); //registrati nel database
-		database.getUser("pinco").setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), FieldHeading.CATEGORIE_INTERESSE.getClassType().parse("Partita di Calcio")); //Interessato a calcio
+		database.getUser("pinco").setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), 
+											FieldHeading.CATEGORIE_INTERESSE.getClassType().parse("Partita di Calcio")); //Interessato a calcio
 		
 		ProposalHandler noticeBoard = new ProposalHandler(); //creazione bacheca
 		//Creazione nuova categoria

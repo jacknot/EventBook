@@ -201,7 +201,13 @@ public class Main {
 			}),
 		//syntax : modifica [id]
 		MODIFY("modifica","Modifica il campo di una proposta\tSintassi: modifica [id]",(args)->{
-			if(args.length == 1) {
+			if(args.length == 0) {
+				System.out.print("Inserisci un parametro");
+				return false;
+			}else if(args.length > 1) {
+				System.out.print("Inserisci un solo parametro");
+				return false;	
+			}else {
 				//inserisci id proposta
 				boolean valid = false;
 				int id = -1;
@@ -255,13 +261,7 @@ public class Main {
 				}else {
 					System.out.println("Modifica fallita");
 					return false;
-				}		
-			}else if(args.length > 1) {
-				System.out.print("Inserisci un solo parametro");
-				return false;	
-			}else {
-				System.out.print("Inserisci un parametro");
-				return false;
+				}
 			}
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento", (args)->{
@@ -301,26 +301,27 @@ public class Main {
 		}),
 		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo\tSintassi: rimuoviNotifica [id]",(args)->{
-			if(args.length == 1) { 
+			if(args.length == 0) {
+				System.out.print("Inserisci un parametro");
+				return false;
+			}else if(args.length > 1) { 
+				System.out.print("Inserisci un solo parametro");
+				return false;
+			}else {
+				int id = -1;
 				try {
-					int i = Integer.parseInt(args[0]);
-					if(!session.getOwner().removeMsg(i)) {
-						System.out.println("La rimozione non è andata a buon fine");
-						return false;
-					}else {
-						System.out.println("Rimossa correttamente");
-						return true;
-					}
+					id = Integer.parseInt(args[0]);
 				}catch(NumberFormatException e) {
 					System.out.println("Dato invalido, inserisci un numero");
 					return false;
 				}
-			}else if(args.length > 1){
-				System.out.print("Inserisci un solo parametro");
-				return false;
-			}else {
-				System.out.print("Inserisci un parametro");
-				return false;
+				if(!session.getOwner().removeMsg(id)) {
+					System.out.println("La rimozione non è andata a buon fine");
+					return false;
+				}else {
+					System.out.println("Rimossa correttamente");
+					return true;
+				}
 			}
 		}),
 		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",(args)->{
@@ -334,81 +335,84 @@ public class Main {
 		}),
 		//syntax : pubblica [id]
 		PUBLISH("pubblica", "Pubblica un evento creato\tSintassi: pubblica [id]", (args)->{
-			if(args.length == 1) { 
-				try {
-					int id = Integer.parseInt(args[0]);
-					if(session.contains(id)) {
-						if(noticeBoard.add(session.getProposal(id))) {
-							String categoryName = session.getProposal(id).getCategoryName();
-							System.out.println("Proposta aggiunta con successo");
-							ArrayList<User> receivers = database.searchBy(categoryName);
-							receivers.remove(session.getOwner());
-							MessageHandler.getInstance().notifyByInterest(receivers, categoryName);
-							return true;
-						}else {
-							System.out.println("La proposta inserita non è valida");
-							return false;
-						}
-					}else {
-						System.out.println("La proposta inserita non esiste");
-						return false;
-					}
-				}catch(NumberFormatException e) {
-					System.out.println(INSERT_NUMBER);
-					return false;
-				}
+			if(args.length == 0) {
+				System.out.print("Inserisci un parametro");
+				return false;
 			}else if(args.length > 1){
 				System.out.print("Inserisci un solo parametro");
 				return false;
 			}else {
-				System.out.print("Inserisci un parametro");
-				return false;
+				int id = -1;
+				try {
+					id = Integer.parseInt(args[0]);
+				}catch(NumberFormatException e) {
+					System.out.println(INSERT_NUMBER);
+					return false;
+				}
+				if(session.contains(id)) {
+					if(noticeBoard.add(session.getProposal(id))) {
+						String categoryName = session.getProposal(id).getCategoryName();
+						System.out.println("Proposta aggiunta con successo");
+						ArrayList<User> receivers = database.searchBy(categoryName);
+						receivers.remove(session.getOwner());
+						MessageHandler.getInstance().notifyByInterest(receivers, categoryName);
+						return true;
+					}else {
+						System.out.println("La proposta inserita non è valida");
+						return false;
+					}
+				}else {
+					System.out.println("La proposta inserita non esiste");
+					return false;
+				}
 			}
 		}),
 		// syntax : partecipa [id]
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca\tSintassi: partecipa [id]",(args)->{
-				if(args.length == 1) { 
-					try {
-						int id = Integer.parseInt(args[0]);
-						if(!noticeBoard.signUp(id, session.getOwner())) {
-							System.out.println("L'iscrizione non è andata a buon fine");
-							return false;
-						}else {
-							System.out.println("L'iscrizione è andata a buon fine");
-							return true;
-						}
-					}catch(NumberFormatException e) {
-						System.out.println(INSERT_NUMBER);
-						return false;
-					}
-				}else if(args.length > 1){
-					System.out.print("Inserisci un solo parametro");
-					return false;
-				}else {
-					System.out.print("Inserisci un parametro");
+			if(args.length == 0) {
+				System.out.print("Inserisci un parametro");
+				return false;
+			}else if(args.length > 1) {
+				System.out.print("Inserisci un solo parametro");
+				return false;
+			}else { 
+				int id = -1;
+				try {
+					id = Integer.parseInt(args[0]);
+				}catch(NumberFormatException e) {
+					System.out.println(INSERT_NUMBER);
 					return false;
 				}
+				if(!noticeBoard.signUp(id, session.getOwner())) {
+					System.out.println("L'iscrizione non è andata a buon fine");
+					return false;
+				}else {
+					System.out.println("L'iscrizione è andata a buon fine");
+					return true;
+				}
+			}
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(args)->{
 			User actualUser = session.getOwner();
 			System.out.println(noticeBoard.showUserSubscription(actualUser));
+			int id = -1;
 			try {
 				System.out.print(INSERT_IDENTIFIER);
-				int id = Integer.parseInt(in.nextLine());
-				if(noticeBoard.isSignedUp(id, actualUser)) {
-					if(noticeBoard.unsubscribe(id , actualUser)) {
-						System.out.println("La disiscrizione è andata a buon fine");
-						return true;
-					}else {
-						System.out.println("La disiscrizione NON è andata a buon fine");
-						return false;
-					}
-				}else {
-					System.out.println("Non sei iscritto a questa proposta");
-					return false;
-				}
+				id = Integer.parseInt(in.nextLine());
 			}catch(NumberFormatException e) {
 				System.out.println(INSERT_NUMBER);
+				return false;
+			}
+			if(noticeBoard.isSignedUp(id, actualUser)) {
+				if(noticeBoard.unsubscribe(id , actualUser)) {
+					System.out.println("La disiscrizione è andata a buon fine");
+					return true;
+				}else {
+					System.out.println("La disiscrizione NON è andata a buon fine");
+					return false;
+				}
+			}else {
+				System.out.println("Non sei iscritto a questa proposta");
 				return false;
 			}
 		}),
@@ -426,18 +430,13 @@ public class Main {
 				System.out.println("Il nome inserito non appartiene ad un campo modificabile");
 				return false;
 			}
-			
 			if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
 				boolean add = true;
 				System.out.print("Inserisci modalità di modifica: \"a\" aggiungi - \"r\" togli> ");
 				String confirm = in.nextLine();
-				if(confirm.equalsIgnoreCase("a")) {
-					
-				}
-				else if(confirm.equalsIgnoreCase("r")) {
+				if(confirm.equalsIgnoreCase("r"))
 					add = false;
-				}
-				else {
+				else if(!confirm.equalsIgnoreCase("a")){
 					System.out.println("Errore");
 					return false;
 				}
@@ -448,18 +447,15 @@ public class Main {
 					if(session.getOwner().modifyCategory(cat, add)) {
 						System.out.println("Categoria modificata con successo");
 						return true;
-					}
-					else {
+					}else {
 						System.out.println("La modifica non è andata a buon fine");
 						return false;
 					}
-				}
-				else {
+				}else {
 					System.out.println("Il nome inserito non appartiene ad una categoria");
 					return false;
 				}
-			}
-			else {
+			}else {
 				//inserisci valore del campo da modificare
 				Object obj = null;
 				obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
@@ -475,28 +471,29 @@ public class Main {
 		}),
 		//syntax : ritira [id]
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca\tSintassi: ritira [id]", (args)->{
-				if(args.length == 1) { 
-					try {
-						System.out.print(INSERT_IDENTIFIER);
-						int id = Integer.parseInt(in.nextLine());
-						if(noticeBoard.withdraw(id, session.getOwner())) {
-							System.out.println("La proposta è stata ritirata con successo");
-							return true;
-						}else {
-							System.out.println("La proposta non è stata ritirata");
-							return false;
-						}
-					}catch(NumberFormatException e) {
-						System.out.println(INSERT_NUMBER);
-						return false;
-					}
-				}else if(args.length > 1){
-					System.out.print("Inserisci un solo parametro");
-					return false;
-				}else {
-					System.out.print("Inserisci un parametro");
+			if(args.length == 0) {
+				System.out.print("Inserisci un parametro");
+				return false;
+			}else if(args.length > 1) {
+				System.out.print("Inserisci un solo parametro");
+				return false;
+			}else {
+				int id = -1;
+				try {
+					System.out.print(INSERT_IDENTIFIER);
+					id = Integer.parseInt(in.nextLine());
+				}catch(NumberFormatException e) {
+					System.out.println(INSERT_NUMBER);
 					return false;
 				}
+				if(noticeBoard.withdraw(id, session.getOwner())) {
+					System.out.println("La proposta è stata ritirata con successo");
+					return true;
+				}else {
+					System.out.println("La proposta non è stata ritirata");
+					return false;
+				}
+			}
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", (args)->{
 			noticeBoard.refresh();
@@ -508,52 +505,48 @@ public class Main {
 			return true;
 		}),
 		INVITE("invite", "Invita utenti ad una proposta",(args)->{
-			boolean valid = false;
-			do {
-				try {
-					System.out.print(INSERT_IDENTIFIER);
-					int id = Integer.parseInt(in.nextLine());
-					valid = true;
-					User owner = session.getOwner();
-					if(noticeBoard.isOwner(id, owner)) {
-						ArrayList<User> userList = noticeBoard.searchBy(id, owner);
-						System.out.println("Potenziali utenti da invitare: " + userList.toString());
-						System.out.println("Vuoi mandare un invito a tutti?");
-						System.out.print("[y|n]> ");
-						String confirm = in.nextLine();
-						
-						if(confirm.equalsIgnoreCase("y")) {
-							MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-							return true;
-						}else if(confirm.equalsIgnoreCase("n")) {							
-							ArrayList<User> receivers = new ArrayList<>();
-							userList.stream()
-										.forEach(( u )->{
-											System.out.print("Invitare " + u.getName() + " ? [y|n]> ");
-											String answer = in.nextLine();
-											if(answer.equalsIgnoreCase("y")) {
-												receivers.add(u);
-												System.out.println("L'utente verrà notificato");
-											}else if(answer.equalsIgnoreCase("n"))
-												System.out.println(u.getName() + " non verrà invitato ");
-											else
-												System.out.println("Inserito valore non valido. L'utente non verrà notificato");
-										});
-							MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-							return true;
-						}else {
-							System.out.println("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
-							return false;
-						}
-					}else {
-						System.out.println("La proposta non è di tua proprietà");
-						return false;
-					}
-				}catch(NumberFormatException e) {
-					System.out.println(INSERT_NUMBER);
+			int id = -1;
+			try {
+				System.out.print(INSERT_IDENTIFIER);
+				id = Integer.parseInt(in.nextLine());
+			}catch(NumberFormatException e) {
+				System.out.println(INSERT_NUMBER);
+				return false;
+			}
+			User owner = session.getOwner();
+			if(noticeBoard.isOwner(id, owner)) {
+				ArrayList<User> userList = noticeBoard.searchBy(id, owner);
+				System.out.println("Potenziali utenti da invitare: " + userList.toString());
+				System.out.println("Vuoi mandare un invito a tutti?");
+				System.out.print("[y|n]> ");
+				String confirm = in.nextLine();
+				if(confirm.equalsIgnoreCase("y")) {
+					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+					return true;
+				}else if(confirm.equalsIgnoreCase("n")) {							
+					ArrayList<User> receivers = new ArrayList<>();
+					userList.stream()
+								.forEach(( u )->{
+									System.out.print("Invitare " + u.getName() + " ? [y|n]> ");
+									String answer = in.nextLine();
+									if(answer.equalsIgnoreCase("y")) {
+										receivers.add(u);
+										System.out.println("L'utente verrà notificato");
+									}else if(answer.equalsIgnoreCase("n"))
+										System.out.println(u.getName() + " non verrà invitato ");
+									else
+										System.out.println("Inserito valore non valido. L'utente non verrà notificato");
+								});
+					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+					return true;
+				}else {
+					System.out.println("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
 					return false;
 				}
-			}while(!valid);
+			}else {
+				System.out.println("La proposta non è di tua proprietà");
+				return false;
+			}
 		}),
 		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente",(args)->{
 			System.out.print(session.getOwner().showProfile());
@@ -642,5 +635,4 @@ public class Main {
 			return this.name.equals(comando);
 		}
 	}	
-
 }

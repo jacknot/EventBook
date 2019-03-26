@@ -1,6 +1,7 @@
 package dataTypes;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import categories.CategoryHeading;
 
@@ -14,14 +15,11 @@ public class CategoriesInterest extends ArrayList<String>{
 	 * @return True se aggiunto correttamente <br> False altrimenti
 	 */
 	public boolean add(String categoryName) {	
-		if(!contains(categoryName)) {
-			CategoryHeading[] cats = CategoryHeading.values();
-			
-			for(int i=0; i < cats.length; i++) {
-				if(cats[i].getName().equalsIgnoreCase(categoryName)) {		
-					return super.add(cats[i].getName());
-				}
-			}
+		if(!contains(categoryName) && Stream.of(CategoryHeading.values())
+												.anyMatch((ch)->ch.getName().equalsIgnoreCase(categoryName))) {
+			return super.add(Stream.of(CategoryHeading.values())
+									.filter((ch)->ch.getName().equalsIgnoreCase(categoryName))
+									.findFirst().get().getName());
 		}
 		return false;
 	}
@@ -32,9 +30,8 @@ public class CategoriesInterest extends ArrayList<String>{
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for(String str : this) {
-			sb.append(str).append("\n");
-		}
+		this.stream()
+				.forEach((str)->sb.append(str).append("\n"));
 		return sb.toString();
 	}
 }
