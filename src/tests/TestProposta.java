@@ -10,6 +10,7 @@ import categories.CategoryHeading;
 import fields.FieldHeading;
 import proposals.Proposal;
 import proposals.ProposalHandler;
+import proposals.State;
 import users.User;
 
 class TestProposta {
@@ -18,9 +19,10 @@ class TestProposta {
 	void propostaInvalidaTermineIscrizione() {
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("30/06/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019")); //Viene prima di termine iscrizone: Invalida
+		//Viene prima di termine iscrizone: Invalida
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().minusDays(1)); 
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
@@ -33,9 +35,9 @@ class TestProposta {
 	void propostaInvalidaObbligatoriNonCompilati() {
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		//event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20); // Campo obbligatorio non compilato
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(),  FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(),  LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(),  FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.DATA.getName(),  LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.ORA.getName(),  FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(),  FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(),  FieldHeading.GENERE.getClassType().parse("M"));
@@ -48,9 +50,9 @@ class TestProposta {
 	void propostaValida() { 
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
@@ -63,9 +65,9 @@ class TestProposta {
 	void propostaValidaPubblicata() { 
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
@@ -81,9 +83,9 @@ class TestProposta {
 		User owner =  new User("Mario");
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
@@ -100,17 +102,12 @@ class TestProposta {
 	void iscrizionePropostaValida() { 
 		User owner =  new User("Mario");
 		User user =  new User("Pinco");
-		
-		//Data termine iscrizione precedente di un mese rispetto al tempo attuale
-		int mesePrima = LocalDate.now().getMonthValue()  - 1;
-		if(mesePrima == 0)
-			mesePrima = 12; // da gennaio a dicembre
-		int meseDopo = LocalDate.now().getMonthValue() % 12 + 1;
+
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
@@ -118,36 +115,38 @@ class TestProposta {
 		
 		Proposal proposal = new Proposal(event, owner); //creata proposta
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
-		bacheca.add(proposal); //proposta aggiunta correttamente		
-		assertTrue(bacheca.signUp(0, user)); //Impossibile registrarsi oltre il termine iscrizione
+		assertTrue(bacheca.add(proposal)); //proposta aggiunta correttamente		
+		assertTrue(bacheca.signUp(0, user));
 	}
 
 	@org.junit.jupiter.api.Test
 	void impossibileIscriversiDopoTermineIscrizione() { 
 		User owner =  new User("Mario");
 		User user =  new User("Pinco");
-		
-		//Data termine iscrizione precedente di un mese rispetto al tempo attuale
-		int mesePrima = LocalDate.now().getMonthValue()  - 1;
-		if(mesePrima == 0)
-			mesePrima = 12; // da gennaio a dicembre
-		int meseDopo = LocalDate.now().getMonthValue() % 12 + 1;
+
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/02/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
-		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), FieldHeading.TERMINE_RITIRO.getClassType().parse("21/02/2019"));
+		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(3));
 		
 		Proposal proposal = new Proposal(event, owner); //creata proposta
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
-		bacheca.add(proposal); //proposta aggiunta correttamente	
+		assertTrue(bacheca.add(proposal));
+		proposal.setState(State.VALID);
+		proposal.modify(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().minusDays(1));
+		proposal.setState(State.OPEN);
 		bacheca.refresh(); //La bacheca si aggiorna e cambia stato alla proposta -> passa a Fallita
-		assertFalse(bacheca.signUp(0, user)); //Impossibile registrarsi oltre il termine iscrizione
+		assertFalse(bacheca.contains(proposal));
+		assertTrue(proposal.hasState(State.FAILED));
+		//La proposta, avendo superato la data ultima di termine iscrizione, viene rimossa dalla bacheca
+		//La bacheca ora è vuota -> non posso iscrivermi
+		assertFalse(bacheca.signUp(0, user)); 
 	}
 	
 }

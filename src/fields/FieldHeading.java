@@ -7,41 +7,50 @@ import dataTypes.ClassType;
  *
  */
 public enum FieldHeading{
-	TITOLO("Titolo", "Il titolo dell'evento", false, ClassType.STRING),
-	NUMPARTECIPANTI("Numero di Partecipanti", "Numero di persone da coinvolgere nell'evento", true, ClassType.INTEGER),
-	TERMINEISCRIZIONE("Termine ultimo iscrizione", "Ultimo giorno utile per iscriversi all'evento", true, ClassType.DATA),
+	TITOLO("Titolo", "Il titolo dell'evento", false, false, ClassType.STRING),
+	NUMPARTECIPANTI("Numero di Partecipanti", "Numero di persone da coinvolgere nell'evento", true, false, ClassType.INTEGER),
+	TERMINEISCRIZIONE("Termine ultimo iscrizione", "Ultimo giorno utile per iscriversi all'evento", true, false, ClassType.DATA),
 	LUOGO("Luogo", "Indirizzo del luogo che ospiterà l'evento oppure, se l'evento è itinerante,"
-			+ " il luogo di ritrovo dei partecipanti", true, ClassType.STRING),
+			+ " il luogo di ritrovo dei partecipanti", true, false, ClassType.STRING),
 	DATA("Data", "Data in cui l'evento proposto deve svolgersi o, nel caso l'evento non termini nello stesso giorno in cui ha inizio,"
-			+ " la data dell'inizio dell'evento", true, ClassType.DATA),
-	ORA("Ora", "Ora in cui i partecipanti dovranno trovarsi nel luogo \"Luogo\" in data \"Data\" per dare inizio all'evento", true, ClassType.ORA),
+			+ " la data dell'inizio dell'evento", true, false, ClassType.DATA),
+	ORA("Ora", "Ora in cui i partecipanti dovranno trovarsi nel luogo \"Luogo\" in data \"Data\" per dare inizio all'evento", 
+			true, false, ClassType.ORA),
 	DURATA("Durata", "Durata in termini di numero (approssimativo) di ore e minuti, per gli eventi che si esauriscono in un sol giorno,"
-			+ " o in termini di numero esatto di giorni, per gli eventi che occupano più giorni	consecutivi", false, ClassType.ORA),
+			+ " o in termini di numero esatto di giorni, per gli eventi che occupano più giorni	consecutivi", false, false, ClassType.ORA),
 	QUOTA("Quota individuale", "Spesa (o una stima della stessa) che ogni partecipante all'iniziativa dovrà sostenere "
-			+ "(Può anche essere nulla)", true, ClassType.REAL),
+			+ "(Può anche essere nulla)", true, false, ClassType.REAL),
 	COMPRESO_QUOTA("Compreso nella quota", "Tutte le voci di spesa comprese nell'ammontare indicato nella "
-			+ "\"Quota individuale\"", false,  ClassType.STRING),
-	DATAFINE("Data conclusiva", "Data di conclusione dell'evento", false,  ClassType.DATA),
-	ORAFINE("Ora conclusiva", "Ora di conclusione dell'evento", false,  ClassType.ORA),
-	NOTE("Note", "Informazioni aggiuntive", false, ClassType.STRING),
+			+ "\"Quota individuale\"", false, false,  ClassType.STRING),
+	DATAFINE("Data conclusiva", "Data di conclusione dell'evento", false, false,  ClassType.DATA),
+	ORAFINE("Ora conclusiva", "Ora di conclusione dell'evento", false, false,  ClassType.ORA),
+	NOTE("Note", "Informazioni aggiuntive", false, false, ClassType.STRING),
 	
 	//Nuovi campi aggiunti nella versione 3
-	TOLL_PARTECIPANTI("Tolleranza numero partecipanti", "Numero di partecipanti eventualmente accettabili in esubero rispetto al \"Numero di partecipanti\"", false, ClassType.INTEGER),
-	TERMINE_RITIRO("Termine ultimo di ritiro iscrizione", " Data entro cui a ogni fruitore che ha aderito all’evento è concesso di cancellare la sua iscrizione e al fruitore che ha proposto l’evento di ritirare la proposta", false, ClassType.DATA),
+	TOLL_PARTECIPANTI("Tolleranza numero partecipanti", "Numero di partecipanti eventualmente accettabili in esubero rispetto al "
+						+ "\"Numero di partecipanti\"", false, false, ClassType.INTEGER),
+	TERMINE_RITIRO("Termine ultimo di ritiro iscrizione", " Data entro cui a ogni fruitore che ha aderito all’evento è concesso "
+					+ "di cancellare la sua iscrizione e al fruitore che ha proposto l’evento di ritirare la proposta", 
+					false, false, ClassType.DATA),
 	
 	//Campi FootballMatch
-	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.GENDER),
-	FASCIA_ETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL),
+	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, false, ClassType.GENDER),
+	FASCIA_ETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, false, ClassType.INTERVAL),
 	
 	//Campi Concert
-	BACKSTAGE_PASS("Pass Backstage", "Prezzo del Pass Backstage per accedere dietro le quinte e salire sul palco", false, ClassType.REAL),
-	MEET_AND_GREET("Meet & Greet", "Prezzo del Meet & Greet per conoscere i membri della/e Band prima del concerto", false, ClassType.REAL),
-	MERCHANDISE("Merchandise", "Prezzo dei Gadet e Merchandise ufficiali della/e band", false, ClassType.REAL),
+	BACKSTAGE_PASS("Pass Backstage", "Prezzo del Pass Backstage per accedere dietro le quinte e salire sul palco", 
+					false, true, ClassType.REAL),
+	MEET_AND_GREET("Meet & Greet", "Prezzo del Meet & Greet per conoscere i membri della/e Band prima del concerto", 
+					false, true, ClassType.REAL),
+	MERCHANDISE("Merchandise", "Prezzo dei Gadet e Merchandise ufficiali della/e band", false, true, ClassType.REAL),
 	
 	//Nuovi campi aggiunti per la versione 4 (Per l'utente)
-	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso", true, ClassType.STRING),
-	FASCIA_ETA_UTENTE("Fascia di età utente", "Estremo inferiore e superiore di un intervallo di età entro cui cade quella del fruitore", false, ClassType.INTERVAL),
-	CATEGORIE_INTERESSE("Categorie di interesse","Elenca le categorie di eventi a cui il fruitore è particolarmente interessato", false, ClassType.INTEREST_CATEGORIES);
+	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso", 
+				true, false, ClassType.STRING),
+	FASCIA_ETA_UTENTE("Fascia di età utente", "Estremo inferiore e superiore di un intervallo di età entro cui cade quella del fruitore", 
+						false, false, ClassType.INTERVAL),
+	CATEGORIE_INTERESSE("Categorie di interesse","Elenca le categorie di eventi a cui il fruitore è particolarmente interessato", 
+						false, false, ClassType.INTEREST_CATEGORIES);
 
 	/**
 	 * Contiene il nome
@@ -56,6 +65,10 @@ public enum FieldHeading{
 	 */
 	private boolean binding;
 	/**
+	 * Contiene informazioni sull' opzionalità
+	 */
+	private boolean optional;
+	/**
 	 * Contiene informazioni sul tipo del campo
 	 */
 	private ClassType type;
@@ -65,6 +78,21 @@ public enum FieldHeading{
 	//private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s";
 	private final static String TOSTRING_FORMAT = "Nome: %s%s%nDescrizione: %s";
 	
+	/**
+	 * Costruttore
+	 * @param nome Il nome
+	 * @param descrizione La descrizione
+	 * @param obbligatorio Se obbligatorio
+	 * @param opzionale
+	 * @param type il tipo di dato associato alla descrizione
+	 */
+	private FieldHeading(String nome, String descrizione, boolean obbligatorio, boolean opzionale, ClassType type) {
+		this.name = nome;
+		this.description = descrizione;
+		this.binding = obbligatorio;
+		this.optional = opzionale;
+		this.type = type;
+	}
 	/**Restituisce il nome
 	 * @return Il nome
 	 */
@@ -86,18 +114,13 @@ public enum FieldHeading{
 		return binding;
 	}
 	
-	/**Costruttore
-	 * @param nome Il nome
-	 * @param descrizione La descrizione
-	 * @param obbligatorio Se obbligatorio
-	 * @param type il tipo di dato associato alla descrizione
+	/**Controlla se è opzionale
+	 * @return True - è opzionale<br> False - non è opzionale
 	 */
-	private FieldHeading(String nome, String descrizione, boolean obbligatorio, ClassType type) {
-		this.name = nome;
-		this.description = descrizione;
-		this.binding = obbligatorio;
-		this.type = type;
+	public boolean isOptional() {
+		return optional;
 	}
+	
 	/**
 	 * Restituisce il tipo del campo
 	 * @return il tipo del campo

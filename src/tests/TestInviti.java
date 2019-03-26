@@ -12,7 +12,7 @@ import fields.FieldHeading;
 import proposals.Proposal;
 import proposals.ProposalHandler;
 import proposals.State;
-import users.Database;
+import users.UserDatabase;
 import users.Message;
 import users.User;
 import utility.MessageHandler;
@@ -21,7 +21,7 @@ class TestInviti {
 
 	@org.junit.jupiter.api.Test
 	void notificaInteresse() { 
-		Database database = new Database(); //creazione database utenti
+		UserDatabase database = new UserDatabase(); //creazione database utenti
 		database.register("pinco");
 		database.register("Mario"); //registrati nel database
 		database.getUser("pinco").setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), 
@@ -31,9 +31,9 @@ class TestInviti {
 		//Creazione nuova categoria
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
-		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		event.setValue(FieldHeading.DATA.getName(), FieldHeading.DATA.getClassType().parse("25/06/2019"));
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(2));
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
@@ -59,7 +59,7 @@ class TestInviti {
 //			7. invito gente
 //			8. controllo che la gente sia stata corretamente invitata
 		
-		Database db = new Database();
+		UserDatabase db = new UserDatabase();
 		ProposalHandler ph = new ProposalHandler();
 		db.register("mario");
 		db.register("carlo");
@@ -117,7 +117,7 @@ class TestInviti {
 		//invito gente (carlo)
 		ArrayList<User> receivers = ph.searchBy(db.getUser("mario"), p2.getCategoryName());
 		assertTrue(receivers.contains(db.getUser("carlo")));
-		receivers.stream().forEach((u)->u.receive(new Message("prova","prova","prova")));
+		receivers.stream().forEach((u)->u.receive(new Message("prova","prova","Invito te!")));
 		assertFalse(db.getUser("carlo").noMessages());
 		System.out.println(db.getUser("carlo").showNotifications());
 	}

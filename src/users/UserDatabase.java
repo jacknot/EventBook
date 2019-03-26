@@ -11,7 +11,7 @@ import users.Message;
 /**Classe che contiene la lista di tutti i Fruitori registrati al programma.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Database implements Serializable{
+public class UserDatabase implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	/**
@@ -21,7 +21,7 @@ public class Database implements Serializable{
 	/**
 	 * Costruttore
 	 */
-	public Database() {
+	public UserDatabase() {
 		this.users = new ArrayList<User>();
 	}
 	/**
@@ -67,6 +67,7 @@ public class Database implements Serializable{
 	 * @param name nome del fruitore
 	 * @param message messaggio da inviare al fruitore
 	 */
+	@Deprecated
 	public void receive(String name, Message message) {
 		for(User user: users) {
 			if(user.getName().equals(name))

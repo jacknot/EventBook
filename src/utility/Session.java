@@ -44,7 +44,7 @@ public class Session {
 	 * @return la proposta identificata dall'identificatore, null se non è valida
 	 */
 	public Proposal getProposal(int id) {
-		if(id < proposalsSet.size()) {
+		if(contains(id)) {
 			return proposalsSet.get(id);
 		}
 		return null;
@@ -55,7 +55,7 @@ public class Session {
 	 * @return l'esito della rimozione
 	 */
 	public boolean removeProposal(int id) {
-		if(id < proposalsSet.size()) {
+		if(contains(id)) {
 			proposalsSet.remove(id);
 			return true;
 		}
@@ -77,7 +77,7 @@ public class Session {
 	 * @return l'esito della modifica
 	 */
 	public boolean modifyProposal(int id, String campo, Object valore) {
-		if(id < proposalsSet.size()) {
+		if(contains(id)) {
 			return proposalsSet.get(id).modify(campo, valore);
 			}
 		return false;

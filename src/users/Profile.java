@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import dataTypes.CategoriesInterest;
+import dataTypes.CategoriesOfInterest;
 import fields.FieldHeading;
 import fields.FieldSet;
 import fields.FieldSetFactory;
@@ -40,8 +40,8 @@ public class Profile implements Serializable{
 		return fields.getValue(name);
 	}
 	
-	private CategoriesInterest getCategories(){
-		return (CategoriesInterest)fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName());
+	private CategoriesOfInterest getCategories(){
+		return (CategoriesOfInterest)fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName());
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class Profile implements Serializable{
 	 * @return True se operazione completata correttamente <br> False altrimenti
 	 */
 	public boolean modifyCategory(String category, boolean add) {
-		CategoriesInterest cat = getCategories();
+		CategoriesOfInterest cat = getCategories();
 		if(add)
 			cat.add(category);
 		else 	

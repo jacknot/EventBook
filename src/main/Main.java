@@ -7,7 +7,7 @@ import java.util.stream.*;
 import categories.*;
 import fields.*;
 import proposals.*;
-import users.Database;
+import users.UserDatabase;
 import users.User;
 import utility.*;
 
@@ -37,7 +37,7 @@ public class Main {
 	private static Scanner in;
 	private static CommandList protocol;
 	private static Session session;
-	private static Database database;
+	private static UserDatabase database;
 	private static ProposalHandler noticeBoard;
 	
 	private static final long DELAY = 3600000;//60MIN
@@ -83,9 +83,9 @@ public class Main {
 	 */
 	private static void load() {
 		System.out.println("Caricamento database ...");
-		database = (Database)new FileHandler().load(DATABASE);
+		database = (UserDatabase)new FileHandler().load(DATABASE);
 		if(database == null) {
-			database = new Database();
+			database = new UserDatabase();
 			System.out.println("Caricato nuovo database");
 			}
 		System.out.println("Caricamento bacheca ...");
@@ -367,6 +367,7 @@ public class Main {
 				if(session.contains(id)) {
 					if(noticeBoard.add(session.getProposal(id))) {
 						String categoryName = session.getProposal(id).getCategoryName();
+						session.removeProposal(id);
 						System.out.println("Proposta aggiunta con successo");
 						ArrayList<User> receivers = database.searchBy(categoryName);
 						receivers.remove(session.getOwner());

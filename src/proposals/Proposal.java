@@ -31,9 +31,10 @@ public class Proposal implements Serializable{
 	/**
 	 * Gli iscritti alla proposta
 	 */
-	private ArrayList<User> subscribers;
-	
-	//Non so se va bene
+	private ArrayList<User> subscribers;	//->ArrayList<Partecipante> subscribers;
+	/**
+	 * Contiene informazioni legate al passaggio di stato della proposta
+	 */
 	private ArrayList<Pair<State, LocalDate>> statePassages;
 	
 	/**
@@ -198,14 +199,28 @@ public class Proposal implements Serializable{
 					+ "\tIscritti: " + subNumber()
 					+ "\n\t" +subscribers.toString() + "\n";
 	}
+	
+	/**
+	 * Controlla se la proposta è legata al tipo di evento di cui si è inserito il nome della categoria
+	 * @param name il nome della categoria di evento
+	 * @return True - la proposta è relativa alla categoria<br>False - la proposta non è legata alla categoria
+	 */
 	public boolean isCategory(String name) {
 		return event.hasName(name);
 	}
 
+	/**
+	 * Restituisce la lista di iscritti all proposta
+	 * @return La lista di utenti iscritti all proposta
+	 */
 	public ArrayList<User> getSubscribers(){
 		return subscribers;
 	}
 	
+	/**
+	 * Restituisce il nome della categoria a cui la proposta fa riferimento
+	 * @return il nome della categoria a cui la proposta fa riferimento
+	 */
 	public String getCategoryName() {
 		return event.getName();
 	}

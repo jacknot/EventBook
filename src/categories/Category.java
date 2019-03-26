@@ -154,7 +154,12 @@ public abstract class Category implements Cloneable,Serializable{
 			fields.setValue(FieldHeading.TOLL_PARTECIPANTI.getName(), 0);
 	}
 	
-	public void reset() {
+	/**
+	 * Resetta tutti i campi della categoria
+	 * @return la categoria sulla quale si è eseguito il reset
+	 */
+	public Category reset() {
 		fields.reset();
+		return this;
 	}
 }

@@ -8,9 +8,6 @@ import users.User;
 
 public class ProposalHandler implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	/**
 	 * ArrayList contenente le proposte concluse

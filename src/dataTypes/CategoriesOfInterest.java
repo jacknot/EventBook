@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import categories.CategoryHeading;
 
-public class CategoriesInterest extends ArrayList<String>{
+public class CategoriesOfInterest extends ArrayList<String>{
 
 	private static final long serialVersionUID = 1L;
 
