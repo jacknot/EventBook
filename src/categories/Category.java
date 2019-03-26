@@ -146,11 +146,15 @@ public abstract class Category implements Cloneable,Serializable{
 	/**
 	 * Porta l'evento in una condizione di default
 	 */
-	private void toDefault() {
+	public void toDefault() {
 		if(fields.getValue(FieldHeading.TERMINE_RITIRO.getName()) == null && 
 				fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()) != null)
 			fields.setValue(FieldHeading.TERMINE_RITIRO.getName(), ((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())));
 		if(fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName()) == null)
 			fields.setValue(FieldHeading.TOLL_PARTECIPANTI.getName(), 0);
+	}
+	
+	public void reset() {
+		fields.reset();
 	}
 }

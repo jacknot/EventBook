@@ -108,4 +108,11 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 			.forEachOrdered((f)->sb.append(f.toString() + "\n"));
 		return sb.toString();
 	}
+	
+	/**
+	 * Imposta il valore dei campi contenuti nel FieldSet ad un valore di default
+	 */
+	public void reset() {
+		this.stream().forEach((f)->f.reset());
+	}
 }

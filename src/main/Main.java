@@ -515,7 +515,7 @@ public class Main {
 			}
 			User owner = session.getOwner();
 			if(noticeBoard.isOwner(id, owner)) {
-				ArrayList<User> userList = noticeBoard.searchBy(id, owner);
+				ArrayList<User> userList = noticeBoard.searchBy(owner, noticeBoard.getCategory(id));
 				System.out.println("Potenziali utenti da invitare: " + userList.toString());
 				System.out.println("Vuoi mandare un invito a tutti?");
 				System.out.print("[y|n]> ");

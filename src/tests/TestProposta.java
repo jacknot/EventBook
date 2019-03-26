@@ -32,7 +32,7 @@ class TestProposta {
 	@org.junit.jupiter.api.Test
 	void propostaInvalidaObbligatoriNonCompilati() {
 		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
-		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), null); // Campo obbligatorio non compilato
+		//event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20); // Campo obbligatorio non compilato
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(),  FieldHeading.TERMINEISCRIZIONE.getClassType().parse("21/06/2019"));
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
 		event.setValue(FieldHeading.DATA.getName(),  FieldHeading.DATA.getClassType().parse("25/06/2019"));

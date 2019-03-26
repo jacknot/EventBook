@@ -48,9 +48,11 @@ public class CategoryCache {
 	public Category getCategory(String type) {
 		if(!contains(type))
 			return null;
-		return (Category) set.stream()
+		Category cat = (Category) set.stream()
 								.filter((c)->c.hasName(type))
 								.findFirst().get().clone();
+		cat.reset();
+		return cat;
 	}
 	/**
 	 * Controlla se contiene la categoria di cui si è inserito il nome

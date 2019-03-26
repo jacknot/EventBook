@@ -166,13 +166,13 @@ public class ProposalHandler implements Serializable{
 	/**
 	 * Restituisce una lista di utenti papabili per un invito in base a quelli che hanno partecipate a proposte
 	 * presentate dall'utente inserito
-	 * @param user utente proprietario di proposte
+	 * @param owner utente proprietario di proposte
 	 * @param categoryName nome della Categoria
 	 * @return lista contente utenti da invitare
 	 */
-	public synchronized ArrayList<User> searchBy(User user, String categoryName){
+	public synchronized ArrayList<User> searchBy(User owner, String categoryName){
 		ArrayList<User> userList = new ArrayList<User>();
-		Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
+		/*Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
 			.filter((p)->p.isOwner(user))
 			.filter((p)->p.isCategory(categoryName))
 			.map((p) -> p.getSubscribers())
@@ -180,19 +180,29 @@ public class ProposalHandler implements Serializable{
 								.forEach((u) -> {
 									if(!userList.contains(u))
 										userList.add(u);
-				}));
+				}));*/
+		ArrayList<Proposal> p = new ArrayList<Proposal>();
+		
+		p.addAll(proposteConcluse);
+		p.addAll(proposteChiuse);
+		
+		for(Proposal prop : p) {
+			if(prop.isOwner(owner) && prop.isCategory(categoryName)) {
+				userList.addAll(prop.getSubscribers());
+			}
+		}
+		
 		return userList;
 	}
-	
+
 	/**
-	 * Restituisce una lista di utenti papabili per un invito in base a quelli che sono stati iscritti alle proposte
-	 * dell'utente identificato da user relative alla categoria a cui appartiene la proposta identificata da id
-	 * @param user utente proprietario di proposte
-	 * @param id indetificatore della proposta
-	 * @return lista contente utenti da invitare
+	 * Restituisce il nome della categoria della proposta che coincide con id
+	 * @param id id della proposta
+	 * @return Nome della categoria
 	 */
-	public synchronized ArrayList<User> searchBy(int id, User user){
-		String categoryName = bacheca.get(id).getCategoryName();
-		return searchBy(user, categoryName);
+	public String getCategory(int id) {
+		if(bacheca.contains(id))
+			return bacheca.get(id).getCategoryName();
+		return null;
 	}
 }

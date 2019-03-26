@@ -121,4 +121,11 @@ public class Field <T> implements Serializable{
 	public boolean equals(Field<?> f) {
 		return heading.getName().equals(f.getName()) && getType().equals(f.getType()) && value.equals(f.value);
 	}
+	
+	/**
+	 * Imposta il valore del campo ad un valore di default
+	 */
+	public void reset() {
+		value = null;
+	}
 }
