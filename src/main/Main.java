@@ -265,7 +265,22 @@ public class Main {
 			}
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento", (args)->{
-			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+			if(args.length == 0) {
+				System.out.print("Inserisci un parametro");
+				return false;
+			}
+			int id = -1;
+			try {
+				id = Integer.parseInt(args[0]);
+				if(id >= CategoryHeading.values().length) {
+					System.out.println("Categoria non esistente");
+					return false;
+				}
+			}catch(NumberFormatException e) {
+				System.out.println(INSERT_NUMBER);
+				return false;
+			}
+			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.values()[id].getName());
 			Stream.of(FieldHeading.values())
 					.filter(( fd )->event.containsField(fd.getName()))
 					.forEachOrdered(( fd )->{				

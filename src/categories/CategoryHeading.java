@@ -8,7 +8,8 @@ import java.io.Serializable;
  */
 public enum CategoryHeading implements Serializable{	
 
-	FOOTBALLMATCH("Partita di Calcio", "Una partita di calcio tra vari generi e età");
+	FOOTBALLMATCH("Partita di Calcio", "Una partita di calcio tra vari generi e età"),
+	CONCERT("Concerto Live", "Un Concerto musicale dal vivo");
 	
 	/**
 	 * Definisce un formato per la visualizzazione sottoforma di stringa del contenuto dell'oggetto

@@ -28,9 +28,15 @@ public enum FieldHeading{
 	//Nuovi campi aggiunti nella versione 3
 	TOLL_PARTECIPANTI("Tolleranza numero partecipanti", "Numero di partecipanti eventualmente accettabili in esubero rispetto al \"Numero di partecipanti\"", false, ClassType.INTEGER),
 	TERMINE_RITIRO("Termine ultimo di ritiro iscrizione", " Data entro cui a ogni fruitore che ha aderito all’evento è concesso di cancellare la sua iscrizione e al fruitore che ha proposto l’evento di ritirare la proposta", false, ClassType.DATA),
+	
 	//Campi FootballMatch
 	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, ClassType.GENDER),
 	FASCIA_ETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, ClassType.INTERVAL),
+	
+	//Campi Concert
+	BACKSTAGE_PASS("Pass Backstage", "Prezzo del Pass Backstage per accedere dietro le quinte e salire sul palco", false, ClassType.REAL),
+	MEET_AND_GREET("Meet & Greet", "Prezzo del Meet & Greet per conoscere i membri della/e Band prima del concerto", false, ClassType.REAL),
+	MERCHANDISE("Merchandise", "Prezzo dei Gadet e Merchandise ufficiali della/e band", false, ClassType.REAL),
 	
 	//Nuovi campi aggiunti per la versione 4 (Per l'utente)
 	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso", true, ClassType.STRING),

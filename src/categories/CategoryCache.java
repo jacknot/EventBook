@@ -39,6 +39,7 @@ public class CategoryCache {
 	 */
 	private static void loadCache() {
 		set.add(new FootballMatch());
+		set.add(new Concert());
 	}
 	
 	/**Restituisce il clone di una particolare istanza di categoria

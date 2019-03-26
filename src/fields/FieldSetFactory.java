@@ -44,6 +44,14 @@ public class FieldSetFactory {
 			cc.add(new Field <>(FieldHeading.CATEGORIE_INTERESSE));
 			return cc;
 		});
+		//Aggiunta per la versione 5
+		types.put(CategoryHeading.CONCERT.getName().toUpperCase(), ()->{
+			FieldSet cc = commonSet();
+			cc.add(new Field<>(FieldHeading.BACKSTAGE_PASS));
+			cc.add(new Field <>(FieldHeading.MEET_AND_GREET));
+			cc.add(new Field <>(FieldHeading.MERCHANDISE));
+			return cc;
+		});
 	}
 	/**Metodo per ottenere un'istanza della factory di contenitori<br>
 	 * Necessario per l'implementazione del design pattern singleton
