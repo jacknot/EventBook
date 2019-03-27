@@ -98,10 +98,10 @@ public class MainGUI {
 		
 		handler.setStringRedirector(new StringRedirector() {
 
-			@Override
+		/*	@Override
 			public InputStream getIn() {
 				return new TextFieldInputStream(textFieldCommands);
-			}
+			}*/
 
 			@Override
 			public PrintStream getOut() {

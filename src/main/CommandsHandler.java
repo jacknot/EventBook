@@ -114,7 +114,7 @@ class CommandsHandler {
 	}
 	
 	protected void setStringRedirector(StringRedirector redirector) {
-		System.setIn(redirector.getIn());
+		//System.setIn(redirector.getIn());
 		System.setOut(redirector.getOut());
 		System.setErr(redirector.getOut());
 	}
