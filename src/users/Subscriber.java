@@ -78,7 +78,7 @@ public class Subscriber {
 	 * @param h l'intestazione del campo opzionale di cui si vuole ottenere la preferenza
 	 * @return la preferenza impostata dall'utente
 	 */
-	public boolean getPreferenza(FieldHeading h){ //Va lasciato il throws? Secondo me no, perchè viene tutto gestito dal metodo in Preferenze
+	public boolean getPreferenza(FieldHeading h) throws IllegalArgumentException{
 		return preferenze.getPreferenza(h);
 	}
 	
