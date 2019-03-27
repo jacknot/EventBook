@@ -197,7 +197,8 @@ public class Proposal implements Serializable{
 	 */
 	public boolean isSignedUp(User user) {
 		return isOwner(user) || subscribers.stream()
-											.anyMatch(( s )->s.equals(user));
+											.map((s) -> s.getUser())
+											.anyMatch(( u )->u.equals(user));
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
