@@ -3,9 +3,15 @@ package proposals;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+
 import categories.Category;
 import dataTypes.Pair;
 import users.Message;
+import users.Subscriber;
 import users.User;
 
 /**
@@ -31,7 +37,7 @@ public class Proposal implements Serializable{
 	/**
 	 * Gli iscritti alla proposta
 	 */
-	private ArrayList<User> subscribers;	//->ArrayList<Partecipante> subscribers;
+	private ArrayList<Subscriber> subscribers;	//->ArrayList<Partecipante> subscribers;
 	/**
 	 * Contiene informazioni legate al passaggio di stato della proposta
 	 */
@@ -45,7 +51,7 @@ public class Proposal implements Serializable{
 	public Proposal(Category event, User owner) {
 		this.event = event;
 		this.owner = owner;
-		this.subscribers = new ArrayList<User>();
+		this.subscribers = new ArrayList<Subscriber>();
 		this.aState = State.INVALID;
 		statePassages = new ArrayList<Pair<State, LocalDate>>();
 		update();
@@ -102,10 +108,12 @@ public class Proposal implements Serializable{
 	 * @param user il fruitore da iscrivere
 	 * @return True - l'utente è stato correttamente iscritto alla proposta<br>False - l'utente non è stato iscritto alla proposta
 	 */
-	public boolean signUp(User user) {
+	public boolean signUp(User user, Preferenze preferenza) {
 		if(aState.canSignUp(this)){
 			if(!isSignedUp(user)) {
-				subscribers.add(user);
+				//Controlla che le preferenze inserite siano corrette / adeguate
+				Subscriber sub = new Subscriber(user, preferenza);
+				subscribers.add(sub);
 				update();
 				return true;
 			}
@@ -214,7 +222,8 @@ public class Proposal implements Serializable{
 	 * @return La lista di utenti iscritti all proposta
 	 */
 	public ArrayList<User> getSubscribers(){
-		return subscribers;
+		//return subscribers;
+		return subscribers.stream().map((s) -> s.getUser()).collect(Collectors.toCollection(ArrayList :: new));
 	}
 	
 	/**

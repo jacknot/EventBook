@@ -55,6 +55,7 @@ public class User implements Serializable{
 	public boolean removeMsg(int index) {
 		return privateSpace.remove(index);
 	}
+	
 	/**
 	 * Controlla se i due utenti sono uguali
 	 * @param f utente da controllare
@@ -63,6 +64,7 @@ public class User implements Serializable{
 	public boolean equals(User f) {
 		return getName().equals(f.getName());
 	}
+	
 	/**
 	 * Restituisce il contenuto dello spazio personale dell'utente sotto forma di testo
 	 * @return il contenuto dello spazio personale come testo
