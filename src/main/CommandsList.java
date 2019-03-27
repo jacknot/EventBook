@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import main.Main.Command;
+import main.CommandsHandler.Command;
 
 /**
  * Contenitore in grado di gestire una lista di comandi e di poter fare operazioni su di essi
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-class CommandList extends ArrayList<Command>{
+class CommandsList extends ArrayList<Command>{
 	
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Il formato con cui vengono stampati i comandi
 	 */
-	private static final String TOSTRING_FORMAT = "\n\t%-20s%s";
+	private static final String TOSTRING_FORMAT = "\n\t%-20s%20s";
 	/**
 	 * Espressione regolare per l'estrazione del comando
 	 */
@@ -27,7 +27,7 @@ class CommandList extends ArrayList<Command>{
 	/**
 	 * Costruttore
 	 */
-	public CommandList() {
+	public CommandsList() {
 		super();
 		add(Command.EXIT);
 		add(Command.REGISTRATION);

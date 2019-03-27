@@ -88,7 +88,7 @@ class TestInviti {
 		assertTrue(ph.contains(p1));
 		assertTrue(ph.isSignedUp(0, db.getUser("mario")));
 		//ho iscritto gente fino a far riempire la proposta (APERTA -> CHIUSA)
-		ph.signUp(0, db.getUser("carlo"));
+		ph.signUp(0, db.getUser("carlo"), null);
 		assertTrue(p1.hasState(State.CLOSED));
 		assertFalse(ph.contains(p1));
 		

@@ -75,9 +75,9 @@ public class ProposalHandler implements Serializable{
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
 	 */
-	public synchronized boolean signUp(int id, User user) {
+	public synchronized boolean signUp(int id, User user, Preferenze preferenze) {
 		if(bacheca.contains(id)) 
-			if(bacheca.get(id).signUp(user)) {
+			if(bacheca.get(id).signUp(user, preferenze)) {
 				this.refresh();
 				return true;
 			}

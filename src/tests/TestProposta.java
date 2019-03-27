@@ -116,7 +116,7 @@ class TestProposta {
 		Proposal proposal = new Proposal(event, owner); //creata proposta
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal)); //proposta aggiunta correttamente		
-		assertTrue(bacheca.signUp(0, user));
+		assertTrue(bacheca.signUp(0, user, null));
 	}
 
 	@org.junit.jupiter.api.Test
@@ -146,7 +146,7 @@ class TestProposta {
 		assertTrue(proposal.hasState(State.FAILED));
 		//La proposta, avendo superato la data ultima di termine iscrizione, viene rimossa dalla bacheca
 		//La bacheca ora è vuota -> non posso iscrivermi
-		assertFalse(bacheca.signUp(0, user)); 
+		assertFalse(bacheca.signUp(0, user, null)); 
 	}
 	
 }
