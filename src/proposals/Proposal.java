@@ -3,10 +3,7 @@ package proposals;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.stream.Collectors;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import categories.Category;
 import dataTypes.Pair;
@@ -33,11 +30,11 @@ public class Proposal implements Serializable{
 	/**
 	 * Il proprietario della proposta
 	 */
-	private User owner;
+	private Subscriber owner;
 	/**
 	 * Gli iscritti alla proposta
 	 */
-	private ArrayList<Subscriber> subscribers;	//->ArrayList<Partecipante> subscribers;
+	private ArrayList<Subscriber> subscribers;
 	/**
 	 * Contiene informazioni legate al passaggio di stato della proposta
 	 */
@@ -48,9 +45,9 @@ public class Proposal implements Serializable{
 	 * @param event L'evento a cui farà riferimento la proposta
 	 * @param owner Il proprietario della proposta
 	 */
-	public Proposal(Category event, User owner) {
+	public Proposal(Category event) {
 		this.event = event;
-		this.owner = owner;
+		this.owner = null;
 		this.subscribers = new ArrayList<Subscriber>();
 		this.aState = State.INVALID;
 		statePassages = new ArrayList<Pair<State, LocalDate>>();
@@ -58,6 +55,27 @@ public class Proposal implements Serializable{
 		statePassages.add(new Pair<>(aState, LocalDate.now()));
 	}
 	
+	/**
+	 * Imposta il proprietario della proposta
+	 * @param nOwner il nuovo proprietario della proposta
+	 * @param pref le preferenze espresse dal proprietario
+	 * @return True - l'utente inserito è stato impostato come proprietario<br>False - l'utente inserito non è stato inserito come proprietario
+	 */
+	public boolean setOwner(User nOwner, Preferenze pref) {
+		if(getPreferenze().sameChoices(pref) && this.owner == null) {
+			this.owner = new Subscriber(nOwner, pref);
+			this.update();
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * Controlla se la proposta ha un proprietario
+	 * @return True - la proposta ha un proprietario<br>False - la proposta non ha un proprietario
+	 */
+	public boolean hasOwner() {
+		return (owner == null)?false:true;
+	}
 	/**
 	 * Fa cambiare stato alla proposta
 	 */
@@ -110,8 +128,7 @@ public class Proposal implements Serializable{
 	 */
 	public boolean signUp(User user, Preferenze preferenza) {
 		if(aState.canSignUp(this)){
-			if(!isSignedUp(user)) {
-				//Controlla che le preferenze inserite siano corrette / adeguate
+			if(!isSignedUp(user) && getPreferenze().sameChoices(preferenza)) {
 				Subscriber sub = new Subscriber(user, preferenza);
 				subscribers.add(sub);
 				update();
@@ -129,7 +146,9 @@ public class Proposal implements Serializable{
 	public boolean unsubscribe(User user) {
 		if(aState.canSignUp(this)){
 			if(!isOwner(user) && isSignedUp(user)) {
-				subscribers.remove(subscribers.stream().filter((s) -> s.equals(user)).findFirst().get());
+				subscribers.remove(subscribers.stream()
+												.filter((s) -> s.getUser().equals(user))
+												.findFirst().get());
 				update();
 				return true;
 			}
@@ -171,14 +190,14 @@ public class Proposal implements Serializable{
 	 * @return il numero di iscritti alla proposta
 	 */
 	public int subNumber() {
-		return subscribers.size() + 1;
+		return subscribers.size() + (hasOwner()?1:0);
 	}
 	/**
 	 * Verifica se la proposta è valida
 	 * @return True - la proposta è valida<br>False - la proposta è invalida
 	 */
 	public boolean isValid() {
-		return event.isValid();
+		return hasOwner() && event.isValid();
 	}
 	
 	/**
@@ -187,7 +206,7 @@ public class Proposal implements Serializable{
 	 * @return True se proprietario<br> False altrimenti
 	 */
 	public boolean isOwner(User user) {
-		return owner.equals(user);
+		return owner.getUser().equals(user);
 	}
 	
 	/**
@@ -224,7 +243,9 @@ public class Proposal implements Serializable{
 	 */
 	public ArrayList<User> getSubscribers(){
 		//return subscribers;
-		return subscribers.stream().map((s) -> s.getUser()).collect(Collectors.toCollection(ArrayList :: new));
+		return subscribers.stream()
+							.map((s) -> s.getUser())
+							.collect(Collectors.toCollection(ArrayList :: new));
 	}
 	
 	/**
@@ -233,5 +254,12 @@ public class Proposal implements Serializable{
 	 */
 	public String getCategoryName() {
 		return event.getName();
+	}
+	/**
+	 * Restituisce l'insieme delle varie opzioni disponibili sulla proposta
+	 * @return il set delle varie opzioni
+	 */
+	public Preferenze getPreferenze() {
+		return event.getPreferenze();
 	}
 }

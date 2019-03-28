@@ -27,8 +27,10 @@ class TestProposta {
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
-		Proposal proposal = new Proposal(event, new User("Mario"));
+		Proposal proposal = new Proposal(event);
 		assertFalse(proposal.isValid()); //deve essere invalida
+		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
+		assertFalse(proposal.isValid());
 	}
 	
 	@org.junit.jupiter.api.Test
@@ -42,7 +44,8 @@ class TestProposta {
 		event.setValue(FieldHeading.QUOTA.getName(),  FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(),  FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse( "10-50"));
-		Proposal proposal = new Proposal(event, new User("Mario"));
+		Proposal proposal = new Proposal(event);
+		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
 		assertFalse(proposal.isValid()); //deve essere invalida
 	}
 	
@@ -57,7 +60,9 @@ class TestProposta {
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
-		Proposal proposal = new Proposal(event, new User("Mario"));
+		Proposal proposal = new Proposal(event);
+		assertFalse(proposal.isValid()); //deve essere valida
+		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
 		assertTrue(proposal.isValid()); //deve essere valida
 	}
 	
@@ -72,7 +77,9 @@ class TestProposta {
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));	//categoria valida generata
-		Proposal proposal = new Proposal(event, new User("Mario")); //creata proposta
+		Proposal proposal = new Proposal(event); //creata proposta
+		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
+		assertTrue(proposal.isValid()); //deve essere valida
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		bacheca.add(proposal);
 		assertTrue(bacheca.contains(proposal)); //proposta aggiunta correttamente
@@ -90,7 +97,8 @@ class TestProposta {
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50")); //categoria valida generata (con un termine di ritiro corretto)
-		Proposal proposal = new Proposal(event, owner); //creata proposta
+		Proposal proposal = new Proposal(event); //creata proposta
+		proposal.setOwner(owner, proposal.getPreferenze());
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		bacheca.add(proposal); //proposta aggiunta correttamente
 		bacheca.withdraw(0, owner); //rimossa proposta
@@ -113,10 +121,11 @@ class TestProposta {
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		
-		Proposal proposal = new Proposal(event, owner); //creata proposta
+		Proposal proposal = new Proposal(event); //creata proposta
+		proposal.setOwner(owner, proposal.getPreferenze());
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal)); //proposta aggiunta correttamente		
-		assertTrue(bacheca.signUp(0, user, null));
+		assertTrue(bacheca.signUp(0, user, bacheca.getPreferenze(0)));
 	}
 
 	@org.junit.jupiter.api.Test
@@ -135,7 +144,9 @@ class TestProposta {
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(3));
 		
-		Proposal proposal = new Proposal(event, owner); //creata proposta
+		Proposal proposal = new Proposal(event); //creata proposta
+		proposal.setOwner(owner, proposal.getPreferenze());
+		
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal));
 		proposal.setState(State.VALID);

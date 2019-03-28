@@ -76,7 +76,7 @@ public enum FieldHeading{
 	 * Formattazione per la visualizzazione testuale dell'oggetto
 	 */
 	//private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s";
-	private final static String TOSTRING_FORMAT = "Nome: %s%s%nDescrizione: %s";
+	private final static String TOSTRING_FORMAT = "Nome: %s%s%s%nDescrizione: %s";
 	
 	/**
 	 * Costruttore
@@ -141,10 +141,7 @@ public enum FieldHeading{
 	 * @see java.lang.Enum#toString()
 	 */
 	public String toString() {
-		String bindingString = "";
-		if(!binding)
-			bindingString = " [Facoltativo]";
-		return String.format(TOSTRING_FORMAT, name, bindingString, description);
+		return String.format(TOSTRING_FORMAT, name, binding?"":" [Facoltativo]", optional?" [Opzionale]":"", description);
 	}
 	/**
 	 * Controlla se le due intestazioni sono uguali

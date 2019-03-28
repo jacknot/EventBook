@@ -2,9 +2,13 @@ package categories;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import fields.FieldHeading;
 import fields.FieldSet;
+import proposals.Preferenze;
 
 
 /**
@@ -161,5 +165,28 @@ public abstract class Category implements Cloneable,Serializable{
 	public Category reset() {
 		fields.reset();
 		return this;
+	}
+	/**
+	 * Rimuove dalla categoria un campo opzionale
+	 * @param fh l'intestazione del campo opzionale da rimuovere
+	 * @return True - il campo è stato rimosso con successo<br>False - il campo non è stato rimosso
+	 */
+	public boolean removeOptionalField(FieldHeading fh) {
+		if(fh.isOptional()) {
+			return fields.remove(fh.getName());
+		}
+		return false;
+	}
+	/**
+	 * Restituisce l'insieme delle varie opzioni disponibili sulla categoria
+	 * @return il set delle varie opzioni
+	 */
+	public Preferenze getPreferenze() {
+		return new Preferenze(Stream.of(FieldHeading.values())
+									.filter((fh)->fh.isOptional())
+									.filter((fh)->this.containsField(fh.getName()))
+									.collect(Collectors.toCollection(ArrayList::new))
+									.toArray(new FieldHeading[0])
+							);
 	}
 }

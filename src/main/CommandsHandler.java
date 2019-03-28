@@ -93,6 +93,7 @@ class CommandsHandler {
 			System.out.println("Caricata nuova bacheca");
 			}
 		System.out.println("Fine caricamento");
+		System.out.println("Pronto");
 		System.out.print(NEW_LINE + WAITING);	
 	}
 	/**
@@ -275,26 +276,25 @@ class CommandsHandler {
 				}
 			}
 		}),
-		NEW_EVENT("crea", "Crea un nuovo evento", (args)->{
+		NEW_EVENT("crea", "Crea un nuovo evento\tSintassi: crea [categoryName]", (args)->{
 			if(args.length == 0) {
-				System.out.print("Inserisci un parametro");
+				System.out.print("Inserisci il nome di una categoria");
 				return false;
 			}
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-				if(id >= CategoryHeading.values().length) {
-					System.out.println("Categoria non esistente");
-					return false;
-				}
-			}catch(NumberFormatException e) {
-				System.out.println(INSERT_NUMBER);
+			String categoryName = in.nextLine();
+			if(!Stream.of(CategoryHeading.values()).anyMatch((ch)->ch.getName().equalsIgnoreCase(categoryName))) {
+				System.out.println("Categoria non esistente");
 				return false;
 			}
-			Category event = CategoryCache.getInstance().getCategory(CategoryHeading.values()[id].getName());
+			Category event = CategoryCache.getInstance()
+											.getCategory(Stream.of(CategoryHeading.values())
+																.filter((ch)->ch.getName().equalsIgnoreCase(categoryName))
+																.findFirst().get().getName());
+			//campi facoltativi/obbligatori
 			Stream.of(FieldHeading.values())
 					.filter(( fd )->event.containsField(fd.getName()))
-					.forEachOrdered(( fd )->{				
+					.filter(( fd )->!fd.isOptional())
+					.forEachOrdered(( fd )->{	
 						System.out.println(fd.toString());
 						Object obj = acceptValue(fd, "Inserisci un valore per il campo: ");
 						if(event.setValue(fd.getName(), obj))
@@ -302,7 +302,60 @@ class CommandsHandler {
 						else
 							System.out.println("\tIl dato non è stato inserito correttamente\n");
 					});
-			if(session.addProposal(new Proposal(event, session.getOwner()))) {
+			//campi opzionali
+			Stream.of(FieldHeading.values())
+					.filter(( fd )->event.containsField(fd.getName()))
+					.filter(( fd )->fd.isOptional())
+					.forEachOrdered(( fd )->{
+						System.out.println(fd.toString());
+						System.out.print("Vuoi inserire questo campo opzionale?[y|n]>");
+						boolean valid = false;
+						boolean keepField = false;
+						do {
+							String confirm = in.nextLine();
+							if(confirm.equalsIgnoreCase("y")) {
+								valid = true;
+								keepField = true;
+							}else if(confirm.equalsIgnoreCase("n")) 
+								valid = true;
+							else
+								System.out.println("Valore inserito errato: inserisci 'y' o 'n'");
+						}while(!valid);
+						if(!keepField) {
+							System.out.println("Il campo opzionale " + fd.getName() + " non verrà inserito nella categoria");
+							event.removeOptionalField(fd);
+						}else {
+							System.out.println("Il campo opzionale " + fd.getName() + " verrà inserito nella categoria");
+							Object obj = acceptValue(fd, "Inserisci un valore per il campo: ");
+							if(event.setValue(fd.getName(), obj))
+								System.out.println("\tDato inserito correttamente\n");
+							else
+								System.out.println("\tIl dato non è stato inserito correttamente\n");
+						}
+					});
+			//iscrizione proprietario
+			Proposal p = new Proposal(event);
+			Preferenze pref = p.getPreferenze();
+			Stream.of(pref.getChoices())
+					.forEach((fh)->{
+						System.out.println(fh.toString());
+						System.out.print("Vuoi usufruirne?[y|n]>");
+						boolean confirm = false;
+						boolean valid = false;
+						do {
+							String ok = in.nextLine();
+							if(ok.equalsIgnoreCase("y")) {
+								confirm = true;
+								valid = true;
+							}else if(ok.equalsIgnoreCase("n"))
+								valid = true;
+							else
+								System.out.println("Il valore inserito non è corretto: inserisci 'y' o 'n'");
+						}while(!valid);
+						pref.impostaPreferenza(fh, confirm);
+					});
+			p.setOwner(session.getOwner(), pref);
+			if(session.addProposal(p)) {
 				System.out.println("La proposta è stata aggiunta alla proposte in lavorazione");
 				return true;
 			}else {
@@ -410,7 +463,26 @@ class CommandsHandler {
 					System.out.println(INSERT_NUMBER);
 					return false;
 				}
-				if(!noticeBoard.signUp(id, session.getOwner(), new Preferenze(null))) {
+				Preferenze pref = noticeBoard.getPreferenze(id);
+				Stream.of(pref.getChoices())
+						.forEach((fh)->{
+							System.out.println(fh.toString());
+							System.out.print("Vuoi usufruirne?[y|n]>");
+							boolean confirm = false;
+							boolean valid = false;
+							do {
+								String ok = in.nextLine();
+								if(ok.equalsIgnoreCase("y")) {
+									confirm = true;
+									valid = true;
+								}else if(ok.equalsIgnoreCase("n"))
+									valid = true;
+								else
+									System.out.println("Il valore inserito non è corretto: inserisci 'y' o 'n'");
+							}while(!valid);
+							pref.impostaPreferenza(fh, confirm);
+						});
+				if(!noticeBoard.signUp(id, session.getOwner(), pref)) {
 					System.out.println("L'iscrizione non è andata a buon fine");
 					return false;
 				}else {
@@ -641,7 +713,7 @@ class CommandsHandler {
 			do {
 				System.out.print("\t" + message);
 				String value = in.nextLine();
-				if(!field.isBinding() && value.isEmpty())
+				if(!field.isBinding() && !field.isOptional() && value.isEmpty())
 					valid = true;
 				System.out.print(NEW_LINE);
 				if(field.getClassType().isValidType(value)) {

@@ -24,6 +24,7 @@ public class Preferenze implements Serializable{
 	 * @param intestazioni la lista di intestazioni di campi opzionali relativi ai quali si vuole tenere traccia delle scelte dell'utente
 	 */
 	public Preferenze(FieldHeading[] intestazioni) {
+		preferenze = new HashMap<FieldHeading, Boolean>();
 		Stream.of(intestazioni)
 				.filter((h)->h.isOptional())
 				.forEach((h)->preferenze.put(h, false));
@@ -59,5 +60,27 @@ public class Preferenze implements Serializable{
 	 */
 	public boolean contains(FieldHeading h) {
 		return preferenze.containsKey(h);
+	}
+	/**
+	 * Verifica se due preferenze sono uguali
+	 * @param p la preferenza da confrontare
+	 * @return True - le preferenze sono uguali<br>False - le preferenze sono diverse
+	 */
+	public boolean sameChoices(Preferenze p) {
+		return Stream.of(this.getChoices()).allMatch((k)->p.contains(k)) && 
+				Stream.of(p.getChoices()).allMatch((k)->this.contains(k));
+	}
+	/**
+	 * Restitusice le intestazioni dei campi sui quali è possibile fare scelte
+	 * @return le intestazioni
+	 */
+	public FieldHeading[] getChoices() {
+		return this.preferenze.keySet().toArray(new FieldHeading[0]);
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return preferenze.toString();
 	}
 }

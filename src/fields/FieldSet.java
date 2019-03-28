@@ -2,6 +2,7 @@ package fields;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**Definisce una struttura dati con il compito di gestire di diversi campi
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -114,5 +115,18 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 */
 	public void reset() {
 		this.stream().forEach((f)->f.reset());
+	}
+	/**
+	 * Rimuove dal set il campo di cui si è inserito il nome, sempre che questo sia contenuto
+	 * @param fieldName il nome del campo da rimuovere
+	 * @return True - il campo è stato rimosso con successo<br>False - il campo non è stato rimosso
+	 */
+	public boolean remove(String fieldName) {
+		if(contains(fieldName))
+			return this.removeAll(this.stream()
+										.filter((f)->f.getName().equalsIgnoreCase(fieldName))
+										.collect(Collectors.toCollection(ArrayList::new))
+								);
+		return false;
 	}
 }

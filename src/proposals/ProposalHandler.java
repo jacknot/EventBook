@@ -194,4 +194,14 @@ public class ProposalHandler implements Serializable{
 			return bacheca.get(id).getCategoryName();
 		return null;
 	}
+	/**
+	 * Restituisce le scelte che sono possibili fare sulle voci opzionali della proposta di cui si è inserito l'identificativo
+	 * @param id l'identificativo della proposta interessata
+	 * @return l'insieme di scelte che è possibile fare sulla proposta, null se la proposta non esiste
+	 */
+	public synchronized Preferenze getPreferenze(int id) {
+		if(bacheca.contains(id))
+			return bacheca.get(id).getPreferenze();
+		return null;
+	}
 }

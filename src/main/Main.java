@@ -27,8 +27,6 @@ public class Main {
 		handler.load();
 		
 		Scanner in = new Scanner(System.in);
-		
-		
 		do {
 			String command = in.nextLine();
 			handler.run(command.trim());
