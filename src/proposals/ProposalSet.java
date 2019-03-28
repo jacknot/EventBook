@@ -57,9 +57,11 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return il contenuto dell'insieme in forma testuale
 	 */
 	public String showContent() {
+		sort();
 		StringBuilder sb = new StringBuilder();
 		IntStream.range(0, this.size())
 					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, this.get(i).toString())));
+		
 		return sb.toString();
 	}	
 	/**
@@ -98,6 +100,14 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 					.forEach((i)->sb.append(String.format(PROPOSAL, i, this.get(i).toString())));
 		return sb.toString();
 	}
+	
+	/**
+	 * Ordina le proposte nel ProposalSet in ordine di categoria
+	 */
+	private void sort() {
+		super.sort((p1, p2) -> p1.getCategoryName().compareTo(p2.getCategoryName()));
+	}	
+	
 	/**
 	 * Verifica che l'utente passato come parametro sia iscritto alla proposta identificata da id
 	 * @param id id della proposta

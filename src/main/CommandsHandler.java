@@ -1,5 +1,6 @@
 package main;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Timer;
@@ -94,7 +95,7 @@ class CommandsHandler {
 			}
 		System.out.println("Fine caricamento");
 		System.out.println("Pronto");
-		System.out.print(NEW_LINE + WAITING);	
+		System.out.print(NEW_LINE + WAITING);
 	}
 	/**
 	 * Salva la bacheca e il database
@@ -111,13 +112,12 @@ class CommandsHandler {
 			protocol.run(command);
 		else
 			System.out.println(ERROR_UNKNOWN_COMMAND);
-		System.out.print(NEW_LINE + WAITING);	
+		System.out.print(NEW_LINE + WAITING);
 	}
 	
-	protected void setStringRedirector(StringRedirector redirector) {
-		//System.setIn(redirector.getIn());
-		System.setOut(redirector.getOut());
-		System.setErr(redirector.getOut());
+	protected void setOut(PrintStream out) {
+		System.setOut(out);
+		System.setErr(out);
 	}
 	
 	

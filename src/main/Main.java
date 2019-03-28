@@ -12,6 +12,7 @@ public class Main {
 	
 	private static final String NEW_LINE = "\n";
 	private static final String WELCOME = "Welcome to EventBook";
+	private static final String WAITING = "> ";
 
 
 	private static CommandsHandler handler;
