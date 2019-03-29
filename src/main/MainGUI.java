@@ -10,15 +10,20 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
+
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
@@ -99,6 +104,9 @@ public class MainGUI {
 			
 		});
 		t.start();
+		
+		String str = "pROVA";
+		InputStream inputStream = new ByteArrayInputStream(str.getBytes(Charset.forName("UTF-8"))); //String to InputStream
 	}
 	
 	class TextAreaOutputStream extends OutputStream {
@@ -119,6 +127,17 @@ public class MainGUI {
 	        textArea.update(textArea.getGraphics());
 	    }
 	}
+	
+	class TextFieldInputStream extends InputStream {
+
+		@Override
+		public int read() throws IOException {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		
+	}
+	
 
 
 }
