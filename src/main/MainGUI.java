@@ -7,37 +7,23 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 import javax.swing.JTextArea;
-import javax.swing.border.EtchedBorder;
-
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
-
 import javax.swing.JButton;
 
 public class MainGUI {
 	
-	private static final String NEW_LINE = "\n";
 	private static final String WELCOME = "Welcome to EventBook";
-	private static final String WAITING = "> ";
 
 	private static CommandsHandler handler;
 	private JFrame frame;
 	private JTextArea textArea;
+	private JTextField textFieldCommands;
+	private JButton btnSend;
 
 	/**
 	 * Launch the application.
@@ -69,7 +55,6 @@ public class MainGUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 550, 350);
 		frame.setTitle("EventBook");
-		frame.setAlwaysOnTop(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panelScroll = new JPanel();
@@ -88,56 +73,62 @@ public class MainGUI {
 		lblWelcome.setFont(new Font("Tahoma", Font.BOLD, 18));
 		panelWelcome.add(lblWelcome);
 		
-		handler = CommandsHandler.getInstance();
+		handler = CommandsHandler.getInstance();	
 		
-		handler.setOut( new PrintStream(new TextAreaOutputStream(textArea)));		
+		JPanel panelCommands = new JPanel();
+		panelCommands.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		frame.getContentPane().add(panelCommands, BorderLayout.SOUTH);
+		panelCommands.setLayout(new BorderLayout(0, 0));
+		
+		btnSend = new JButton("Invia");
+		panelCommands.add(btnSend, BorderLayout.EAST);
+		
+		textFieldCommands = new JTextField();
+		panelCommands.add(textFieldCommands);
+		textFieldCommands.setColumns(10);
+		
+		handler.setStream(new GUIStream());
 		
 		handler.load();
 
-		Thread t = new Thread(() -> {
-			Scanner in = new Scanner(System.in);	
-			do {
-				String command = in.nextLine().trim();
-				System.out.println(command);
-				handler.run(command);
-			}while(true);
-			
+		btnSend.addActionListener(event -> {
+			String command = textFieldCommands.getText().trim();
+			textArea.append(command + "\n");
+			handler.run(command);
+			textFieldCommands.setText("");
+			textFieldCommands.requestFocus();
 		});
-		t.start();
 		
-		String str = "pROVA";
-		InputStream inputStream = new ByteArrayInputStream(str.getBytes(Charset.forName("UTF-8"))); //String to InputStream
+		
 	}
 	
-	class TextAreaOutputStream extends OutputStream {
-		
-	    private JTextArea textArea;
+	 class GUIStream implements InOutStream{
+					
+			@Override
+			public String read() {
+				String input = JOptionPane.showInputDialog(frame, "Inserisci valore: (annullando il campo non verrà compilato)");
+				if(input==null)
+					input = "";
+				else write(input);
+				return input;
+			}
 
-	    public TextAreaOutputStream(JTextArea textArea) {
-	        this.textArea = textArea;
-	    }
+			@Override
+			public void write(String str) {
+			textArea.append(str);
+				
+			}
 
-	    @Override
-	    public void write(int b) throws IOException {
-	        // redirects data to the text area
-	    	textArea.setText(textArea.getText() + String.valueOf((char)b));
-	        // scrolls the text area to the end of data
-	        textArea.setCaretPosition(textArea.getDocument().getLength());
-	        // keeps the textArea up to date
-	        textArea.update(textArea.getGraphics());
-	    }
-	}
-	
-	class TextFieldInputStream extends InputStream {
+			@Override
+			public void writeln(String str) {
+				textArea.append(str + "\n");			
+			}
 
-		@Override
-		public int read() throws IOException {
-			// TODO Auto-generated method stub
-			return 0;
+			@Override
+			public void close() {
+				// TODO Auto-generated method stub		
+			}
+			
 		}
-		
-	}
-	
-
 
 }

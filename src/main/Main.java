@@ -12,10 +12,10 @@ public class Main {
 	
 	private static final String NEW_LINE = "\n";
 	private static final String WELCOME = "Welcome to EventBook";
-	private static final String WAITING = "> ";
 
 
 	private static CommandsHandler handler;
+	private static Scanner inMain; 
 	
 	/**
 	 * Il punto da cui far iniziare il programma
@@ -25,14 +25,46 @@ public class Main {
 		System.out.println(WELCOME + NEW_LINE);
 		
 		handler = CommandsHandler.getInstance();
+		handler.setStream(new SimpleStream());
 		handler.load();
 		
-		Scanner in = new Scanner(System.in);
+		inMain = new Scanner(System.in);
 		do {
-			String command = in.nextLine();
+			String command = inMain.nextLine();
 			handler.run(command.trim());
 		}while(true);
 	}
 
+}
+
+
+class SimpleStream implements InOutStream{
+	
+	private Scanner in;
+	
+	public SimpleStream() {
+		in = new Scanner(System.in);
+	}
+	
+	@Override
+	public String read() {
+		return in.nextLine();
+	}
+
+	@Override
+	public void write(String str) {
+		System.out.print(str);	
+	}
+
+	@Override
+	public void writeln(String str) {
+		System.out.println(str);	
+	}
+
+	@Override
+	public void close() {
+		in.close();
+		//inMain.close();
+	}
 	
 }

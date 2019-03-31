@@ -1,8 +1,6 @@
 package main;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Stream;
@@ -39,7 +37,6 @@ class CommandsHandler {
 	private static final String INSERT_NUMBER = "Inserisci un numero";
 
 	private static Timer refreshTimer;
-	private static Scanner in;
 	private static CommandsList protocol;
 	private static Session session;
 	private static UserDatabase database;
@@ -48,6 +45,7 @@ class CommandsHandler {
 	private static final long DELAY = 3600000;//60MIN
 
 	private static CommandsHandler instance;
+	private static InOutStream stream;
 	
 	private CommandsHandler() {}
 	
@@ -66,13 +64,12 @@ class CommandsHandler {
 		
 		//chiusura + terminazione anomala -> save
 				Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 		
-					in.close();
+					stream.close();
 					refreshTimer.cancel();
 					save();
-					System.out.println(EXITMSG);	
+					stream.writeln(EXITMSG);	
 				}));
-				
-		in = new Scanner(System.in);	
+
 		
 		refreshTimer = new Timer("RefreshNoticeBoard");
 		refreshTimer.schedule(new TimerTask() {
@@ -81,43 +78,42 @@ class CommandsHandler {
 			}
 		}, DELAY, DELAY);
 		
-		System.out.println("Caricamento database ...");
+		stream.writeln("Caricamento database ...");
 		database = (UserDatabase)new FileHandler().load(DATABASE);
 		if(database == null) {
 			database = new UserDatabase();
-			System.out.println("Caricato nuovo database");
+			stream.writeln("Caricato nuovo database");
 			}
-		System.out.println("Caricamento bacheca ...");
+		stream.writeln("Caricamento bacheca ...");
 		noticeBoard = (ProposalHandler)new FileHandler().load(NOTICEBOARD);
 		if(noticeBoard == null) {
 			noticeBoard = new ProposalHandler();
-			System.out.println("Caricata nuova bacheca");
+			stream.writeln("Caricata nuova bacheca");
 			}
-		System.out.println("Fine caricamento");
-		System.out.println("Pronto");
-		System.out.print(NEW_LINE + WAITING);
+		stream.writeln("Fine caricamento");
+		stream.writeln("Pronto");
+		stream.write(NEW_LINE + WAITING);
 	}
 	/**
 	 * Salva la bacheca e il database
 	 */
 	protected void save() {
-		System.out.print("Salvataggio bacheca... ");
-		System.out.println((new FileHandler().save(NOTICEBOARD, noticeBoard))? SAVE_COMPLETED : SAVE_FAILED);
-		System.out.print("Salvataggio database... ");
-		System.out.println((new FileHandler().save(DATABASE, database))? SAVE_COMPLETED : SAVE_FAILED);
+		stream.write("Salvataggio bacheca... ");
+		stream.writeln((new FileHandler().save(NOTICEBOARD, noticeBoard))? SAVE_COMPLETED : SAVE_FAILED);
+		stream.write("Salvataggio database... ");
+		stream.writeln((new FileHandler().save(DATABASE, database))? SAVE_COMPLETED : SAVE_FAILED);
 	}
 	
 	protected void run(String command){
 		if(protocol.contains(command))
 			protocol.run(command);
 		else
-			System.out.println(ERROR_UNKNOWN_COMMAND);
-		System.out.print(NEW_LINE + WAITING);
+			stream.writeln(ERROR_UNKNOWN_COMMAND);
+		stream.write(NEW_LINE + WAITING);
 	}
 	
-	protected void setOut(PrintStream out) {
-		System.setOut(out);
-		System.setErr(out);
+	protected void setStream(InOutStream _stream) {
+		stream = _stream;
 	}
 	
 	
@@ -133,91 +129,91 @@ class CommandsHandler {
 			return true;
 			}),
 		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", (args)->{
-			System.out.println("Le categorie disponibili: ");
-			Stream.of(CategoryHeading.values()).forEach((ch)->System.out.println("\t" + ch.getName()));
+			stream.writeln("Le categorie disponibili: ");
+			Stream.of(CategoryHeading.values()).forEach((ch)->stream.writeln("\t" + ch.getName()));
 			return true;
 		}),
 		//syntax : categoria [category]
 		CATEGORY("categoria", "Mostra la categoria disponibile\tSintassi: categoria [name]", (args)->{
 			if(args.length == 0){
-			 	System.out.println("Inserisci il nome di una categoria");
+			 	stream.writeln("Inserisci il nome di una categoria");
 			  	return false;
 			}else if(Stream.of(CategoryHeading.values())
 			  					.anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
-			  	System.out.print(Stream.of(CategoryHeading.values())
+			  	stream.write(Stream.of(CategoryHeading.values())
 			  								.filter((fh)->fh.getName().equalsIgnoreCase(args[0]))
 			  								.findFirst().get().toString());
 			  	return true;
 			 }else{
-			  	System.out.println("Il nome inserito non appartiene ad una categoria");
+			  	stream.writeln("Il nome inserito non appartiene ad una categoria");
 			  	return false;
 			  }
 		}),
 		//syntax : descrizione [category]
 		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile\tSintassi: descrizione [name]", (args)->{
 			if(args.length == 0){
-		 		System.out.println("Inserisci il nome di una categoria");
+		 		stream.writeln("Inserisci il nome di una categoria");
 		  		return false;
 		  	}else if(Stream.of(CategoryHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
-		  		System.out.print(FieldSetFactory.getInstance().getSet(args[0]).getFeatures());
+		  		stream.write(FieldSetFactory.getInstance().getSet(args[0]).getFeatures());
 		  		return true;
 		 	}else{
-		  		System.out.println("Il nome inserito non appartiene ad una categoria");
+		  		stream.writeln("Il nome inserito non appartiene ad una categoria");
 		  		return false;
 		  	}
 		}),
 		//syntax : registra [name]
 		REGISTRATION("registra", "Registra un fruitore\tSintassi: registra [name]", (args)->{
 			if(args.length == 0){
-		 		System.out.println("Inserisci il nomignolo dell'utente da registrare");
+		 		stream.writeln("Inserisci il nomignolo dell'utente da registrare");
 		  		return false;
 		  	}else if(args.length > 0 && !database.contains(args[0])){
 		  		database.register(args[0]);
-				System.out.println("L'utente è stato registrato con successo");
-				System.out.println("Compilare, se si vuole, il proprio Profilo personale:\n");
+				stream.writeln("L'utente è stato registrato con successo");
+				stream.writeln("Compilare, se si vuole, il proprio Profilo personale:\n");
 				User user = database.getUser(args[0]);
 				FieldHeading[] fields = user.getEditableFields();
 				Stream.of(fields)
 						.forEach((fh)->{
-							System.out.println(fh.toString());
+							stream.writeln(fh.toString());
 							Object obj = acceptValue(fh, "Inserisci un valore per il campo: ");
 							if(user.setValue(fh.getName(), obj))
-								System.out.println("\tDato inserito correttamente\n");
+								stream.writeln("\tDato inserito correttamente\n");
 							else
-								System.out.println("\tIl dato non è stato inserito correttamente\n");
+								stream.writeln("\tIl dato non è stato inserito correttamente\n");
 						});
 				return true;
 		 	}else{
-		  		System.out.println("Il nome inserito è già esistente");
+		  		stream.writeln("Il nome inserito è già esistente");
 		  		return false;
 		  	}
 		}),
 		//syntax : login [name]
 		LOGIN("login", "Accedi\tSintassi: login [name]", (args)->{
 			if(args.length == 0){
-		 		System.out.println("Inserisci il nomignolo di un utente contenuto nel database");
+		 		stream.writeln("Inserisci il nomignolo di un utente contenuto nel database");
 		  		return false;
 		  	}else if(args.length > 0 && database.contains(args[0])){
 		  		session = new Session(database.getUser(args[0]));
-		  		System.out.println("Loggato come: " + args[0]);
+		  		stream.writeln("Loggato come: " + args[0]);
 		  		return true;
 		 	}else{
-		  		System.out.println("Utente non registrato");
+		  		stream.writeln("Utente non registrato");
 		  		return false;
 		  	}
 		}),
 		LOGOUT("logout", "Per uscire", (args)->{
 			session = null;
-			System.out.println("Logout eseguito");
+			stream.writeln("Logout eseguito");
 			return true;
 			}),
 		//syntax : modifica [id]
 		MODIFY("modifica","Modifica il campo di una proposta\tSintassi: modifica [id]",(args)->{
 			if(args.length == 0) {
-				System.out.print("Inserisci un parametro");
+				stream.write("Inserisci un parametro");
 				return false;
 			}else if(args.length > 1) {
-				System.out.print("Inserisci un solo parametro");
+				stream.write("Inserisci un solo parametro");
 				return false;	
 			}else {
 				//inserisci id proposta
@@ -226,24 +222,24 @@ class CommandsHandler {
 				try {
 					id = Integer.parseInt(args[0]);
 					if(!session.contains(id)) {
-						System.out.println("Identificatore non esistente");
+						stream.writeln("Identificatore non esistente");
 						return false;
 					}
 				}catch(NumberFormatException e) {
-					System.out.println(INSERT_NUMBER);
+					stream.writeln(INSERT_NUMBER);
 					return false;
 				}
 				//inserisci nome del campo da modificare
 				FieldHeading field = FieldHeading.TITOLO;
-				System.out.print("Inserisci il nome del campo che vuoi modificare : ");
-				String newField = in.nextLine();
+				stream.write("Inserisci il nome del campo che vuoi modificare : ");
+				String newField = stream.read();
 				if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
 					field = Stream.of(FieldHeading.values())
 							.filter((fh)->fh.getName().equalsIgnoreCase(newField))
 							.findAny()
 							.get();
 				else {
-					System.out.println("Il nome inserito non appartiene ad un campo");
+					stream.writeln("Il nome inserito non appartiene ad un campo");
 					return false;
 				}
 				//inserisci valore del campo da modificare
@@ -252,38 +248,38 @@ class CommandsHandler {
 				//conferma modifica
 				valid = false;
 				do {
-					System.out.println("Sei sicuro di voler modificare ?");
+					stream.writeln("Sei sicuro di voler modificare ?");
 					String newValue = "";
 					if(obj!=null)
 						newValue = obj.toString();
-					System.out.println("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + newValue);
-					System.out.print("[y/n]> ");
-					String confirm = in.nextLine();
+					stream.writeln("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + newValue);
+					stream.write("[y/n]> ");
+					String confirm = stream.read();
 					if(confirm.equalsIgnoreCase("n")) {
 						valid = true;
-						System.out.println("La modifica è stata annullata");
+						stream.writeln("La modifica è stata annullata");
 						return false;
 					}else if(confirm.equalsIgnoreCase("y"))
 						valid = true;
 				}while(!valid);
 				//modifica effetiva
 				if(session.modifyProposal(id, field.getName(), obj)) {
-					System.out.println("Modifica avvenuta con successo");
+					stream.writeln("Modifica avvenuta con successo");
 					return true;
 				}else {
-					System.out.println("Modifica fallita");
+					stream.writeln("Modifica fallita");
 					return false;
 				}
 			}
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento\tSintassi: crea [categoryName]", (args)->{
 			if(args.length == 0) {
-				System.out.print("Inserisci il nome di una categoria");
+				stream.write("Inserisci il nome di una categoria");
 				return false;
 			}
-			String categoryName = in.nextLine();
+			String categoryName = args[0];
 			if(!Stream.of(CategoryHeading.values()).anyMatch((ch)->ch.getName().equalsIgnoreCase(categoryName))) {
-				System.out.println("Categoria non esistente");
+				stream.writeln("Categoria non esistente");
 				return false;
 			}
 			Category event = CategoryCache.getInstance()
@@ -295,42 +291,42 @@ class CommandsHandler {
 					.filter(( fd )->event.containsField(fd.getName()))
 					.filter(( fd )->!fd.isOptional())
 					.forEachOrdered(( fd )->{	
-						System.out.println(fd.toString());
+						stream.writeln(fd.toString());
 						Object obj = acceptValue(fd, "Inserisci un valore per il campo: ");
 						if(event.setValue(fd.getName(), obj))
-							System.out.println("\tDato inserito correttamente\n");
+							stream.writeln("\tDato inserito correttamente\n");
 						else
-							System.out.println("\tIl dato non è stato inserito correttamente\n");
+							stream.writeln("\tIl dato non è stato inserito correttamente\n");
 					});
 			//campi opzionali
 			Stream.of(FieldHeading.values())
 					.filter(( fd )->event.containsField(fd.getName()))
 					.filter(( fd )->fd.isOptional())
 					.forEachOrdered(( fd )->{
-						System.out.println(fd.toString());
-						System.out.print("Vuoi inserire questo campo opzionale?[y|n]>");
+						stream.writeln(fd.toString());
+						stream.write("Vuoi inserire questo campo opzionale?[y|n]>");
 						boolean valid = false;
 						boolean keepField = false;
 						do {
-							String confirm = in.nextLine();
+							String confirm = stream.read();
 							if(confirm.equalsIgnoreCase("y")) {
 								valid = true;
 								keepField = true;
 							}else if(confirm.equalsIgnoreCase("n")) 
 								valid = true;
 							else
-								System.out.println("Valore inserito errato: inserisci 'y' o 'n'");
+								stream.writeln("Valore inserito errato: inserisci 'y' o 'n'");
 						}while(!valid);
 						if(!keepField) {
-							System.out.println("Il campo opzionale " + fd.getName() + " non verrà inserito nella categoria");
+							stream.writeln("Il campo opzionale " + fd.getName() + " non verrà inserito nella categoria");
 							event.removeOptionalField(fd);
 						}else {
-							System.out.println("Il campo opzionale " + fd.getName() + " verrà inserito nella categoria");
+							stream.writeln("Il campo opzionale " + fd.getName() + " verrà inserito nella categoria");
 							Object obj = acceptValue(fd, "Inserisci un valore per il campo: ");
 							if(event.setValue(fd.getName(), obj))
-								System.out.println("\tDato inserito correttamente\n");
+								stream.writeln("\tDato inserito correttamente\n");
 							else
-								System.out.println("\tIl dato non è stato inserito correttamente\n");
+								stream.writeln("\tIl dato non è stato inserito correttamente\n");
 						}
 					});
 			//iscrizione proprietario
@@ -338,67 +334,67 @@ class CommandsHandler {
 			Preferenze pref = p.getPreferenze();
 			Stream.of(pref.getChoices())
 					.forEach((fh)->{
-						System.out.println(fh.toString());
-						System.out.print("Vuoi usufruirne?[y|n]>");
+						stream.writeln(fh.toString());
+						stream.write("Vuoi usufruirne?[y|n]>");
 						boolean confirm = false;
 						boolean valid = false;
 						do {
-							String ok = in.nextLine();
+							String ok = stream.read();
 							if(ok.equalsIgnoreCase("y")) {
 								confirm = true;
 								valid = true;
 							}else if(ok.equalsIgnoreCase("n"))
 								valid = true;
 							else
-								System.out.println("Il valore inserito non è corretto: inserisci 'y' o 'n'");
+								stream.writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
 						}while(!valid);
 						pref.impostaPreferenza(fh, confirm);
 					});
 			p.setOwner(session.getOwner(), pref);
 			if(session.addProposal(p)) {
-				System.out.println("La proposta è stata aggiunta alla proposte in lavorazione");
+				stream.writeln("La proposta è stata aggiunta alla proposte in lavorazione");
 				return true;
 			}else {
-				System.out.println("La proposta non è stata aggiunta");
+				stream.writeln("La proposta non è stata aggiunta");
 				return false;
 			}
 		}),
 		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte", (args)->{
 			String proposals = session.showInProgress();
 			if(proposals.equals(""))
-				System.out.print("Nessuna proposta in lavorazione!\n");
+				stream.write("Nessuna proposta in lavorazione!\n");
 			else 
-				System.out.print("Le proposte in lavorazione:\n" + session.showInProgress());
+				stream.write("Le proposte in lavorazione:\n" + session.showInProgress());
 			return true;
 		}),
 		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", (args)->{
 			if(session.noMessages()) 
-				System.out.println("Nessun messaggio.");
+				stream.writeln("Nessun messaggio.");
 			else
-				System.out.println(session.showNotification());
+				stream.writeln(session.showNotification());
 			return true;
 		}),
 		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo\tSintassi: rimuoviNotifica [id]",(args)->{
 			if(args.length == 0) {
-				System.out.print("Inserisci un parametro");
+				stream.write("Inserisci un parametro");
 				return false;
 			}else if(args.length > 1) { 
-				System.out.print("Inserisci un solo parametro");
+				stream.write("Inserisci un solo parametro");
 				return false;
 			}else {
 				int id = -1;
 				try {
 					id = Integer.parseInt(args[0]);
 				}catch(NumberFormatException e) {
-					System.out.println("Dato invalido, inserisci un numero");
+					stream.writeln("Dato invalido, inserisci un numero");
 					return false;
 				}
 				if(!session.getOwner().removeMsg(id)) {
-					System.out.println("La rimozione non è andata a buon fine");
+					stream.writeln("La rimozione non è andata a buon fine");
 					return false;
 				}else {
-					System.out.println("Rimossa correttamente");
+					stream.writeln("Rimossa correttamente");
 					return true;
 				}
 			}
@@ -407,42 +403,42 @@ class CommandsHandler {
 			noticeBoard.refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente vedrà la bacheca aggiornata
 			String content = noticeBoard.showContent();
 			if(content.equals(""))
-				System.out.print("Nessuna proposta in bacheca!\n");
+				stream.write("Nessuna proposta in bacheca!\n");
 			else 
-				System.out.print("Le proposte in bacheca:\n" + content);
+				stream.write("Le proposte in bacheca:\n" + content);
 			return true;
 		}),
 		//syntax : pubblica [id]
 		PUBLISH("pubblica", "Pubblica un evento creato\tSintassi: pubblica [id]", (args)->{
 			if(args.length == 0) {
-				System.out.print("Inserisci un parametro");
+				stream.write("Inserisci un parametro");
 				return false;
 			}else if(args.length > 1){
-				System.out.print("Inserisci un solo parametro");
+				stream.write("Inserisci un solo parametro");
 				return false;
 			}else {
 				int id = -1;
 				try {
 					id = Integer.parseInt(args[0]);
 				}catch(NumberFormatException e) {
-					System.out.println(INSERT_NUMBER);
+					stream.writeln(INSERT_NUMBER);
 					return false;
 				}
 				if(session.contains(id)) {
 					if(noticeBoard.add(session.getProposal(id))) {
 						String categoryName = session.getProposal(id).getCategoryName();
 						session.removeProposal(id);
-						System.out.println("Proposta aggiunta con successo");
+						stream.writeln("Proposta aggiunta con successo");
 						ArrayList<User> receivers = database.searchBy(categoryName);
 						receivers.remove(session.getOwner());
 						MessageHandler.getInstance().notifyByInterest(receivers, categoryName);
 						return true;
 					}else {
-						System.out.println("La proposta inserita non è valida");
+						stream.writeln("La proposta inserita non è valida");
 						return false;
 					}
 				}else {
-					System.out.println("La proposta inserita non esiste");
+					stream.writeln("La proposta inserita non esiste");
 					return false;
 				}
 			}
@@ -450,108 +446,108 @@ class CommandsHandler {
 		// syntax : partecipa [id]
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca\tSintassi: partecipa [id]",(args)->{
 			if(args.length == 0) {
-				System.out.print("Inserisci un parametro");
+				stream.write("Inserisci un parametro");
 				return false;
 			}else if(args.length > 1) {
-				System.out.print("Inserisci un solo parametro");
+				stream.write("Inserisci un solo parametro");
 				return false;
 			}else { 
 				int id = -1;
 				try {
 					id = Integer.parseInt(args[0]);
 				}catch(NumberFormatException e) {
-					System.out.println(INSERT_NUMBER);
+					stream.writeln(INSERT_NUMBER);
 					return false;
 				}
 				Preferenze pref = noticeBoard.getPreferenze(id);
 				Stream.of(pref.getChoices())
 						.forEach((fh)->{
-							System.out.println(fh.toString());
-							System.out.print("Vuoi usufruirne?[y|n]>");
+							stream.writeln(fh.toString());
+							stream.write("Vuoi usufruirne?[y|n]>");
 							boolean confirm = false;
 							boolean valid = false;
 							do {
-								String ok = in.nextLine();
+								String ok = stream.read();
 								if(ok.equalsIgnoreCase("y")) {
 									confirm = true;
 									valid = true;
 								}else if(ok.equalsIgnoreCase("n"))
 									valid = true;
 								else
-									System.out.println("Il valore inserito non è corretto: inserisci 'y' o 'n'");
+									stream.writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
 							}while(!valid);
 							pref.impostaPreferenza(fh, confirm);
 						});
 				if(!noticeBoard.signUp(id, session.getOwner(), pref)) {
-					System.out.println("L'iscrizione non è andata a buon fine");
+					stream.writeln("L'iscrizione non è andata a buon fine");
 					return false;
 				}else {
-					System.out.println("L'iscrizione è andata a buon fine");
+					stream.writeln("L'iscrizione è andata a buon fine");
 					return true;
 				}
 			}
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(args)->{
 			User actualUser = session.getOwner();
-			System.out.println(noticeBoard.showUserSubscription(actualUser));
+			stream.writeln(noticeBoard.showUserSubscription(actualUser));
 			int id = -1;
 			try {
-				System.out.print(INSERT_IDENTIFIER);
-				id = Integer.parseInt(in.nextLine());
+				stream.write(INSERT_IDENTIFIER);
+				id = Integer.parseInt(stream.read());
 			}catch(NumberFormatException e) {
-				System.out.println(INSERT_NUMBER);
+				stream.writeln(INSERT_NUMBER);
 				return false;
 			}
 			if(noticeBoard.isSignedUp(id, actualUser)) {
 				if(noticeBoard.unsubscribe(id , actualUser)) {
-					System.out.println("La disiscrizione è andata a buon fine");
+					stream.writeln("La disiscrizione è andata a buon fine");
 					return true;
 				}else {
-					System.out.println("La disiscrizione NON è andata a buon fine");
+					stream.writeln("La disiscrizione NON è andata a buon fine");
 					return false;
 				}
 			}else {
-				System.out.println("Non sei iscritto a questa proposta");
+				stream.writeln("Non sei iscritto a questa proposta");
 				return false;
 			}
 		}),
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo",(args)->{
 			FieldHeading[] fields = session.getOwner().getEditableFields();
 			FieldHeading field = FieldHeading.TITOLO;
-			System.out.print("Inserisci il nome del campo che vuoi modificare : ");
-			String newField = in.nextLine();
+			stream.write("Inserisci il nome del campo che vuoi modificare : ");
+			String newField = stream.read();
 			if(Stream.of(fields).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
 					field = Stream.of(fields)
 									.filter((fh)->fh.getName().equalsIgnoreCase(newField))
 									.findAny()
 									.get();
 			else {
-				System.out.println("Il nome inserito non appartiene ad un campo modificabile");
+				stream.writeln("Il nome inserito non appartiene ad un campo modificabile");
 				return false;
 			}
 			if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
 				boolean add = true;
-				System.out.print("Inserisci modalità di modifica: \"a\" aggiungi - \"r\" togli> ");
-				String confirm = in.nextLine();
+				stream.write("Inserisci modalità di modifica: \"a\" aggiungi - \"r\" togli> ");
+				String confirm = stream.read();
 				if(confirm.equalsIgnoreCase("r"))
 					add = false;
 				else if(!confirm.equalsIgnoreCase("a")){
-					System.out.println("Errore");
+					stream.writeln("Errore");
 					return false;
 				}
-				System.out.print("Inserisci il nome della categoria da " + (add? "aggiungere" : "rimuovere") + "> ");
-				String categoryName = in.nextLine();
+				stream.write("Inserisci il nome della categoria da " + (add? "aggiungere" : "rimuovere") + "> ");
+				String categoryName = stream.read();
 				if(Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
 					String cat = Stream.of(CategoryHeading.values()).filter((fh) -> fh.getName().equalsIgnoreCase(categoryName)).findFirst().get().getName();
 					if(session.getOwner().modifyCategory(cat, add)) {
-						System.out.println("Categoria modificata con successo");
+						stream.writeln("Categoria modificata con successo");
 						return true;
 					}else {
-						System.out.println("La modifica non è andata a buon fine");
+						stream.writeln("La modifica non è andata a buon fine");
 						return false;
 					}
 				}else {
-					System.out.println("Il nome inserito non appartiene ad una categoria");
+					stream.writeln("Il nome inserito non appartiene ad una categoria");
 					return false;
 				}
 			}else {
@@ -559,10 +555,10 @@ class CommandsHandler {
 				Object obj = null;
 				obj = acceptValue(field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
 				if(session.getOwner().setValue(field.getName(), obj)) {
-					System.out.println("Modifica avvenuta con successo");
+					stream.writeln("Modifica avvenuta con successo");
 					return true;
 				}else {
-					System.out.println("Modifica fallita");
+					stream.writeln("Modifica fallita");
 					return false;
 				}
 			}
@@ -571,54 +567,54 @@ class CommandsHandler {
 		//syntax : ritira [id]
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca\tSintassi: ritira [id]", (args)->{
 			if(args.length == 0) {
-				System.out.print("Inserisci un parametro");
+				stream.write("Inserisci un parametro");
 				return false;
 			}else if(args.length > 1) {
-				System.out.print("Inserisci un solo parametro");
+				stream.write("Inserisci un solo parametro");
 				return false;
 			}else {
 				int id = -1;
 				try {
-					System.out.print(INSERT_IDENTIFIER);
-					id = Integer.parseInt(in.nextLine());
+					stream.write(INSERT_IDENTIFIER);
+					id = Integer.parseInt(stream.read());
 				}catch(NumberFormatException e) {
-					System.out.println(INSERT_NUMBER);
+					stream.writeln(INSERT_NUMBER);
 					return false;
 				}
 				if(noticeBoard.withdraw(id, session.getOwner())) {
-					System.out.println("La proposta è stata ritirata con successo");
+					stream.writeln("La proposta è stata ritirata con successo");
 					return true;
 				}else {
-					System.out.println("La proposta non è stata ritirata");
+					stream.writeln("La proposta non è stata ritirata");
 					return false;
 				}
 			}
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", (args)->{
 			noticeBoard.refresh();
-			System.out.println("Accesso completato allo spazio personale ('help' per i comandi)");
+			stream.writeln("Accesso completato allo spazio personale ('help' per i comandi)");
 			return true;
 		}),
 		PRIVATE_SPACE_OUT("back", "Esci dal private space", (args)->{
-			System.out.println("Sei uscito dal tuo spazio personale");
+			stream.writeln("Sei uscito dal tuo spazio personale");
 			return true;
 		}),
 		INVITE("invite", "Invita utenti ad una proposta",(args)->{
 			int id = -1;
 			try {
-				System.out.print(INSERT_IDENTIFIER);
-				id = Integer.parseInt(in.nextLine());
+				stream.write(INSERT_IDENTIFIER);
+				id = Integer.parseInt(stream.read());
 			}catch(NumberFormatException e) {
-				System.out.println(INSERT_NUMBER);
+				stream.writeln(INSERT_NUMBER);
 				return false;
 			}
 			User owner = session.getOwner();
 			if(noticeBoard.isOwner(id, owner)) {
 				ArrayList<User> userList = noticeBoard.searchBy(owner, noticeBoard.getCategory(id));
-				System.out.println("Potenziali utenti da invitare: " + userList.toString());
-				System.out.println("Vuoi mandare un invito a tutti?");
-				System.out.print("[y|n]> ");
-				String confirm = in.nextLine();
+				stream.writeln("Potenziali utenti da invitare: " + userList.toString());
+				stream.writeln("Vuoi mandare un invito a tutti?");
+				stream.write("[y|n]> ");
+				String confirm = stream.read();
 				if(confirm.equalsIgnoreCase("y")) {
 					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
 					return true;
@@ -626,29 +622,29 @@ class CommandsHandler {
 					ArrayList<User> receivers = new ArrayList<>();
 					userList.stream()
 								.forEach(( u )->{
-									System.out.print("Invitare " + u.getName() + " ? [y|n]> ");
-									String answer = in.nextLine();
+									stream.write("Invitare " + u.getName() + " ? [y|n]> ");
+									String answer = stream.read();
 									if(answer.equalsIgnoreCase("y")) {
 										receivers.add(u);
-										System.out.println("L'utente verrà notificato");
+										stream.writeln("L'utente verrà notificato");
 									}else if(answer.equalsIgnoreCase("n"))
-										System.out.println(u.getName() + " non verrà invitato ");
+										stream.writeln(u.getName() + " non verrà invitato ");
 									else
-										System.out.println("Inserito valore non valido. L'utente non verrà notificato");
+										stream.writeln("Inserito valore non valido. L'utente non verrà notificato");
 								});
 					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
 					return true;
 				}else {
-					System.out.println("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
+					stream.writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
 					return false;
 				}
 			}else {
-				System.out.println("La proposta non è di tua proprietà");
+				stream.writeln("La proposta non è di tua proprietà");
 				return false;
 			}
 		}),
 		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente",(args)->{
-			System.out.print(session.getOwner().showProfile());
+			stream.write(session.getOwner().showProfile());
 			return true;
 		});
 		/**
@@ -711,17 +707,17 @@ class CommandsHandler {
 			boolean valid = false;
 			Object obj = null;
 			do {
-				System.out.print("\t" + message);
-				String value = in.nextLine();
+				stream.write("\t" + message);
+				String value = stream.read();
 				if(!field.isBinding() && !field.isOptional() && value.isEmpty())
 					valid = true;
-				System.out.print(NEW_LINE);
+				stream.write(NEW_LINE);
 				if(field.getClassType().isValidType(value)) {
 					obj = field.getClassType().parse(value);
 					valid = true;
 				}
 				if(!valid)
-					System.out.println("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
+					stream.writeln("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
 			}while(!valid);
 			return obj;
 		}

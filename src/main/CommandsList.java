@@ -163,7 +163,7 @@ class CommandsList extends ArrayList<Command>{
 			args[0] = parameters;
 		}
 		if(command.equals("help"))
-			System.out.println(toString());
+			System.out.println(toString()); //da cambiare in base a Main
 		else if(contains(command)) {
 			if(this.stream()
 				.filter((c)->c.hasName(command))
