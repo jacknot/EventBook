@@ -69,6 +69,7 @@ public class MainGUI {
 		panelScroll.setLayout(new BorderLayout(0, 0));
 		
 		textArea = new JTextArea();
+		textArea.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		panelScroll.add(scrollPane);
 		
