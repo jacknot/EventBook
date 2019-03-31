@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import categories.Category;
 import dataTypes.Pair;
+import fields.FieldHeading;
 import users.Message;
 import users.Subscriber;
 import users.User;
@@ -183,7 +185,19 @@ public class Proposal implements Serializable{
 	public void send(Message msg) {
 		owner.receive(msg);
 		subscribers.stream()
-					.forEach(( i )-> i.receive(msg));
+					.forEach(( s )-> {
+							Message m = msg;
+							Double sum = Stream.of(s.getPreferenze().getChoices())
+												.filter((fh)-> s.getPreferenze().getPreferenza(fh))
+												.map((fh)->(Double) getValue(fh.getName()))
+												.mapToDouble(Double::doubleValue)
+												.sum();
+							m.setObject(m.getObject() + ((sum==0)?"":String.format("\nValutate le sue scelte relative alle voci opzionali "
+																			+ "si ricorda di portare un totale di %s€.",
+																			sum + (Double) getValue(FieldHeading.QUOTA.getName())))
+									);
+							s.receive(m);
+						});
 	}
 	/**
 	 * Restituisce il numero di iscritti alla proposta

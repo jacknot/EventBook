@@ -44,7 +44,12 @@ public class Message implements Serializable{
 	public String getObject() {
 		return object;
 	}
-	
+	/**Imposta l'oggetto del messaggio
+	 * @param str l'oggetto del messaggio
+	 */
+	public void setObject(String str) {
+		object = str;
+	}
 	/**
 	 * Restituisce la descrizione del messaggio
 	 * @return La descrizione del messaggio

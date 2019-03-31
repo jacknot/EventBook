@@ -1,7 +1,9 @@
 package main;
 
+import java.io.IOException;
 
-import java.util.*;
+import command.*;
+import command.InOutAdapter.SimpleStreamAdapter;
 
 /**
  * Classe contente il punto di partenza da cui far iniziare il programam
@@ -9,62 +11,31 @@ import java.util.*;
  *
  */
 public class Main {
-	
-	private static final String NEW_LINE = "\n";
-	private static final String WELCOME = "Welcome to EventBook";
 
-
-	private static CommandsHandler handler;
-	private static Scanner inMain; 
+	private static CommandHandler handler;
 	
 	/**
 	 * Il punto da cui far iniziare il programma
 	 * @param args lista di argomenti da passare
 	 */
 	public static void main(String[] args) {
-		System.out.println(WELCOME + NEW_LINE);
+		SimpleStreamAdapter ssa = new SimpleStreamAdapter();
 		
-		handler = CommandsHandler.getInstance();
-		handler.setStream(new SimpleStream());
-		handler.load();
-		
-		inMain = new Scanner(System.in);
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 		
+			try {
+				handler.close();
+				ssa.writeln(StringConstant.EXITMSG);
+				ssa.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}));
+		System.out.println(StringConstant.WELCOME);
+		handler = CommandHandler.getInstance(ssa);
 		do {
-			String command = inMain.nextLine();
+			String command = ssa.read(StringConstant.NEW_LINE);
 			handler.run(command.trim());
 		}while(true);
-	}
-
-}
-
-
-class SimpleStream implements InOutStream{
-	
-	private Scanner in;
-	
-	public SimpleStream() {
-		in = new Scanner(System.in);
-	}
-	
-	@Override
-	public String read() {
-		return in.nextLine();
-	}
-
-	@Override
-	public void write(String str) {
-		System.out.print(str);	
-	}
-
-	@Override
-	public void writeln(String str) {
-		System.out.println(str);	
-	}
-
-	@Override
-	public void close() {
-		in.close();
-		//inMain.close();
-	}
-	
+	}	
 }

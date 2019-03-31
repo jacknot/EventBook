@@ -26,7 +26,6 @@ public class Subscriber {
 		this.user = user;
 		this.preferenze = preferenze;
 	}
-	
 	/**
 	 * Ritorna l'User
 	 * @return l'User
@@ -34,7 +33,6 @@ public class Subscriber {
 	public User getUser() {
 		return user;
 	}
-	
 	/**
 	 * Ritorna le Preferenze
 	 * @return le Preferenze
@@ -42,15 +40,11 @@ public class Subscriber {
 	public Preferenze getPreferenze() {
 		return preferenze;
 	}
-	
-	//Metodi che servono dall'utente
-	
 	/**
 	 * Ritorna il nome dell'User
 	 * @return Il nome dell'User
 	 */
 	public String getName() {
-		//Modifica per la versione 4
 		return user.getName();
 	}
 	

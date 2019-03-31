@@ -178,7 +178,7 @@ public enum State implements Serializable{
 	private static final String WITHDRAWNOBJ = "Ritiro evento";
 	//data ora luogo importo
 	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
-													+ "\nSi ricorda di portare %s€ per l'organizzazione";
+													+ "\nPer la partecipazione sono %f€.";
 	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
 													+ "\nL'evento è quindi annullato.";
 	private static final String WITHDRAWNFORMAT = "Siamo spiacenti di informarla che l'evento %s è stato ritirato dal proprietario."
