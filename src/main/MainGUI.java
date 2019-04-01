@@ -20,14 +20,12 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 
-import javax.swing.JButton;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class MainGUI {
 	

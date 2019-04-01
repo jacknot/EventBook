@@ -14,11 +14,11 @@ import utility.Parser;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public enum ClassType {
+public enum ClassType{
 
 	STRING(String.class, "[^\n]+", "Stringa", (str) -> str),
-	INTEGER(Integer.class, "\\d+", "Numero intero", (i) -> Integer.parseInt(i)),
-	REAL(Double.class, "\\d+\\.\\d{2}", "Numero reale con . e due decimali", (real) -> Double.parseDouble(real)),
+	INTEGER(Integer.class, "\\d+", "Numero positivo intero", (i) -> Integer.parseInt(i)),
+	REAL(Double.class, "\\d+\\.\\d{2}", "Numero reale positivo con . e due decimali", (real) -> Double.parseDouble(real)),
 	DATA(LocalDate.class, "(0[1-9]|[1-2][0-9]|3[0-1])\\/(0[1-9]|1[0-2])\\/(2[0-9]{3})", "gg/mm/aaaa", (data) ->{
 		return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}),

@@ -44,7 +44,7 @@ public enum FieldHeading{
 					false, true, ClassType.REAL),
 	MERCHANDISE("Merchandise", "Prezzo dei Gadet e Merchandise ufficiali della/e band", false, true, ClassType.REAL),
 	
-	//Nuovi campi aggiunti per la versione 4 (Per l'utente)
+	//campi per il profilo
 	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso", 
 				true, false, ClassType.STRING),
 	FASCIA_ETA_UTENTE("Fascia di età utente", "Estremo inferiore e superiore di un intervallo di età entro cui cade quella del fruitore", 

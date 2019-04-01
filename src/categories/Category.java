@@ -89,22 +89,30 @@ public abstract class Category implements Cloneable,Serializable{
 	public boolean isValid() {
 		toDefault();
 		//contenuto è valido
-		if(fields.isValid()) {
-			//la data è seguente o uguale al termine ultimo iscrizione
-			if(((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
-									.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())) >= 0) {
+		if(fields.isValid()
+				//la data è seguente o uguale al termine ultimo iscrizione
+				&& (((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
+										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())) >= 0) 
 				//il termine ultimo iscrizione segue o egualia il termine di ritiro
-				if(((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
-										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName())) >= 0){
-					//E' possibile iscriversi all'evento quando questo viene pubblicato
-					if(((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
-											.compareTo(LocalDate.now()) >= 0) {
-						
-						return true;
-					}
-				}
-			}
-		}
+				&& (((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
+										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName())) >= 0)
+				//E' possibile iscriversi all'evento quando questo viene pubblicato
+				&& (((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
+										.compareTo(LocalDate.now()) >= 0) 
+				&& (((Double)fields.getValue(FieldHeading.QUOTA.getName())) >= 0)
+				&& (fields.getValue(FieldHeading.DURATA.getName())==null?true:
+						(((Double)fields.getValue(FieldHeading.DURATA.getName())) >= 0))
+				&& (fields.getValue(FieldHeading.DATAFINE.getName())==null?true:
+						(((LocalDate)fields.getValue(FieldHeading.DATAFINE.getName()))
+												.compareTo((LocalDate)fields.getValue(FieldHeading.DATA.getName())) >= 0))
+				&& (fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())==null?true:
+						(((Integer)fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())) >= 0))
+				&& Stream.of(FieldHeading.values())
+							.filter((fh)->fh.isOptional())
+							.filter((fh)->containsField(fh.getName()))
+							.allMatch((fh)-> fields.getValue(fh.getName())==null?true:(((Double)fields.getValue(fh.getName())) >= 0))
+				)
+			return true;
 		return false;
 	}
 	

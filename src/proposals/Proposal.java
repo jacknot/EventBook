@@ -189,7 +189,7 @@ public class Proposal implements Serializable{
 		receivers.add(owner);
 		receivers.addAll(subscribers);
 		//owner.receive(msg);
-		subscribers.stream()
+		receivers.stream()
 					.forEach(( s )-> {
 							Message m = msg;
 							if(msg.getObject().equals(StringConstant.CONFIRMOBJ)) {
@@ -202,8 +202,8 @@ public class Proposal implements Serializable{
 																				+ "si ricorda di portare un totale di %s€.",
 																				sum + (Double) getValue(FieldHeading.QUOTA.getName())))
 										);
-								s.receive(m);
 							}
+							s.receive(m);
 						});
 	}
 	/**
