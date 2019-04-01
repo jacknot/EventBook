@@ -188,7 +188,6 @@ public class Proposal implements Serializable{
 		ArrayList <Subscriber> receivers = new ArrayList <Subscriber>();
 		receivers.add(owner);
 		receivers.addAll(subscribers);
-		//owner.receive(msg);
 		receivers.stream()
 					.forEach(( s )-> {
 							Message m = msg;
@@ -198,9 +197,9 @@ public class Proposal implements Serializable{
 													.map((fh)->(Double) getValue(fh.getName()))
 													.mapToDouble(Double::doubleValue)
 													.sum();
-								m.setObject(m.getObject() + ((sum==0)?"":String.format("\nValutate le sue scelte relative alle voci opzionali "
+								m.setObject(m.getObject() + String.format("\nValutate le sue scelte relative alle voci opzionali "
 																				+ "si ricorda di portare un totale di %s€.",
-																				sum + (Double) getValue(FieldHeading.QUOTA.getName())))
+																				(sum + (Double) getValue(FieldHeading.QUOTA.getName())))
 										);
 							}
 							s.receive(m);
