@@ -21,9 +21,13 @@ import java.awt.Font;
 
 import javax.swing.JButton;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainGUI {
 	
@@ -32,6 +36,7 @@ public class MainGUI {
 	private JTextArea textArea;
 	private JTextField textFieldCommands;
 	private JButton btnSend;
+	private ArrayList<String> commandsHistory;
 
 	/**
 	 * Launch the application.
@@ -63,6 +68,8 @@ public class MainGUI {
 		frame.setBounds(100, 100, 815, 564);
 		frame.setTitle("EventBook");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		commandsHistory = new ArrayList<String>();
 		
 		JPanel panelScroll = new JPanel();
 		panelScroll.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -106,10 +113,23 @@ public class MainGUI {
 				textFieldCommands.setText("");
 				textFieldCommands.requestFocus();
 		});
+		
+		textFieldCommands.addKeyListener(new KeyAdapter() { //da sistemare
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_UP) {
+					int index = Math.max(0, commandsHistory.size()-2);
+					textFieldCommands.setText(commandsHistory.get(index));
+				}			
+			}
+		
+		});
 
 		
 		btnSend.addActionListener(event -> {
 			String command = textFieldCommands.getText().trim();
+			commandsHistory.add(command);
 			textArea.append(command + "\n");
 			handler.run(command);
 			textFieldCommands.setText("");
