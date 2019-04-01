@@ -3,7 +3,7 @@ package dataTypes;
 import java.io.Serializable;
 
 /**
- * Classe che permette di salvare una coppia di valori di tipo uguale o diverso
+ * Classe che permette di gestire una coppia di valori di tipo uguale o diverso.
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  * @param <T1> Tipo del primo attributo
@@ -11,6 +11,8 @@ import java.io.Serializable;
  */
 public class Pair<T1, T2> implements Serializable{
 
+	//Attributi
+	
 	private static final long serialVersionUID = 1L;
 	
 	private T1 first;
@@ -33,7 +35,7 @@ public class Pair<T1, T2> implements Serializable{
 	}
 	
 	/**
-	 * Imposta il primo oggetto della coppia
+	 * Imposta il valore del primo oggetto della coppia
 	 * @param first nuovo valore
 	 */
 	public void setFirst(T1 first) {
@@ -49,7 +51,7 @@ public class Pair<T1, T2> implements Serializable{
 	}
 	
 	/**
-	 * Imposta il secondo oggetto della coppia
+	 * Imposta il valore del secondo oggetto della coppia
 	 * @param second nuovo valore
 	 */
 	public void setSecond(T2 second) {

@@ -13,13 +13,10 @@ public class Field <T> implements Serializable{
 	
 	//Attributi
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Contiene le informazioni generali di un campo
+	 * Contiene le informazioni generali di un campo (nome, descrizione, obbligatorietà, opzionalità, tipo)
 	 */
 	private FieldHeading heading;
 	
@@ -29,7 +26,7 @@ public class Field <T> implements Serializable{
 	private T value;
 	
 	/**
-	 * La stringa usata per mostrare le principali caratteristiche del campo
+	 * Stringa usata per mostrare le principali caratteristiche del campo
 	 */
 	private final static String FORMAT_TO_STRING ="%s <%s> : %s";
 	

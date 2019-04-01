@@ -8,14 +8,15 @@ import users.User;
 import users.Message;
 
 
-/**Classe che contiene la lista di tutti i Fruitori registrati al programma.<br>
+/**
+ * Classe che gestisce la lista di tutti i Fruitori registrati al programma.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
 public class UserDatabase implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Lista contenente i fruitori registrati
+	 * Lista contenente i Fruitori registrati al programma
 	 */
 	private ArrayList<User> users;
 	/**
@@ -25,7 +26,7 @@ public class UserDatabase implements Serializable{
 		this.users = new ArrayList<User>();
 	}
 	/**
-	 * Restituisce il fruitore di cui si è inserito il nome, se presente
+	 * Restituisce il Fruitore di cui si è passato il nome come parametro, se presente nella lista
 	 * @param name il nome del fruitore
 	 * @return il fruitore di cui si è inserito il nome, null altrimenti
 	 */
@@ -37,7 +38,7 @@ public class UserDatabase implements Serializable{
 		return null;
 	}
 	/**
-	 * Controlla se il fruitore è registrato
+	 * Controlla se il Fruitore è registrato
 	 * @param name Il nome del fruitore da cercare
 	 * @return True - se esiste un fruitore con tale nome <br>False - se il fruitore non esiste
 	 */
@@ -50,7 +51,7 @@ public class UserDatabase implements Serializable{
 	}
 	
 	/**
-	 * Registra un fruitore nella lista Registrazioni
+	 * Registra un Fruitore nella lista
 	 * @param name Nome del fruitore da registrare
 	 * @return True - l'utente è stato registrato con successo<br>False - l'utente non è stato registrato
 	 */
@@ -63,8 +64,8 @@ public class UserDatabase implements Serializable{
 	}
 	
 	/**
-	 * Permette al fruitore specificato di ricevere il Messaggio inviato come parametro
-	 * @param name nome del fruitore
+	 * Permette al Fruitore specificato di ricevere il Messaggio inviato come parametro
+	 * @param name nome del Fruitore
 	 * @param message messaggio da inviare al fruitore
 	 */
 	@Deprecated
@@ -76,9 +77,9 @@ public class UserDatabase implements Serializable{
 	}
 	
 	/**
-	 * Restitusice la lista di utenti a cui interessa la categoria di cui si è inserito il nome
+	 * Restitusice la lista di utenti a cui interessa la categoria il cui nome è passato come parametro
 	 * @param categoryName il nome della categoria
-	 * @return la lista contenente tutti gli utenti interessati nella categoria inserita
+	 * @return la lista contenente tutti gli utenti interessati dalla categoria specificata
 	 */
 	public ArrayList<User> searchBy(String categoryName){
 		return users.stream()

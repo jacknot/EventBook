@@ -2,27 +2,29 @@ package dataTypes;
 
 import java.io.Serializable;
 
-/**Classe con il compito di ospitare due dati numerici interi
+/**
+ * La classe ha il compito di gestire un intervallo.<br>
+ * Gli estremi dell'intervallo sono due dati numerici interi
  * @author Matteo Salvalai [715827], Lorenzo Maestrini [715780], Jacopo Mora [715149]
  *
  */
 public class Interval implements Serializable{
 
+	//Attributi
+	
 	private static final long serialVersionUID = 1L;
-	//ATTRIBUTI
 	/**
-	 * Il minore fra i due dati
+	 * Estremo inferiore dell'intervallo
 	 */
 	private int infExt;
 	/**
-	 * Il maggiore fra i due dati
+	 * Estremo superiore dell'intervallo
 	 */
 	private int supExt;
 	
-	//COSTRUTTORE
 	/**Costruttore 
-	 * @param iE Il dato numerico pi� piccolo si vuole assegnare<br>
-	 * @param sE Il dato numerico pi� grande si vuole assegnare
+	 * @param iE Il dato che rappresenta l'estremo inferiore dell'intervallo
+	 * @param sE Il dato che rappresenta l'estremo superiore dell'intervallo
 	 */
 	public Interval(int iE, int sE) {
 		if(iE > sE) {
@@ -61,7 +63,7 @@ public class Interval implements Serializable{
 		this.supExt = supE;
 	}
 	//METODI
-	/**Restituisce l'intervallo fra i due dati numerici
+	/**Restituisce l'intervallo (gap) fra i due dati numerici
 	 * @return L'intervallo fra i due dati
 	 */
 	//estremoSuperiore >= estremoInferiore

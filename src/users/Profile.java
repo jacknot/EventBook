@@ -10,19 +10,20 @@ import fields.FieldHeading;
 import fields.FieldSet;
 import fields.FieldSetFactory;
 
-/**La classe User ha il compito di fornire una struttura adatta a gestire il profilo di un fruitore del social network.<br>
+/**La classe Profile ha il compito di fornire una struttura adatta a gestire il profilo di un fruitore del social network.<br>
  * Ad ogni profilo è associato un nomignolo, una fascia d'età ed un insieme di categorie di interesse<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
 public class Profile implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Contiene i campi
 	 */
 	private FieldSet fields;
+	/**
+	 * Stringa usata per mostrare le caratteristiche del profilo
+	 */
 	private final static String TOSTRING_FORMAT = "Nomignolo: %s%nFascia di età utente: %s%nCategorie di interesse:%n%s"; 
 	/**
 	 * Costruttore
@@ -32,7 +33,7 @@ public class Profile implements Serializable{
 		fields.setValue(FieldHeading.NOMIGNOLO.getName(), name);
 	}
 	/**
-	 * Restituisce il valore del campo di cui si è inserito il nome
+	 * Restituisce il valore del campo il cui nome è passato come parametro
 	 * @param name il nome del campo di cui si vuole il valore
 	 * @return Il valore del campo inserito. Restituisce null se il campo non esiste
 	 */
@@ -40,13 +41,17 @@ public class Profile implements Serializable{
 		return fields.getValue(name);
 	}
 	
+	/**
+	 * Restituisce l'elenco delle categorie d'interesse contenute nel profilo
+	 * @return elenco delle categorie di interesse
+	 */
 	private CategoriesOfInterest getCategories(){
 		return (CategoriesOfInterest)fields.getValue(FieldHeading.CATEGORIE_INTERESSE.getName());
 	}
 	
 	/**
-	 * Modifica la lista di categoria di interesse dell'utente
-	 * @param category categoria di riferimento
+	 * Modifica (aggiunge/rimuove) una categoria alla lista delle categorie di interesse dell'utente
+	 * @param category nome della categoria da modificare
 	 * @param add True se categoria è da aggiungere <br> False se da rimuovere
 	 * @return True se operazione completata correttamente <br> False altrimenti
 	 */
@@ -59,7 +64,7 @@ public class Profile implements Serializable{
 		return setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), cat);
 	}
 	/**
-	 * Modifica il valore del campo di cui si è inserito il nome
+	 * Modifica il valore del campo di cui si è passatp il nome come parametro
 	 * @param name il nome del campo
 	 * @param nValue il nuovo valore del campo
 	 * @return True - il campo è stato modificato<br>False - il campo non è stato modificato
@@ -71,7 +76,7 @@ public class Profile implements Serializable{
 	}
 	
 	/**
-	 * Verifica se tra le categorie di interesse dell'utente compare la categoria cercata
+	 * Verifica se tra le categorie di interesse dell'utente compare la categoria il cui nome è passato come argomento
 	 * @param categoryName nome della categoria
 	 * @return True se presente <br> False altrimenti
 	 */

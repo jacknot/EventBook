@@ -35,7 +35,6 @@ public class User implements Serializable{
 	 * @return Il nome del fruitore
 	 */
 	public String getName() {
-		//Modifica per la versione 4
 		return profile.getValue(FieldHeading.NOMIGNOLO.getName()).toString();
 	}
 	
@@ -50,15 +49,15 @@ public class User implements Serializable{
 	/**
 	 * Rimuove un messaggio 
 	 * @param index l'id del messaggio
-	 * @return l'esito della rimizione
+	 * @return l'esito della rimozione
 	 */
 	public boolean removeMsg(int index) {
 		return privateSpace.remove(index);
 	}
 	
 	/**
-	 * Controlla se i due utenti sono uguali
-	 * @param f utente da controllare
+	 * Controlla se i due utenti sono uguali (hanno lo stesso nome)
+	 * @param f utente da confrontare
 	 * @return true se uguali<br>false altrimenti
 	 */
 	public boolean equals(User f) {
@@ -73,7 +72,6 @@ public class User implements Serializable{
 		return this.privateSpace.toString();
 	}
 	
-	//Metodo aggiunto per la versione 4
 	/**
 	 * Visualizza il profilo dell'utente
 	 * @return Stringa che rappresenta il profilo
@@ -91,7 +89,7 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * Modifica il valore del campo di cui si è inserito il nome
+	 * Modifica il valore del campo di cui è passato il nome come parametro
 	 * @param name il nome del campo
 	 * @param nValue il nuovo valore del campo
 	 * @return True - il campo è stato modificato<br>False - il campo non è stato modificato
@@ -111,7 +109,7 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * Verifica se tra le categorie di interesse dell'utente compare la categoria cercata
+	 * Verifica se tra le categorie di interesse dell'utente compare la categoria il cui nome è passato come parametro
 	 * @param categoryName nome della categoria
 	 * @return True se presente <br> False altrimenti
 	 */
@@ -120,7 +118,7 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * Verifica la presenza o meno di messaggi nello spazio personale
+	 * Verifica se lo spazio personale è vuoto (non ha messaggi)
 	 * @return True se nessun messaggio presente <br> False altrimenti
 	 */
 	public boolean noMessages() {
