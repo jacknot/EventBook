@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import categories.Category;
+import command.StringConstant;
 import dataTypes.Pair;
 import fields.FieldHeading;
 import users.Message;
@@ -183,20 +184,26 @@ public class Proposal implements Serializable{
 	 * @param msg il messaggio da inviare
 	 */
 	public void send(Message msg) {
-		owner.receive(msg);
+		//ARRAY TEMPORANEO
+		ArrayList <Subscriber> receivers = new ArrayList <Subscriber>();
+		receivers.add(owner);
+		receivers.addAll(subscribers);
+		//owner.receive(msg);
 		subscribers.stream()
 					.forEach(( s )-> {
 							Message m = msg;
-							Double sum = Stream.of(s.getPreferenze().getChoices())
-												.filter((fh)-> s.getPreferenze().getPreferenza(fh))
-												.map((fh)->(Double) getValue(fh.getName()))
-												.mapToDouble(Double::doubleValue)
-												.sum();
-							m.setObject(m.getObject() + ((sum==0)?"":String.format("\nValutate le sue scelte relative alle voci opzionali "
-																			+ "si ricorda di portare un totale di %s€.",
-																			sum + (Double) getValue(FieldHeading.QUOTA.getName())))
-									);
-							s.receive(m);
+							if(msg.getObject().equals(StringConstant.CONFIRMOBJ)) {
+								Double sum = Stream.of(s.getPreferenze().getChoices())
+													.filter((fh)-> s.getPreferenze().getPreferenza(fh))
+													.map((fh)->(Double) getValue(fh.getName()))
+													.mapToDouble(Double::doubleValue)
+													.sum();
+								m.setObject(m.getObject() + ((sum==0)?"":String.format("\nValutate le sue scelte relative alle voci opzionali "
+																				+ "si ricorda di portare un totale di %s€.",
+																				sum + (Double) getValue(FieldHeading.QUOTA.getName())))
+										);
+								s.receive(m);
+							}
 						});
 	}
 	/**

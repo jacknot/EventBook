@@ -99,6 +99,7 @@ public abstract class Category implements Cloneable,Serializable{
 					//E' possibile iscriversi all'evento quando questo viene pubblicato
 					if(((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
 											.compareTo(LocalDate.now()) >= 0) {
+						
 						return true;
 					}
 				}

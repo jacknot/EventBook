@@ -3,6 +3,7 @@ package proposals;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import command.StringConstant;
 import fields.FieldHeading;
 import users.Message;
 
@@ -71,7 +72,7 @@ public enum State implements Serializable{
 			LocalDate todayDate = LocalDate.now();
 			LocalDate lastSubDate = (LocalDate) p.getValue(FieldHeading.TERMINEISCRIZIONE.getName());
 			LocalDate lastSigningDay = (LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName());
-			String title = p.getValue(FieldHeading.TITOLO.getName())== null? UNKNOWN_TITLE:
+			String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 															(String)p.getValue(FieldHeading.TITOLO.getName());
 			int tol = p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())== null? 0:
 				(Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
@@ -82,8 +83,8 @@ public enum State implements Serializable{
 				p.setState(CLOSED);
 				p.send(new Message(	//messaggio che avvisa che la proposta è chiusa
 						title+": "+LocalDate.now(),
-						CONFIRMOBJ,															
-						String.format(CONFIRMFORMAT, title,
+						StringConstant.CONFIRMOBJ,															
+						String.format(StringConstant.CONFIRMFORMAT, title,
 													p.getValue(FieldHeading.DATA.getName()),
 													p.getValue(FieldHeading.ORA.getName()),
 													p.getValue(FieldHeading.LUOGO.getName()),
@@ -98,8 +99,8 @@ public enum State implements Serializable{
 				
 				p.send(new Message(	//messaggio che avvisa che la proposta è fallita
 						title+": "+LocalDate.now(),	
-						FAILUREOBJ,
-						String.format(FAILUREFORMAT, title)
+						StringConstant.FAILUREOBJ,
+						String.format(StringConstant.FAILUREFORMAT, title)
 						));
 				return true;
 			}
@@ -111,12 +112,12 @@ public enum State implements Serializable{
 		public boolean withdraw(Proposal p) {
 			if(LocalDate.now().compareTo((LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName())) <= 0) {
 				p.setState(WITHDRAWN);
-				String title = p.getValue(FieldHeading.TITOLO.getName())== null? UNKNOWN_TITLE:
+				String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 					(String)p.getValue(FieldHeading.TITOLO.getName());
 				p.send(new Message(	//messaggio che avvisa che la proposta è stata ritirata
 						title+": "+ LocalDate.now(),
-						WITHDRAWNOBJ,															
-						String.format(WITHDRAWNFORMAT, title)							
+						StringConstant.WITHDRAWNOBJ,															
+						String.format(StringConstant.WITHDRAWNFORMAT, title)							
 						));
 				return true;
 			}
@@ -172,17 +173,6 @@ public enum State implements Serializable{
 		}
 	};
 	
-	private static final String UNKNOWN_TITLE = "(titolo mancante)";
-	private static final String CONFIRMOBJ = "Conferma evento";
-	private static final String FAILUREOBJ = "Fallimento evento";
-	private static final String WITHDRAWNOBJ = "Ritiro evento";
-	//data ora luogo importo
-	private static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
-													+ "\nPer la partecipazione sono %f€.";
-	private static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
-													+ "\nL'evento è quindi annullato.";
-	private static final String WITHDRAWNFORMAT = "Siamo spiacenti di informarla che l'evento %s è stato ritirato dal proprietario."
-			+ "\nL'evento è quindi annullato.";
 	/**
 	 * Modifica lo stato della proposta in modo da poterla rendere adatta al pubblico
 	 * @param p la proposta a cui fare cambiare stato
