@@ -2,8 +2,9 @@ package main;
 
 import java.io.IOException;
 
-import command.*;
-import command.InOutAdapter.SimpleStreamAdapter;
+import main.command.InOutAdapter.SimpleStreamAdapter;
+import main.commands.*;
+import utility.StringConstant;
 
 /**
  * Classe contente il punto di partenza da cui far iniziare il programam

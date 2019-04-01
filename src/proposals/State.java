@@ -3,7 +3,7 @@ package proposals;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import command.StringConstant;
+import utility.StringConstant;
 import fields.FieldHeading;
 import users.Message;
 

@@ -1,4 +1,4 @@
-package command;
+package utility;
 
 /**
  * Contiene tutte le stringhe costanti usate

@@ -1,9 +1,9 @@
-package command.InOutAdapter;
+package main.command.InOutAdapter;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-import command.InOutStream;
+import main.commands.InOutStream;
 
 /**
  * Classe che implemeneta l'interfaccia InOut con lo scopo di fare da ponte fra la console e gli utilizzatori dell'interfaccia

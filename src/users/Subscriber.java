@@ -1,5 +1,7 @@
 package users;
 
+import java.io.Serializable;
+
 import fields.FieldHeading;
 import proposals.Preferenze;
 
@@ -7,7 +9,12 @@ import proposals.Preferenze;
  * Ogni oggetto SUbscriber associa ad un User, l'insieme delle Preferenze relative alla proposta al quale è iscritto<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class Subscriber {
+public class Subscriber implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * L'utente iscritto
 	 */

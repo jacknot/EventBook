@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import categories.Category;
-import command.StringConstant;
+import utility.StringConstant;
 import dataTypes.Pair;
 import fields.FieldHeading;
 import users.Message;

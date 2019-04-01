@@ -1,4 +1,4 @@
-package command;
+package main.commands;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import proposals.ProposalHandler;
 import users.UserDatabase;
 import utility.FileHandler;
 import utility.Session;
+import utility.StringConstant;
 
 public class Context implements Closeable{
 	

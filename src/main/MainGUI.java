@@ -10,9 +10,10 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
-import command.CommandHandler;
-import command.InOutStream;
-import command.StringConstant;
+import main.commands.CommandHandler;
+import main.commands.CommandsHistory;
+import main.commands.InOutStream;
+import utility.StringConstant;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,7 +24,6 @@ import javax.swing.JButton;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -35,8 +35,7 @@ public class MainGUI {
 	private JFrame frame;
 	private JTextArea textArea;
 	private JTextField textFieldCommands;
-	private JButton btnSend;
-	private ArrayList<String> commandsHistory;
+	private CommandsHistory commandsHistory;
 
 	/**
 	 * Launch the application.
@@ -69,7 +68,7 @@ public class MainGUI {
 		frame.setTitle("EventBook");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		commandsHistory = new ArrayList<String>();
+		commandsHistory = new CommandsHistory();
 		
 		JPanel panelScroll = new JPanel();
 		panelScroll.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -93,12 +92,10 @@ public class MainGUI {
 		frame.getContentPane().add(panelCommands, BorderLayout.SOUTH);
 		panelCommands.setLayout(new BorderLayout(0, 0));
 		
-		btnSend = new JButton("Invia");
-		panelCommands.add(btnSend, BorderLayout.EAST);
-		
 		textFieldCommands = new JTextField();		
 		textFieldCommands.setColumns(10);
-		panelCommands.add(textFieldCommands);		
+		panelCommands.add(textFieldCommands);	
+		textFieldCommands.requestFocus();
 		
 		GUIStream guis = new GUIStream();
 		
@@ -108,32 +105,27 @@ public class MainGUI {
 				String command = textFieldCommands.getText().trim();
 				if(command != null) {
 					textArea.append(command + "\n");
+					commandsHistory.add(command);
 					handler.run(command);
 				}
 				textFieldCommands.setText("");
 				textFieldCommands.requestFocus();
 		});
 		
-		textFieldCommands.addKeyListener(new KeyAdapter() { //da sistemare
+		textFieldCommands.addKeyListener(new KeyAdapter() { 
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_UP) {
-					int index = Math.max(0, commandsHistory.size()-2);
-					textFieldCommands.setText(commandsHistory.get(index));
-				}			
+				if(e.getKeyCode() == KeyEvent.VK_UP){
+					textFieldCommands.setText(commandsHistory.previousCommand());
+				} else if(e.getKeyCode() == KeyEvent.VK_DOWN){
+					textFieldCommands.setText(commandsHistory.nextCommand());
+				} else if(e.getKeyCode() == KeyEvent.VK_RIGHT){ //Autocompletamento
+					String hint = handler.hint(textFieldCommands.getText());
+					textFieldCommands.setText(hint);
+				}
 			}
 		
-		});
-
-		
-		btnSend.addActionListener(event -> {
-			String command = textFieldCommands.getText().trim();
-			commandsHistory.add(command);
-			textArea.append(command + "\n");
-			handler.run(command);
-			textFieldCommands.setText("");
-			textFieldCommands.requestFocus();
 		});
 		
 		frame.addWindowListener(new WindowAdapter() {

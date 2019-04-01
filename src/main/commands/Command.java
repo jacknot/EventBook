@@ -1,4 +1,4 @@
-package command;
+package main.commands;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -12,6 +12,7 @@ import proposals.Preferenze;
 import proposals.Proposal;
 import users.User;
 import utility.MessageHandler;
+import utility.StringConstant;
 /**
  * Enumerazione contente i vari comandi disponibili all'utente, comprese le loro funzionalità
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]

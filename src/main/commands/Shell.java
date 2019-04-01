@@ -1,4 +1,4 @@
-package command;
+package main.commands;
 
 /**
  * Interfaccia funzionale con il compito di definire il comportamento dei comandi attraverso l'utilizzo di parametri

@@ -1,10 +1,12 @@
-package command;
+package main.commands;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import utility.StringConstant;
 
 /**
  * Contenitore in grado di gestire una lista di comandi e di poter fare operazioni su di essi
@@ -139,6 +141,19 @@ public class CommandHandler implements Closeable{
 		cList.remove(Command.MODIFY_PROFILE);
 		cList.remove(Command.PRIVATE_SPACE_OUT); //Accesso al private space
 	}
+	
+	/**Restituisce il comando (se presente) che inizia con la stringa passata per parametro
+	 * @param initial Stringa iniziale di un comando
+	 * @return Nome del comando se trovato <br> la stringa iniziale altrimenti
+	 */
+	public String hint(String initial) {
+		for(Command command: cList) {
+			if(command.getNome().startsWith(initial))
+				return command.getNome() + " ";
+		}
+		return initial;
+	}
+	
 	
 	/**
 	 * Estrae dall'input dell'utente il comando, separandolo dagli eventuali parametri

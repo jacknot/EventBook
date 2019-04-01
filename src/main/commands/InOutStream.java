@@ -1,4 +1,4 @@
-package command;
+package main.commands;
 
 import java.io.Closeable;
 import java.io.IOException;
