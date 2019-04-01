@@ -8,7 +8,7 @@ import categories.CategoryCache;
 import categories.CategoryHeading;
 import fields.FieldHeading;
 import fields.FieldSetFactory;
-import proposals.Preferenze;
+import proposals.Preferences;
 import proposals.Proposal;
 import users.User;
 import utility.MessageHandler;
@@ -18,19 +18,19 @@ import utility.StringConstant;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public enum Command {
+public enum Commands {
 
-		EXIT("exit", "Esci dal programma",(ctx, args)->{
+		EXIT("exit", "Esci dal programma","",(ctx, args)->{
 			System.exit(0);
 			return true;
 			}),
-		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", (ctx, args)->{
+		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", "", (ctx, args)->{
 			ctx.getIOStream().writeln("Le categorie disponibili: ");
 			Stream.of(CategoryHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
 			return true;
 		}),
 		//syntax : categoria [category]
-		CATEGORY("categoria", "Mostra la categoria disponibile\tSintassi: categoria [name]", (ctx, args)->{
+		CATEGORY("categoria", "Mostra la categoria disponibile", "categoria [name]", (ctx, args)->{
 			if(args.length == 0){
 			 	ctx.getIOStream().writeln("Inserisci il nome di una categoria");
 			  	return false;
@@ -46,7 +46,7 @@ public enum Command {
 			  }
 		}),
 		//syntax : descrizione [category]
-		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile\tSintassi: descrizione [name]", (ctx, args)->{
+		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", "descrizione [name]", (ctx, args)->{
 			if(args.length == 0){
 		 		ctx.getIOStream().writeln("Inserisci il nome di una categoria");
 		  		return false;
@@ -59,7 +59,7 @@ public enum Command {
 		  	}
 		}),
 		//syntax : registra [name]
-		REGISTRATION("registra", "Registra un fruitore\tSintassi: registra [name]", (ctx, args)->{
+		REGISTRATION("registra", "Registra un fruitore", "registra [name]", (ctx, args)->{
 			if(args.length == 0){
 		 		ctx.getIOStream().writeln("Inserisci il nomignolo dell'utente da registrare");
 		  		return false;
@@ -85,7 +85,7 @@ public enum Command {
 		  	}
 		}),
 		//syntax : login [name]
-		LOGIN("login", "Accedi\tSintassi: login [name]", (ctx, args)->{
+		LOGIN("login", "Accedi", "login [name]", (ctx, args)->{
 			if(args.length == 0){
 		 		ctx.getIOStream().writeln("Inserisci il nomignolo di un utente contenuto nel database");
 		  		return false;
@@ -98,13 +98,13 @@ public enum Command {
 		  		return false;
 		  	}
 		}),
-		LOGOUT("logout", "Per uscire", (ctx, args)->{
+		LOGOUT("logout", "Per uscire","", (ctx, args)->{
 			ctx.resetSession();
 			ctx.getIOStream().writeln("Logout eseguito");
 			return true;
 			}),
 		//syntax : modifica [id]
-		MODIFY("modifica","Modifica il campo di una proposta\tSintassi: modifica [id]",(ctx, args)->{
+		MODIFY("modifica","Modifica il campo di una proposta", "modifica [id]",(ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			//inserisci id proposta
@@ -161,7 +161,7 @@ public enum Command {
 				return false;
 			}
 		}),
-		NEW_EVENT("crea", "Crea un nuovo evento\tSintassi: crea [categoryName]", (ctx, args)->{
+		NEW_EVENT("crea", "Crea un nuovo evento", "crea [categoryName]", (ctx, args)->{
 			if(args.length == 0) {
 				ctx.getIOStream().write("Inserisci il nome di una categoria");
 				return false;
@@ -218,13 +218,13 @@ public enum Command {
 					});
 			//iscrizione proprietario
 			Proposal p = new Proposal(event);
-			Preferenze pref = p.getPreferenze();
+			Preferences pref = p.getPreferenze();
 			Stream.of(pref.getChoices())
 					.forEach((fh)->{
 						boolean confirm = false;
 						boolean valid = false;
 						do {
-							String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne?[y|n]");
+							String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne? [y|n]");
 							if(ok.equalsIgnoreCase("y")) {
 								confirm = true;
 								valid = true;
@@ -244,7 +244,7 @@ public enum Command {
 				return false;
 			}
 		}),
-		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte", (ctx, args)->{
+		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte","", (ctx, args)->{
 			String proposals = ctx.getSession().showInProgress();
 			if(proposals.equals(""))
 				ctx.getIOStream().write("Nessuna proposta in lavorazione!\n");
@@ -252,7 +252,7 @@ public enum Command {
 				ctx.getIOStream().write("Le proposte in lavorazione:\n" + ctx.getSession().showInProgress());
 			return true;
 		}),
-		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche", (ctx, args)->{
+		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche","", (ctx, args)->{
 			if(ctx.getSession().noMessages()) 
 				ctx.getIOStream().writeln("Nessun messaggio.");
 			else
@@ -260,7 +260,7 @@ public enum Command {
 			return true;
 		}),
 		//syntax : rimuoviNotifica [id]
-		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo\tSintassi: rimuoviNotifica [id]",(ctx, args)->{
+		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo", "rimuoviNotifica [id]",(ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
@@ -278,7 +278,7 @@ public enum Command {
 				return true;
 			}
 		}),
-		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca",(ctx, args)->{
+		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca","",(ctx, args)->{
 			ctx.getProposalHandler().refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente utente vedrà la bacheca aggiornata
 			String content = ctx.getProposalHandler().showContent();
 			if(content.equals(""))
@@ -288,7 +288,7 @@ public enum Command {
 			return true;
 		}),
 		//syntax : pubblica [id]
-		PUBLISH("pubblica", "Pubblica un evento creato\tSintassi: pubblica [id]", (ctx, args)->{
+		PUBLISH("pubblica", "Pubblica un evento creato", "pubblica [id]", (ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
@@ -317,7 +317,7 @@ public enum Command {
 			}		
 		}),
 		// syntax : partecipa [id]
-		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca\tSintassi: partecipa [id]",(ctx, args)->{
+		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca", "partecipa [id]",(ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
@@ -327,7 +327,7 @@ public enum Command {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;
 			}
-			Preferenze pref = ctx.getProposalHandler().getPreferenze(id);
+			Preferences pref = ctx.getProposalHandler().getPreferenze(id);
 			if(pref!=null) {
 				Stream.of(pref.getChoices())
 						.forEach((fh)->{
@@ -357,7 +357,7 @@ public enum Command {
 				return false;
 			}			
 		}),
-		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(ctx, args)->{
+		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","",(ctx, args)->{
 			User actualUser = ctx.getSession().getOwner();
 			ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
 			int id = -1;
@@ -380,7 +380,7 @@ public enum Command {
 				return false;
 			}
 		}),
-		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo",(ctx, args)->{
+		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo","",(ctx, args)->{
 			FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
 			FieldHeading field = FieldHeading.TITOLO;
 			String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
@@ -430,8 +430,7 @@ public enum Command {
 			}
 
 		}),
-		//syntax : ritira [id]
-		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca\tSintassi: ritira [id]", (ctx, args)->{
+		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira [id]", (ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
@@ -449,16 +448,16 @@ public enum Command {
 				return false;
 			}	
 		}),
-		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", (ctx, args)->{
+		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "",(ctx, args)->{
 			ctx.getProposalHandler().refresh();
 			ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
 			return true;
 		}),
-		PRIVATE_SPACE_OUT("back", "Esci dal private space", (ctx, args)->{
+		PRIVATE_SPACE_OUT("back", "Esci dal private space", "",(ctx, args)->{
 			ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
 			return true;
 		}),
-		INVITE("invita", "Invita utenti ad una proposta",(ctx, args)->{
+		INVITE("invita", "Invita utenti ad una proposta","",(ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
@@ -500,7 +499,7 @@ public enum Command {
 				return false;
 			}
 		}),
-		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente",(ctx, args)->{
+		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente","",(ctx, args)->{
 			ctx.getIOStream().write(ctx.getSession().getOwner().showProfile());
 			return true;
 		});
@@ -513,6 +512,10 @@ public enum Command {
 		 */
 		private String description;
 		/**
+		 * La sintassi per l'esecuzione del comando
+		 */
+		private String syntax;
+		/**
 		 * L'azione che il comando deve compiere
 		 */
 		private Shell runnable;
@@ -523,9 +526,10 @@ public enum Command {
 		 * @param description la descrizione del comando
 		 * @param runnable ciò che il comando deve fare
 		 */
-		private Command(String comand, String description, Shell runnable) {
+		private Commands(String comand, String description, String syntax, Shell runnable) {
 			this.name = comand;
 			this.description = description;
+			this.syntax = syntax == "" ? "" : String.format("Sintassi: %s", syntax);
 			this.runnable = runnable;
 		}
 	
@@ -539,10 +543,18 @@ public enum Command {
 	
 		/**
 		 * Restituisce la descrizione del comando
-		 * @return restituisce la descrizione del comando
+		 * @return la descrizione del comando
 		 */
 		public String getDescription() {
 			return description;
+		}
+		
+		/**
+		 * Restituisce la sintassi per l'esecuzione del comando
+		 * @return sintassi del comando
+		 */
+		public String getSyntax() {
+			return syntax;
 		}
 	
 		/**

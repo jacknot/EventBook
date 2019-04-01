@@ -13,7 +13,7 @@ import utility.StringConstant;
  */
 public class Main {
 
-	private static CommandHandler handler;
+	private static CommandsHandler handler;
 	
 	/**
 	 * Il punto da cui far iniziare il programma
@@ -32,7 +32,7 @@ public class Main {
 			}
 		}));
 		System.out.println(StringConstant.WELCOME);
-		handler = CommandHandler.getInstance(ssa);
+		handler = CommandsHandler.getInstance(ssa);
 		do {
 			String command = ssa.read(StringConstant.EMPTY_STRING);
 			handler.run(command.trim());

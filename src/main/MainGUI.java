@@ -10,7 +10,9 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
-import main.commands.CommandHandler;
+import com.sun.javafx.scene.control.skin.TextFieldSkin;
+
+import main.commands.CommandsHandler;
 import main.commands.CommandsHistory;
 import main.commands.InOutStream;
 import utility.StringConstant;
@@ -29,7 +31,7 @@ import java.io.IOException;
 
 public class MainGUI {
 	
-	private static CommandHandler handler;
+	private static CommandsHandler handler;
 	private JFrame frame;
 	private JTextArea textArea;
 	private JTextField textFieldCommands;
@@ -97,7 +99,7 @@ public class MainGUI {
 		
 		GUIStream guis = new GUIStream();
 		
-		handler = CommandHandler.getInstance(guis);	
+		handler = CommandsHandler.getInstance(guis);	
 		
 		textFieldCommands.addActionListener(event -> {
 				String command = textFieldCommands.getText().trim();
@@ -126,7 +128,7 @@ public class MainGUI {
 		
 		});
 		
-		frame.addWindowListener(new WindowAdapter() {
+		frame.addWindowListener(new WindowAdapter() { //Intercetta chiusura
 			public void windowClosing(WindowEvent e) {
 				try {
 					handler.close();
@@ -175,7 +177,7 @@ public class MainGUI {
 			 */
 			@Override
 			public void close() {
-				// TODO Auto-generated method stub		
+				textFieldCommands.setText("");
 			}
 		}
 

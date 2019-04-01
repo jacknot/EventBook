@@ -8,6 +8,7 @@ import categories.Category;
 import categories.CategoryCache;
 import categories.CategoryHeading;
 import fields.FieldHeading;
+import proposals.Preferences;
 import proposals.Proposal;
 import proposals.ProposalHandler;
 import proposals.State;
@@ -126,6 +127,35 @@ class TestProposta {
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal)); //proposta aggiunta correttamente		
 		assertTrue(bacheca.signUp(0, user, bacheca.getPreferenze(0)));
+	}
+	
+	
+	@org.junit.jupiter.api.Test
+	void iscrizionePropostaValidaConPreferenze() { 
+		User owner =  new User("Mario");
+		User user =  new User("Pinco");
+
+		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName());
+		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
+		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(1));
+		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
+		event.setValue(FieldHeading.MEET_AND_GREET.getName(), FieldHeading.MEET_AND_GREET.getClassType().parse("90.00")); //Campo opzionale espresso
+		event.setValue(FieldHeading.MERCHANDISE.getName(), FieldHeading.MERCHANDISE.getClassType().parse("20.00")); //Campo opzionale espresso
+		
+		Proposal proposal = new Proposal(event); //creata proposta
+		proposal.setOwner(owner, proposal.getPreferenze()); //PERCHè DEVO PASSARE ALL'OGGETTO proposal un metodo di proposal?
+	
+		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
+		bacheca.add(proposal); //proposta aggiunta correttamente	
+		Preferences pref = bacheca.getPreferenze(0);
+		
+		pref.impostaPreferenza(FieldHeading.MEET_AND_GREET,  true); //accetta la prima
+		pref.impostaPreferenza(FieldHeading.MERCHANDISE, false); //rifiuta la seconda
+			
+		assertTrue(bacheca.signUp(0, user, pref));
 	}
 
 	@org.junit.jupiter.api.Test

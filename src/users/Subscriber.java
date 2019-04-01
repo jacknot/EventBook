@@ -3,7 +3,7 @@ package users;
 import java.io.Serializable;
 
 import fields.FieldHeading;
-import proposals.Preferenze;
+import proposals.Preferences;
 
 /**La classe Subscriber ha il compito di fornire una struttura adatta a gestire un iscritto ad una proposta.<br>
  * Ogni oggetto SUbscriber associa ad un User, l'insieme delle Preferenze relative alla proposta al quale è iscritto<br>
@@ -22,14 +22,14 @@ public class Subscriber implements Serializable{
 	/**
 	 * Le preferenze dell'iscritto
 	 */
-	private Preferenze preferenze;
+	private Preferences preferenze;
 	
 	/**
 	 * Costruttore per la classe Subscriber
 	 * @param user l'User iscritto
 	 * @param preferenze l'insieme delle Preferenze dell'User
 	 */
-	public Subscriber(User user, Preferenze preferenze) {
+	public Subscriber(User user, Preferences preferenze) {
 		this.user = user;
 		this.preferenze = preferenze;
 	}
@@ -44,7 +44,7 @@ public class Subscriber implements Serializable{
 	 * Ritorna le Preferenze
 	 * @return le Preferenze
 	 */
-	public Preferenze getPreferenze() {
+	public Preferences getPreferenze() {
 		return preferenze;
 	}
 	/**

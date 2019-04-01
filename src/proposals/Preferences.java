@@ -11,19 +11,19 @@ import fields.FieldHeading;
  * @author Matteo
  *
  */
-public class Preferenze implements Serializable{
+public class Preferences implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Contiene le coppie: intestazione+preferenza  
 	 */
-	private HashMap<FieldHeading, Boolean> preferenze;
+	private HashMap<FieldHeading, Boolean> preferenze; //non dovrebbe essere fisso boolean ma di tipo variabile -> nuova classe extends HashMap<FieldHeading, T>
 	
 	/**
 	 * Costruttore
 	 * @param intestazioni la lista di intestazioni di campi opzionali relativi ai quali si vuole tenere traccia delle scelte dell'utente
 	 */
-	public Preferenze(FieldHeading[] intestazioni) {
+	public Preferences(FieldHeading[] intestazioni) {
 		preferenze = new HashMap<FieldHeading, Boolean>();
 		Stream.of(intestazioni)
 				.filter((h)->h.isOptional())
@@ -66,7 +66,7 @@ public class Preferenze implements Serializable{
 	 * @param p la preferenza da confrontare
 	 * @return True - le preferenze sono uguali<br>False - le preferenze sono diverse
 	 */
-	public boolean sameChoices(Preferenze p) {
+	public boolean sameChoices(Preferences p) {
 		return Stream.of(this.getChoices()).allMatch((k)->p.contains(k)) && 
 				Stream.of(p.getChoices()).allMatch((k)->this.contains(k));
 	}

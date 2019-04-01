@@ -40,6 +40,14 @@ public enum ClassType{
 				arrayString.add(tokenizer.nextToken());
 			}
 		return arrayString;
+	}),
+	BOOLEAN(Boolean.class, "[^\\n;]+(;[^\\n;]+)*", "Elenco di stringhe separate da ;", (array) -> {
+		CategoriesOfInterest arrayString = new CategoriesOfInterest();
+			StringTokenizer tokenizer = new StringTokenizer(array, ";");
+			while(tokenizer.hasMoreTokens()) {
+				arrayString.add(tokenizer.nextToken());
+			}
+		return arrayString;
 	});
 	
 	/**

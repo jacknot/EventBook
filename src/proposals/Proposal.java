@@ -64,7 +64,7 @@ public class Proposal implements Serializable{
 	 * @param pref le preferenze espresse dal proprietario
 	 * @return True - l'utente inserito è stato impostato come proprietario<br>False - l'utente inserito non è stato inserito come proprietario
 	 */
-	public boolean setOwner(User nOwner, Preferenze pref) {
+	public boolean setOwner(User nOwner, Preferences pref) {
 		if(getPreferenze().sameChoices(pref) && this.owner == null) {
 			this.owner = new Subscriber(nOwner, pref);
 			this.update();
@@ -129,7 +129,7 @@ public class Proposal implements Serializable{
 	 * @param user il fruitore da iscrivere
 	 * @return True - l'utente è stato correttamente iscritto alla proposta<br>False - l'utente non è stato iscritto alla proposta
 	 */
-	public boolean signUp(User user, Preferenze preferenza) {
+	public boolean signUp(User user, Preferences preferenza) {
 		if(aState.canSignUp(this)){
 			if(!isSignedUp(user) && getPreferenze().sameChoices(preferenza)) {
 				Subscriber sub = new Subscriber(user, preferenza);
@@ -279,7 +279,7 @@ public class Proposal implements Serializable{
 	 * Restituisce l'insieme delle varie opzioni disponibili sulla proposta
 	 * @return il set delle varie opzioni
 	 */
-	public Preferenze getPreferenze() {
+	public Preferences getPreferenze() {
 		return event.getPreferenze();
 	}
 }

@@ -13,11 +13,11 @@ import utility.StringConstant;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class CommandHandler implements Closeable{
+public class CommandsHandler implements Closeable{
 	/**
 	 * Il formato con cui vengono stampati i comandi
 	 */
-	private static final String TOSTRING_FORMAT = "\n\t%-20s%20s";
+	private static final String TOSTRING_FORMAT = "\n\t%-30s%-50s%-50s";
 	/**
 	 * Espressione regolare per l'estrazione del comando
 	 */
@@ -25,11 +25,11 @@ public class CommandHandler implements Closeable{
 	/**
 	 * Istanza per implementare il design pattern Singleton
 	 */
-	private static CommandHandler instance;
+	private static CommandsHandler instance;
 	/**
 	 * Contiene i comandi
 	 */
-	private ArrayList<Command> cList;
+	private ArrayList<Commands> cList;
 	/**
 	 * Il contesto sul quale devono operare i comandi
 	 */
@@ -37,109 +37,109 @@ public class CommandHandler implements Closeable{
 	/**
 	 * Costruttore
 	 */
-	private CommandHandler(InOutStream IOStream) {
-		cList = new ArrayList<Command>();
+	private CommandsHandler(InOutStream IOStream) {
+		cList = new ArrayList<Commands>();
 		
 		this.context = new Context(IOStream);
 		
-		cList.add(Command.EXIT);
-		cList.add(Command.REGISTRATION);
-		cList.add(Command.LOGIN);
+		cList.add(Commands.EXIT);
+		cList.add(Commands.REGISTRATION);
+		cList.add(Commands.LOGIN);
 	}
 	
-	public static CommandHandler getInstance(InOutStream IOStream) {
+	public static CommandsHandler getInstance(InOutStream IOStream) {
 		if(instance == null)
-			instance = new CommandHandler(IOStream);
+			instance = new CommandsHandler(IOStream);
 		return instance;
 	}
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logIn
 	 */
 	private void logIn() {
-		cList.add(Command.SHOW_CATEGORIES);
-		cList.add(Command.CATEGORY);
-		cList.add(Command.DESCRIPTION);
-		cList.add(Command.LOGOUT);
-		cList.add(Command.MODIFY);
-		cList.add(Command.NEW_EVENT);
-		cList.add(Command.SHOW_WORKINPROGRESS);
-		cList.add(Command.SHOW_NOTICEBOARD);
-		cList.add(Command.PUBLISH);
-		cList.add(Command.PARTICIPATE);
-		cList.add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
-		cList.add(Command.WITHDRAW_PROPOSAL);
-		cList.add(Command.INVITE);
-		cList.add(Command.PRIVATE_SPACE_IN); //Accesso al private space
-		cList.remove(Command.REGISTRATION);
-		cList.remove(Command.LOGIN);	
+		cList.add(Commands.SHOW_CATEGORIES);
+		cList.add(Commands.CATEGORY);
+		cList.add(Commands.DESCRIPTION);
+		cList.add(Commands.LOGOUT);
+		cList.add(Commands.MODIFY);
+		cList.add(Commands.NEW_EVENT);
+		cList.add(Commands.SHOW_WORKINPROGRESS);
+		cList.add(Commands.SHOW_NOTICEBOARD);
+		cList.add(Commands.PUBLISH);
+		cList.add(Commands.PARTICIPATE);
+		cList.add(Commands.UNSUBSCRIBE); //Comando aggiunto nella V3
+		cList.add(Commands.WITHDRAW_PROPOSAL);
+		cList.add(Commands.INVITE);
+		cList.add(Commands.PRIVATE_SPACE_IN); //Accesso al private space
+		cList.remove(Commands.REGISTRATION);
+		cList.remove(Commands.LOGIN);	
 	}
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logOut
 	 */
 	private void logOut() {
-		cList.add(Command.REGISTRATION);
-		cList.add(Command.LOGIN);
-		cList.remove(Command.SHOW_CATEGORIES);
-		cList.remove(Command.CATEGORY);
-		cList.remove(Command.DESCRIPTION);
-		cList.remove(Command.LOGOUT);
-		cList.remove(Command.MODIFY);
-		cList.remove(Command.NEW_EVENT);
-		cList.remove(Command.SHOW_WORKINPROGRESS);
-		cList.remove(Command.SHOW_NOTICEBOARD);
-		cList.remove(Command.PUBLISH);
-		cList.remove(Command.PARTICIPATE);
-		cList.remove(Command.UNSUBSCRIBE);
-		cList.remove(Command.WITHDRAW_PROPOSAL);
-		cList.remove(Command.INVITE);
-		cList.remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
+		cList.add(Commands.REGISTRATION);
+		cList.add(Commands.LOGIN);
+		cList.remove(Commands.SHOW_CATEGORIES);
+		cList.remove(Commands.CATEGORY);
+		cList.remove(Commands.DESCRIPTION);
+		cList.remove(Commands.LOGOUT);
+		cList.remove(Commands.MODIFY);
+		cList.remove(Commands.NEW_EVENT);
+		cList.remove(Commands.SHOW_WORKINPROGRESS);
+		cList.remove(Commands.SHOW_NOTICEBOARD);
+		cList.remove(Commands.PUBLISH);
+		cList.remove(Commands.PARTICIPATE);
+		cList.remove(Commands.UNSUBSCRIBE);
+		cList.remove(Commands.WITHDRAW_PROPOSAL);
+		cList.remove(Commands.INVITE);
+		cList.remove(Commands.PRIVATE_SPACE_IN); //Accesso al private space
 	}
 	
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un accesso al private space
 	 */
 	private void privateSpaceIn() {
-		cList.add(Command.SHOW_NOTIFICATIONS);
-		cList.add(Command.REMOVE_NOTIFICATION);
-		cList.add(Command.PRIVATE_SPACE_OUT); //Uscita dal private space
-		cList.add(Command.SHOW_PROFILE);
-		cList.add(Command.MODIFY_PROFILE);
-		cList.remove(Command.CATEGORY);
-		cList.remove(Command.DESCRIPTION);
-		cList.remove(Command.LOGOUT);
-		cList.remove(Command.MODIFY);
-		cList.remove(Command.NEW_EVENT);
-		cList.remove(Command.SHOW_WORKINPROGRESS);
-		cList.remove(Command.SHOW_NOTICEBOARD);
-		cList.remove(Command.PUBLISH);
-		cList.remove(Command.PARTICIPATE);
-		cList.remove(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
-		cList.remove(Command.WITHDRAW_PROPOSAL);
-		cList.remove(Command.INVITE);
-		cList.remove(Command.PRIVATE_SPACE_IN); //Accesso al private space
+		cList.add(Commands.SHOW_NOTIFICATIONS);
+		cList.add(Commands.REMOVE_NOTIFICATION);
+		cList.add(Commands.PRIVATE_SPACE_OUT); //Uscita dal private space
+		cList.add(Commands.SHOW_PROFILE);
+		cList.add(Commands.MODIFY_PROFILE);
+		cList.remove(Commands.CATEGORY);
+		cList.remove(Commands.DESCRIPTION);
+		cList.remove(Commands.LOGOUT);
+		cList.remove(Commands.MODIFY);
+		cList.remove(Commands.NEW_EVENT);
+		cList.remove(Commands.SHOW_WORKINPROGRESS);
+		cList.remove(Commands.SHOW_NOTICEBOARD);
+		cList.remove(Commands.PUBLISH);
+		cList.remove(Commands.PARTICIPATE);
+		cList.remove(Commands.UNSUBSCRIBE); //Comando aggiunto nella V3
+		cList.remove(Commands.WITHDRAW_PROPOSAL);
+		cList.remove(Commands.INVITE);
+		cList.remove(Commands.PRIVATE_SPACE_IN); //Accesso al private space
 	}
 	/**
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un uscita dal private space
 	 */
 	private void privateSpaceOut() {
-		cList.add(Command.CATEGORY);
-		cList.add(Command.DESCRIPTION);
-		cList.add(Command.LOGOUT);
-		cList.add(Command.MODIFY);
-		cList.add(Command.NEW_EVENT);
-		cList.add(Command.SHOW_WORKINPROGRESS);
-		cList.add(Command.SHOW_NOTICEBOARD);
-		cList.add(Command.PUBLISH);
-		cList.add(Command.PARTICIPATE);
-		cList.add(Command.UNSUBSCRIBE); //Comando aggiunto nella V3
-		cList.add(Command.WITHDRAW_PROPOSAL);
-		cList.add(Command.INVITE);
-		cList.add(Command.PRIVATE_SPACE_IN); //Accesso al private space
-		cList.remove(Command.SHOW_NOTIFICATIONS);
-		cList.remove(Command.REMOVE_NOTIFICATION);
-		cList.remove(Command.SHOW_PROFILE);
-		cList.remove(Command.MODIFY_PROFILE);
-		cList.remove(Command.PRIVATE_SPACE_OUT); //Accesso al private space
+		cList.add(Commands.CATEGORY);
+		cList.add(Commands.DESCRIPTION);
+		cList.add(Commands.LOGOUT);
+		cList.add(Commands.MODIFY);
+		cList.add(Commands.NEW_EVENT);
+		cList.add(Commands.SHOW_WORKINPROGRESS);
+		cList.add(Commands.SHOW_NOTICEBOARD);
+		cList.add(Commands.PUBLISH);
+		cList.add(Commands.PARTICIPATE);
+		cList.add(Commands.UNSUBSCRIBE); //Comando aggiunto nella V3
+		cList.add(Commands.WITHDRAW_PROPOSAL);
+		cList.add(Commands.INVITE);
+		cList.add(Commands.PRIVATE_SPACE_IN); //Accesso al private space
+		cList.remove(Commands.SHOW_NOTIFICATIONS);
+		cList.remove(Commands.REMOVE_NOTIFICATION);
+		cList.remove(Commands.SHOW_PROFILE);
+		cList.remove(Commands.MODIFY_PROFILE);
+		cList.remove(Commands.PRIVATE_SPACE_OUT); //Accesso al private space
 	}
 	
 	/**Restituisce il comando (se presente) che inizia con la stringa passata per parametro
@@ -147,7 +147,7 @@ public class CommandHandler implements Closeable{
 	 * @return Nome del comando se trovato <br> la stringa iniziale altrimenti
 	 */
 	public String hint(String initial) {
-		for(Command command: cList) {
+		for(Commands command: cList) {
 			if(command.getNome().startsWith(initial))
 				return command.getNome() + " ";
 		}
@@ -168,7 +168,7 @@ public class CommandHandler implements Closeable{
 	}
 	
 	/**
-	 *	Controlla se è presente un comando con il nome inserito 
+	 * Controlla se è presente un comando con il nome inserito 
 	 * @param key il nome del comando di cui si vuole verificare la presenza
 	 * @return True - è presente un comando con il nome inserito<br>False - non è presente un comando con il nome inserito
 	 */
@@ -198,13 +198,13 @@ public class CommandHandler implements Closeable{
 			if(cList.stream()
 				.filter((c)->c.hasName(command))
 				.findFirst().get().run(context, args)) {
-					if(Command.LOGIN.hasName(command))
+					if(Commands.LOGIN.hasName(command))
 						logIn();
-					else if(Command.LOGOUT.hasName(command))
+					else if(Commands.LOGOUT.hasName(command))
 						logOut();
-					else if(Command.PRIVATE_SPACE_IN.hasName(command))
+					else if(Commands.PRIVATE_SPACE_IN.hasName(command))
 						privateSpaceIn();
-					else if(Command.PRIVATE_SPACE_OUT.hasName(command))
+					else if(Commands.PRIVATE_SPACE_OUT.hasName(command))
 						privateSpaceOut();
 			}
 		}else 
@@ -218,7 +218,7 @@ public class CommandHandler implements Closeable{
 	public String toString() {
 		StringBuilder sb = new StringBuilder("I comandi a tua disposizione:");
 		cList.stream()
-			.forEachOrdered((c)->sb.append(String.format(TOSTRING_FORMAT, c.getNome(), c.getDescription())));
+			.forEachOrdered((c)->sb.append(String.format(TOSTRING_FORMAT, c.getNome(), c.getDescription(), c.getSyntax())));
 		return sb.toString();
 	}
 

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import fields.FieldHeading;
 import fields.FieldSet;
-import proposals.Preferenze;
+import proposals.Preferences;
 
 
 /**
@@ -190,8 +190,8 @@ public abstract class Category implements Cloneable,Serializable{
 	 * Restituisce l'insieme delle varie opzioni disponibili sulla categoria
 	 * @return il set delle varie opzioni
 	 */
-	public Preferenze getPreferenze() {
-		return new Preferenze(Stream.of(FieldHeading.values())
+	public Preferences getPreferenze() {
+		return new Preferences(Stream.of(FieldHeading.values())
 									.filter((fh)->fh.isOptional())
 									.filter((fh)->this.containsField(fh.getName()))
 									.collect(Collectors.toCollection(ArrayList::new))
