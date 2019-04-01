@@ -350,29 +350,34 @@ public enum Command {
 					return false;
 				}
 				Preferenze pref = ctx.getProposalHandler().getPreferenze(id);
-				Stream.of(pref.getChoices())
-						.forEach((fh)->{
-							boolean confirm = false;
-							boolean valid = false;
-							do {
-								String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne?[y|n]");
-								if(ok.equalsIgnoreCase("y")) {
-									confirm = true;
-									valid = true;
-								}else if(ok.equalsIgnoreCase("n"))
-									valid = true;
-								else
-									ctx.getIOStream().writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
-							}while(!valid);
-							pref.impostaPreferenza(fh, confirm);
-						});
-				if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
-					ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
+				if(pref!=null) {
+					Stream.of(pref.getChoices())
+							.forEach((fh)->{
+								boolean confirm = false;
+								boolean valid = false;
+								do {
+									String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne?[y|n]");
+									if(ok.equalsIgnoreCase("y")) {
+										confirm = true;
+										valid = true;
+									}else if(ok.equalsIgnoreCase("n"))
+										valid = true;
+									else
+										ctx.getIOStream().writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
+								}while(!valid);
+								pref.impostaPreferenza(fh, confirm);
+							});
+					if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
+						ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
+						return false;
+					}else {
+						ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
+						return true;
+					}
+				} else {
+					ctx.getIOStream().writeln("Proposta non trovata");
 					return false;
-				}else {
-					ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
-					return true;
-				}
+				}			
 			}
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta",(ctx, args)->{
@@ -482,10 +487,17 @@ public enum Command {
 			ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
 			return true;
 		}),
-		INVITE("invite", "Invita utenti ad una proposta",(ctx, args)->{
+		INVITE("invita", "Invita utenti ad una proposta",(ctx, args)->{
+			if(args.length == 0) {
+				ctx.getIOStream().write("Inserisci un parametro");
+				return false;
+			} else if(args.length > 1) {
+				ctx.getIOStream().write("Inserisci un solo parametro");
+				return false;
+			}
 			int id = -1;
 			try {
-				id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
+				id = Integer.parseInt(args[0]);
 			}catch(NumberFormatException e) {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;

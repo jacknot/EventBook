@@ -160,7 +160,9 @@ public class ProposalHandler implements Serializable{
 	 * @return True se proprietario <br> False altrimenti
 	 */
 	public synchronized boolean isOwner(int id, User user) {
-		return bacheca.get(id).isOwner(user);
+		if(bacheca.contains(id))
+			return bacheca.get(id).isOwner(user);
+		return false;
 	}
 	
 	/**

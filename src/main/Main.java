@@ -27,14 +27,13 @@ public class Main {
 				ssa.writeln(StringConstant.EXITMSG);
 				ssa.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}));
 		System.out.println(StringConstant.WELCOME);
 		handler = CommandHandler.getInstance(ssa);
 		do {
-			String command = ssa.read(StringConstant.NEW_LINE);
+			String command = ssa.read(StringConstant.EMPTY_STRING);
 			handler.run(command.trim());
 		}while(true);
 	}	

@@ -12,16 +12,18 @@ import javax.swing.border.BevelBorder;
 
 import command.CommandHandler;
 import command.InOutStream;
+import command.StringConstant;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
 
-import javax.swing.AbstractAction;
 import javax.swing.JButton;
 
-import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 public class MainGUI {
 	
@@ -51,7 +53,6 @@ public class MainGUI {
 	 */
 	public MainGUI() {
 		initialize();
-		handler = CommandHandler.getInstance(new GUIStream());	
 	}
 
 	/**
@@ -88,11 +89,15 @@ public class MainGUI {
 		btnSend = new JButton("Invia");
 		panelCommands.add(btnSend, BorderLayout.EAST);
 		
-		textFieldCommands = new JTextField();
-		textFieldCommands.addActionListener(new AbstractAction() {
-		    @Override
-		    public void actionPerformed(ActionEvent e)
-		    {
+		textFieldCommands = new JTextField();		
+		textFieldCommands.setColumns(10);
+		panelCommands.add(textFieldCommands);		
+		
+		GUIStream guis = new GUIStream();
+		
+		handler = CommandHandler.getInstance(guis);	
+		
+		textFieldCommands.addActionListener(event -> {
 				String command = textFieldCommands.getText().trim();
 				if(command != null) {
 					textArea.append(command + "\n");
@@ -100,10 +105,8 @@ public class MainGUI {
 				}
 				textFieldCommands.setText("");
 				textFieldCommands.requestFocus();
-		    }
 		});
-		panelCommands.add(textFieldCommands);
-		textFieldCommands.setColumns(10);
+
 		
 		btnSend.addActionListener(event -> {
 			String command = textFieldCommands.getText().trim();
@@ -113,7 +116,17 @@ public class MainGUI {
 			textFieldCommands.requestFocus();
 		});
 		
-		
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				try {
+					handler.close();
+					guis.writeln(StringConstant.EXITMSG);
+					guis.close();
+				} catch (IOException exc) {
+					JOptionPane.showConfirmDialog(frame, "Errore", exc.toString(), JOptionPane.WARNING_MESSAGE);
+				}			
+			}			  
+		});
 	}
 	
 	 class GUIStream implements InOutStream{

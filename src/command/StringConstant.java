@@ -7,6 +7,7 @@ package command;
  */
 public class StringConstant {
 	public static final String NEW_LINE = "\n";
+	public static final String EMPTY_STRING = "";
 	public static final String INSERT_IDENTIFIER = "Inserisci l'identificatore : ";
 	public static final String INSERT_NUMBER = "Inserisci un numero";
 	
