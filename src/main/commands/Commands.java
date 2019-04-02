@@ -21,13 +21,25 @@ import utility.StringConstant;
 public enum Commands {
 
 		EXIT("exit", "Esci dal programma","",(ctx, args)->{
-			System.exit(0);
-			return true;
-			}),
+			if(args.length == 0) {
+				System.exit(0);
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
+		}),
 		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", "", (ctx, args)->{
-			ctx.getIOStream().writeln("Le categorie disponibili: ");
-			Stream.of(CategoryHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
-			return true;
+			if(args.length == 0) {
+				ctx.getIOStream().writeln("Le categorie disponibili: ");
+				Stream.of(CategoryHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
 		}),
 		//syntax : categoria [category]
 		CATEGORY("categoria", "Mostra la categoria disponibile", "categoria [name]", (ctx, args)->{
@@ -99,9 +111,15 @@ public enum Commands {
 		  	}
 		}),
 		LOGOUT("logout", "Per uscire","", (ctx, args)->{
-			ctx.resetSession();
-			ctx.getIOStream().writeln("Logout eseguito");
-			return true;
+			if(args.length == 0) {
+				ctx.resetSession();
+				ctx.getIOStream().writeln("Logout eseguito");
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
 			}),
 		//syntax : modifica [id]
 		MODIFY("modifica","Modifica il campo di una proposta", "modifica [id]",(ctx, args)->{
@@ -245,19 +263,31 @@ public enum Commands {
 			}
 		}),
 		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte","", (ctx, args)->{
-			String proposals = ctx.getSession().showInProgress();
-			if(proposals.equals(""))
-				ctx.getIOStream().write("Nessuna proposta in lavorazione!\n");
-			else 
-				ctx.getIOStream().write("Le proposte in lavorazione:\n" + ctx.getSession().showInProgress());
-			return true;
+			if(args.length == 0) {
+				String proposals = ctx.getSession().showInProgress();
+				if(proposals.equals(""))
+					ctx.getIOStream().write("Nessuna proposta in lavorazione!\n");
+				else 
+					ctx.getIOStream().write("Le proposte in lavorazione:\n" + ctx.getSession().showInProgress());
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
 		}),
 		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche","", (ctx, args)->{
-			if(ctx.getSession().noMessages()) 
-				ctx.getIOStream().writeln("Nessun messaggio.");
-			else
-				ctx.getIOStream().writeln(ctx.getSession().showNotification());
-			return true;
+			if(args.length == 0) {
+				if(ctx.getSession().noMessages()) 
+					ctx.getIOStream().writeln("Nessun messaggio.");
+				else
+					ctx.getIOStream().writeln(ctx.getSession().showNotification());
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
 		}),
 		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo", "rimuoviNotifica [id]",(ctx, args)->{
@@ -279,13 +309,19 @@ public enum Commands {
 			}
 		}),
 		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca","",(ctx, args)->{
-			ctx.getProposalHandler().refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente utente vedrà la bacheca aggiornata
-			String content = ctx.getProposalHandler().showContent();
-			if(content.equals(""))
-				ctx.getIOStream().write("Nessuna proposta in bacheca!\n");
-			else 
-				ctx.getIOStream().write("Le proposte in bacheca:\n" + content);
-			return true;
+			if(args.length == 0) {
+				ctx.getProposalHandler().refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente utente vedrà la bacheca aggiornata
+				String content = ctx.getProposalHandler().showContent();
+				if(content.equals(""))
+					ctx.getIOStream().write("Nessuna proposta in bacheca!\n");
+				else 
+					ctx.getIOStream().write("Le proposte in bacheca:\n" + content);
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
 		}),
 		//syntax : pubblica [id]
 		PUBLISH("pubblica", "Pubblica un evento creato", "pubblica [id]", (ctx, args)->{
@@ -358,84 +394,101 @@ public enum Commands {
 			}			
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","",(ctx, args)->{
-			User actualUser = ctx.getSession().getOwner();
-			ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
-			int id = -1;
-			try {
-				id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
-				return false;
-			}
-			if(ctx.getProposalHandler().isSignedUp(id, actualUser)) {
-				if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
-					ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
-					return true;
-				}else {
-					ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
+			if(args.length == 0) {
+				User actualUser = ctx.getSession().getOwner();
+				ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
+				int id = -1;
+				try {
+					id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
+				}catch(NumberFormatException e) {
+					ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 					return false;
 				}
-			}else {
-				ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
+				if(ctx.getProposalHandler().isSignedUp(id, actualUser)) {
+					if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
+						ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
+						return true;
+					}else {
+						ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
+						return false;
+					}
+				}else {
+					ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
+					return false;
+				}
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
 				return false;
 			}
 		}),
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo","",(ctx, args)->{
-			FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
-			FieldHeading field = FieldHeading.TITOLO;
-			String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
-			if(Stream.of(fields).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
-					field = Stream.of(fields)
-									.filter((fh)->fh.getName().equalsIgnoreCase(newField))
-									.findAny()
-									.get();
-			else {
-				ctx.getIOStream().writeln("Il nome inserito non appartiene ad un campo modificabile");
-				return false;
-			}
-			if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
-				boolean add = true;
-				String confirm = ctx.getIOStream().read("Inserisci modalità di modifica: \"a\" aggiungi - \"r\" togli");
-				if(confirm.equalsIgnoreCase("r"))
-					add = false;
-				else if(!confirm.equalsIgnoreCase("a")){
-					ctx.getIOStream().writeln("Errore");
+			if(args.length == 0) {
+				FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
+				FieldHeading field = FieldHeading.TITOLO;
+				String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
+				if(Stream.of(fields).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
+						field = Stream.of(fields)
+										.filter((fh)->fh.getName().equalsIgnoreCase(newField))
+										.findAny()
+										.get();
+				else {
+					ctx.getIOStream().writeln("Il nome inserito non appartiene ad un campo modificabile");
 					return false;
 				}
-				String categoryName = ctx.getIOStream().read("Inserisci il nome della categoria da " + (add? "aggiungere" : "rimuovere") + "> ");
-				if(Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
-					String cat = Stream.of(CategoryHeading.values()).filter((fh) -> fh.getName().equalsIgnoreCase(categoryName)).findFirst().get().getName();
-					if(ctx.getSession().getOwner().modifyCategory(cat, add)) {
-						ctx.getIOStream().writeln("Categoria modificata con successo");
-						return true;
+				if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
+					boolean add = true;
+					String confirm = ctx.getIOStream().read("Inserisci modalità di modifica: \"a\" aggiungi - \"r\" togli");
+					if(confirm.equalsIgnoreCase("r"))
+						add = false;
+					else if(!confirm.equalsIgnoreCase("a")){
+						ctx.getIOStream().writeln("Errore");
+						return false;
+					}
+					String categoryName = ctx.getIOStream().read("Inserisci il nome della categoria da " + (add? "aggiungere" : "rimuovere") + "> ");
+					if(Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
+						String cat = Stream.of(CategoryHeading.values()).filter((fh) -> fh.getName().equalsIgnoreCase(categoryName)).findFirst().get().getName();
+						if(ctx.getSession().getOwner().modifyCategory(cat, add)) {
+							ctx.getIOStream().writeln("Categoria modificata con successo");
+							return true;
+						}else {
+							ctx.getIOStream().writeln("La modifica non è andata a buon fine");
+							return false;
+						}
 					}else {
-						ctx.getIOStream().writeln("La modifica non è andata a buon fine");
+						ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
 						return false;
 					}
 				}else {
-					ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
-					return false;
-				}
-			}else {
-				//inserisci valore del campo da modificare
-				Object obj = null;
-				obj = acceptValue(ctx, field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
-				if(ctx.getSession().getOwner().setValue(field.getName(), obj)) {
-					ctx.getIOStream().writeln("Modifica avvenuta con successo");
-					return true;
-				}else {
-					ctx.getIOStream().writeln("Modifica fallita");
-					return false;
+					//inserisci valore del campo da modificare
+					Object obj = null;
+					obj = acceptValue(ctx, field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+					if(ctx.getSession().getOwner().setValue(field.getName(), obj)) {
+						ctx.getIOStream().writeln("Modifica avvenuta con successo");
+						return true;
+					}else {
+						ctx.getIOStream().writeln("Modifica fallita");
+						return false;
+					}
 				}
 			}
-
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
 		}),
-		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","", (ctx, args)->{
+		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira[id]", (ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
-			try {
+			/*try {
 				id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
+			}catch(NumberFormatException e) {
+				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+				return false;
+			}*/
+			try {
+				id = Integer.parseInt(args[0]);
 			}catch(NumberFormatException e) {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;
@@ -449,59 +502,83 @@ public enum Commands {
 			}	
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "",(ctx, args)->{
-			ctx.getProposalHandler().refresh();
-			ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
-			return true;
-		}),
-		PRIVATE_SPACE_OUT("back", "Esci dal private space", "",(ctx, args)->{
-			ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
-			return true;
-		}),
-		INVITE("invita", "Invita utenti ad una proposta","",(ctx, args)->{
-			if(!paramCheck(ctx, args))
-				return false;
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+			if(args.length == 0) {
+				ctx.getProposalHandler().refresh();
+				ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
 				return false;
 			}
-			User owner = ctx.getSession().getOwner();
-			if(ctx.getProposalHandler().isOwner(id, owner)) {
-				ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
-				ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
-				String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
-				if(confirm.equalsIgnoreCase("y")) {
-					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-					return true;
-				}else if(confirm.equalsIgnoreCase("n")) {							
-					ArrayList<User> receivers = new ArrayList<>();
-					userList.stream()
-								.forEach(( u )->{
-									String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
-									if(answer.equalsIgnoreCase("y")) {
-										receivers.add(u);
-										ctx.getIOStream().writeln("L'utente verrà notificato");
-									}else if(answer.equalsIgnoreCase("n"))
-										ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
-									else
-										ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
-								});
-					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-					return true;
-				}else {
-					ctx.getIOStream().writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
+		}),
+		PRIVATE_SPACE_OUT("back", "Esci dal private space", "",(ctx, args)->{
+			if(args.length == 0) {
+				ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
+		}),
+		INVITE("invita", "Invita utenti ad una proposta","",(ctx, args)->{
+			if(args.length == 0) {
+				if(!paramCheck(ctx, args))
+					return false;
+				int id = -1;
+				try {
+					id = Integer.parseInt(args[0]);
+				}catch(NumberFormatException e) {
+					ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 					return false;
 				}
-			}else {
-				ctx.getIOStream().writeln("La proposta non è di tua proprietà");
+				User owner = ctx.getSession().getOwner();
+				if(ctx.getProposalHandler().isOwner(id, owner)) {
+					ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
+					ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
+					String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
+					if(confirm.equalsIgnoreCase("y")) {
+						MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+						return true;
+					}else if(confirm.equalsIgnoreCase("n")) {							
+						ArrayList<User> receivers = new ArrayList<>();
+						userList.stream()
+									.forEach(( u )->{
+										String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
+										if(answer.equalsIgnoreCase("y")) {
+											receivers.add(u);
+											ctx.getIOStream().writeln("L'utente verrà notificato");
+										}else if(answer.equalsIgnoreCase("n"))
+											ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
+										else
+											ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
+									});
+						MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+						return true;
+					}else {
+						ctx.getIOStream().writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
+						return false;
+					}
+				}else {
+					ctx.getIOStream().writeln("La proposta non è di tua proprietà");
+					return false;
+				}
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
 				return false;
 			}
 		}),
 		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente","",(ctx, args)->{
-			ctx.getIOStream().write(ctx.getSession().getOwner().showProfile());
-			return true;
+			if(args.length == 0) {
+				ctx.getIOStream().write(ctx.getSession().getOwner().showProfile());
+				return true;
+			}
+			else {
+				System.out.println("Troppi parametri inseriti");
+				return false;
+			}
 		});
 		/**
 		 * Il nome del comando
