@@ -57,6 +57,8 @@ public class Profile implements Serializable{
 	 */
 	public boolean modifyCategory(String category, boolean add) {
 		CategoriesOfInterest cat = getCategories();
+		if(cat == null)
+			cat = new CategoriesOfInterest();
 		if(add)
 			cat.add(category);
 		else 	

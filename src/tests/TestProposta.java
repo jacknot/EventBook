@@ -173,6 +173,7 @@ class TestProposta {
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(3));
+		assertTrue(event.isValid());
 		
 		Proposal proposal = new Proposal(event); //creata proposta
 		proposal.setOwner(owner, proposal.getPreferenze());
@@ -189,5 +190,9 @@ class TestProposta {
 		//La bacheca ora è vuota -> non posso iscrivermi
 		assertFalse(bacheca.signUp(0, user, null)); 
 	}
-	
+	@org.junit.jupiter.api.Test
+	void testUgualianazaPreferenze() { 
+		Proposal p = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName()));
+		assertTrue(p.getPreferenze().sameChoices(p.getPreferenze()));
+	}
 }

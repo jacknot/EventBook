@@ -343,7 +343,7 @@ public enum Commands {
 							boolean confirm = false;
 							boolean valid = false;
 							do {
-								String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne?[y|n]");
+								String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne?[y|n]> ");
 								if(ok.equalsIgnoreCase("y")) {
 									confirm = true;
 									valid = true;

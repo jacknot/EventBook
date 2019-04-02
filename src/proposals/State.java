@@ -2,9 +2,13 @@ package proposals;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+
+import dataTypes.Pair;
 import utility.MessageHandler;
 import utility.StringConstant;
 import fields.FieldHeading;
+import users.Subscriber;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare
@@ -81,7 +85,9 @@ public enum State implements Serializable{
 					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastSigningDay) >= 0) && p.subNumber() - max == tol) {
 				p.setState(CLOSED);
 				
-				MessageHandler.getInstance().eventConfirmed(p.getAllSubscribers(), title, 
+				ArrayList<Pair<Subscriber, Double>> sub_cost = new ArrayList<Pair<Subscriber, Double>>();
+				MessageHandler.getInstance().eventConfirmed(sub_cost, 
+															title, 
 															p.getValue(FieldHeading.DATA.getName()),
 															p.getValue(FieldHeading.ORA.getName()),
 															p.getValue(FieldHeading.LUOGO.getName()),
@@ -93,7 +99,7 @@ public enum State implements Serializable{
 					p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMPARTECIPANTI.getName()))
 					) {
 				p.setState(FAILED);
-				MessageHandler.getInstance().eventFailed(p.getAllSubscribers(), title);//messaggio che avvisa che la proposta è fallita
+				MessageHandler.getInstance().eventFailed(p.getSubscribers(), title);
 				return true;
 			}
 			return false;
@@ -106,7 +112,7 @@ public enum State implements Serializable{
 				p.setState(WITHDRAWN);
 				String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 					(String)p.getValue(FieldHeading.TITOLO.getName());
-				MessageHandler.getInstance().eventWithdrawn(p.getAllSubscribers(), title);//messaggio che avvisa che la proposta è stata ritirata
+				MessageHandler.getInstance().eventWithdrawn(p.getSubscribers(), title);
 				return true;
 			}
 			return false;

@@ -118,7 +118,7 @@ public class MainGUI {
 					textFieldCommands.setText(commandsHistory.previousCommand());
 				} else if(e.getKeyCode() == KeyEvent.VK_DOWN){
 					textFieldCommands.setText(commandsHistory.nextCommand());
-				} else if(e.getKeyCode() == KeyEvent.VK_RIGHT){ //Autocompletamento
+				} else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
 					String hint = handler.hint(textFieldCommands.getText());
 					textFieldCommands.setText(hint);
 				}

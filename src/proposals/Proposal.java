@@ -7,10 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import categories.Category;
-import utility.StringConstant;
 import dataTypes.Pair;
-import fields.FieldHeading;
-import users.Message;
 import users.Subscriber;
 import users.User;
 
@@ -183,31 +180,21 @@ public class Proposal implements Serializable{
 	public boolean withdraw() {
 		return aState.withdraw(this);
 	}
+
 	/**
-	 * Invia un messaggio a tutti gli iscritti e al proprietario della risposta
-	 * @param msg il messaggio da inviare
+	 * Calcola i costi addizionali che un dato utente deve sostenere
+	 * @param u l'utente di cui si vogliono conoscere i costi addizionali
+	 * @return i costi addizionali che l'utente inserito deve sostenere
 	 */
-	public void send(Message msg) {
-		//ARRAY TEMPORANEO
-		ArrayList <Subscriber> receivers = new ArrayList <Subscriber>();
-		receivers.add(owner);
-		receivers.addAll(subscribers);
-		receivers.stream()
-					.forEach(( s )-> {
-							Message m = msg;
-							if(msg.getObject().equals(StringConstant.CONFIRMOBJ)) {
-								Double sum = Stream.of(s.getPreferenze().getChoices())
-													.filter((fh)-> s.getPreferenze().getPreferenza(fh))
-													.map((fh)->(Double) getValue(fh.getName()))
-													.mapToDouble(Double::doubleValue)
-													.sum();
-								m.setObject(m.getObject() + String.format("\nValutate le sue scelte relative alle voci opzionali "
-																				+ "si ricorda di portare un totale di %.2f€.",
-																				(sum + (Double) getValue(FieldHeading.QUOTA.getName())))
-										);
-							}
-							s.receive(m);
-						});
+	public Double additionalCostsOf(User u) {
+		if(!isSignedUp(u))
+			return 0.00;
+		Subscriber s = getSubscribers().stream().filter((sub)->sub.getUser().equals(u)).findFirst().get();
+		return Stream.of(s.getPreferenze().getChoices())
+				.filter((fh)-> s.getPreferenze().getPreferenza(fh))
+				.map((fh)->(Double) getValue(fh.getName()))
+				.mapToDouble(Double::doubleValue)
+				.sum();
 	}
 	/**
 	 * Restituisce il numero di iscritti alla proposta
@@ -265,7 +252,7 @@ public class Proposal implements Serializable{
 	 * Restituisce la lista di iscritti all proposta
 	 * @return La lista di utenti iscritti all proposta
 	 */
-	public ArrayList<User> getSubscribers(){
+	public ArrayList<User> getUsers(){
 		return subscribers.stream()
 							.map((s) -> s.getUser())
 							.collect(Collectors.toCollection(ArrayList :: new));
@@ -275,11 +262,10 @@ public class Proposal implements Serializable{
 	 * Restituisce la lista di iscritti all proposta, compreso il proprietario
 	 * @return La lista di utenti iscritti all proposta, compreso il proprietario
 	 */
-	public ArrayList<User> getAllSubscribers(){
-		ArrayList<User> subs = subscribers.stream()
-							.map((s) -> s.getUser())
+	public ArrayList<Subscriber> getSubscribers(){
+		ArrayList<Subscriber> subs = subscribers.stream()
 							.collect(Collectors.toCollection(ArrayList :: new));
-		subs.add(owner.getUser());
+		subs.add(owner);
 		return subs;	
 	}
 

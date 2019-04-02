@@ -3,7 +3,9 @@ package utility;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import dataTypes.Pair;
 import users.Message;
+import users.Subscriber;
 import users.User;
 
 public class MessageHandler {
@@ -59,18 +61,19 @@ public class MessageHandler {
 	 * @param luogo luogo di svolgimento
 	 * @param quota quota da portare per partecipare
 	 */
-	public void eventConfirmed(ArrayList<User> userList, String title, Object data, Object ora, Object luogo, Object quota) {
-		userList.stream().forEach((u)->	u.receive(
-				new Message(
-					title+": "+LocalDate.now(),
-					StringConstant.CONFIRMOBJ,
-					String.format(StringConstant.CONFIRMFORMAT, title,
-							data,
-							ora,
-							luogo,
-							quota)	
-					))
-				);	
+	public void eventConfirmed(ArrayList<Pair<Subscriber, Double>> userList, Object title, Object data, Object ora, Object luogo, Object quota) {
+		userList.stream()
+				.forEach((p)->
+					p.getFirst().receive( new Message(
+									title+": "+LocalDate.now(),
+									StringConstant.CONFIRMOBJ,
+									String.format(StringConstant.CONFIRMFORMAT, title,
+											data,
+											ora,
+											luogo,
+											quota) + (p.getSecond() == 0?"":String.format(StringConstant.OPTIONAL_AMOUNT, p.getSecond()))
+							))
+					);	
 	}
 	
 	/**
@@ -78,7 +81,7 @@ public class MessageHandler {
 	 * @param userList lista di utenti
 	 * @param title titolo della proposta
 	 */
-	public void eventFailed(ArrayList<User> userList, String title) {
+	public void eventFailed(ArrayList<Subscriber> userList, Object title) {
 		userList.stream().forEach((u)->	u.receive(
 				new Message(
 					title+": "+LocalDate.now(),
@@ -93,7 +96,7 @@ public class MessageHandler {
 	 * @param userList lista di utenti
 	 * @param title titolo della proposta
 	 */
-	public void eventWithdrawn(ArrayList<User> userList, String title) {
+	public void eventWithdrawn(ArrayList<Subscriber> userList, Object title) {
 		userList.stream().forEach((u)->	u.receive(
 				new Message(
 					title+": "+LocalDate.now(),

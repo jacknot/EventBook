@@ -33,8 +33,10 @@ public class StringConstant {
 	//data ora luogo importo
 	public static final String CONFIRMFORMAT = "Siamo lieti di confermare che l'evento %s si terrà il giorno %s alle %s in %s."
 													+ "\nPer la partecipazione sono %.2f€.";
+	public static final String OPTIONAL_AMOUNT = "\nValutate le sue scelte relative alle voci opzionali si ricorda di "
+													+ "portare un totale di %.2f€.";
 	public static final String FAILUREFORMAT = "Siamo spiacenti di informarla che l'evento %s non ha raggiunto il numero minimo di iscritti."
 													+ "\nL'evento è quindi annullato.";
 	public static final String WITHDRAWNFORMAT = "Siamo spiacenti di informarla che l'evento %s è stato ritirato dal proprietario."
-			+ "\nL'evento è quindi annullato.";
+													+ "\nL'evento è quindi annullato.";
 }

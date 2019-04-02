@@ -103,8 +103,6 @@ public abstract class Category implements Cloneable,Serializable{
 				&& (((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName()))
 										.compareTo(LocalDate.now()) >= 0) 
 				&& (((Double)fields.getValue(FieldHeading.QUOTA.getName())) >= 0)
-				&& (fields.getValue(FieldHeading.DURATA.getName())==null?true:
-						(((Double)fields.getValue(FieldHeading.DURATA.getName())) >= 0))
 				&& (fields.getValue(FieldHeading.DATAFINE.getName())==null?true:
 						(((LocalDate)fields.getValue(FieldHeading.DATAFINE.getName()))
 												.compareTo((LocalDate)fields.getValue(FieldHeading.DATA.getName())) >= 0))
