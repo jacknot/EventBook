@@ -55,7 +55,6 @@ public class Proposal implements Serializable{
 		this.aState = State.INVALID;
 		statePassages = new ArrayList<Pair<State, LocalDate>>();
 		update();
-		statePassages.add(new Pair<>(aState, LocalDate.now()));
 	}
 	
 	/**
@@ -83,16 +82,21 @@ public class Proposal implements Serializable{
 	 * Fa cambiare stato alla proposta
 	 */
 	public void update() {
+		State oldState = aState;
 		if(aState.transition(this))
-			statePassages.add(new Pair<>(aState, LocalDate.now()));
+			if(!oldState.equals(aState))
+				statePassages.add(new Pair<>(aState, LocalDate.now()));
 	}
 	/**
 	 * Imposta un nuovo stato alla proposta
 	 * @param nS lo stato da assegnare alla proposta
 	 */
 	public void setState(State nS) {
-		aState = nS;
-		statePassages.add(new Pair<>(aState, LocalDate.now()));
+		State oldState = aState;
+		if(!oldState.equals(nS)) {
+			aState = nS;
+			statePassages.add(new Pair<>(aState, LocalDate.now()));
+		}
  	}
 	/**
 	 * Verifica se la proposta è uguale a quella inserita
@@ -198,7 +202,7 @@ public class Proposal implements Serializable{
 													.mapToDouble(Double::doubleValue)
 													.sum();
 								m.setObject(m.getObject() + String.format("\nValutate le sue scelte relative alle voci opzionali "
-																				+ "si ricorda di portare un totale di %s€.",
+																				+ "si ricorda di portare un totale di %.2f€.",
 																				(sum + (Double) getValue(FieldHeading.QUOTA.getName())))
 										);
 							}

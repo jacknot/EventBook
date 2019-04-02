@@ -107,10 +107,18 @@ public class ProposalHandler implements Serializable{
 	/**
 	 * Ritorna una stringa contenente tutte le proposte a cui è iscritto l'utente passato come parametro
 	 * @param user utente
-	 * @return strigna di proposte a cui l'utente è iscritto
+	 * @return stringa di proposte a cui l'utente è iscritto
 	 */
 	public synchronized String showUserSubscription(User user) {
 		return bacheca.showUserSubscription(user);
+	}
+	/**
+	 * Ritorna una il numero di proposte a cui l'utente passato per parametro è iscritto
+	 * @param user utente
+	 * @return numero di iscrizioni dell'utente
+	 */
+	public synchronized int countUserSubscription(User user) {
+		return bacheca.countUserSubscription(user);
 	}
 	/**
 	 * Controlla che il set contenga almeno una proposta con il titolo inserito

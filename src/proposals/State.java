@@ -2,13 +2,9 @@ package proposals;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-
 import utility.MessageHandler;
 import utility.StringConstant;
 import fields.FieldHeading;
-import users.Message;
-import users.User;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare

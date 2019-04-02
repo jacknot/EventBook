@@ -105,7 +105,7 @@ public class Context implements Closeable{
 		this.session = null;
 	}
 	/**
-	 * Restitusice il database di utenti
+	 * Restituisce il database di utenti
 	 * @return il database di utenti
 	 */
 	public UserDatabase getDatabase() {

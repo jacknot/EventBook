@@ -102,6 +102,17 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	}
 	
 	/**
+	 * Ritorna una il numero di proposte a cui l'utente passato per parametro è iscritto
+	 * @param user utente
+	 * @return numero di iscrizioni dell'utente
+	 */
+	public int countUserSubscription(User user) {
+		return (int) IntStream.range(0, this.size())
+					.filter((i)->this.get(i).isSignedUp(user))
+					.count();
+	}
+	
+	/**
 	 * Ordina le proposte nel ProposalSet in ordine di categoria
 	 */
 	private void sort() {

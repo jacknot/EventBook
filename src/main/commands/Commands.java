@@ -21,25 +21,17 @@ import utility.StringConstant;
 public enum Commands {
 
 		EXIT("exit", "Esci dal programma","",(ctx, args)->{
-			if(args.length == 0) {
-				System.exit(0);
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			System.exit(0);
+			return true;
 		}),
 		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", "", (ctx, args)->{
-			if(args.length == 0) {
-				ctx.getIOStream().writeln("Le categorie disponibili: ");
-				Stream.of(CategoryHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			ctx.getIOStream().writeln("Le categorie disponibili: ");
+			Stream.of(CategoryHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
+			return true;
 		}),
 		CATEGORY("categoria", "Mostra la categoria specificata", "categoria [categoryName]", (ctx, args)->{
 			if(args.length == 0){
@@ -108,19 +100,15 @@ public enum Commands {
 		  	}
 		}),
 		LOGOUT("logout", "Per uscire","", (ctx, args)->{
-			if(args.length == 0) {
-				ctx.resetSession();
-				ctx.getIOStream().writeln("Logout eseguito");
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			ctx.resetSession();
+			ctx.getIOStream().writeln("Logout eseguito");
+			return true;
 			}),
 		//syntax : modifica [id]
 		MODIFY("modifica","Modifica il campo di una proposta", "modifica [id]",(ctx, args)->{
-			if(!paramCheck(ctx, args))
+			if(!checkOneParameter(ctx, args))
 				return false;
 			//inserisci id proposta
 			boolean valid = false;
@@ -260,35 +248,27 @@ public enum Commands {
 			}
 		}),
 		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte","", (ctx, args)->{
-			if(args.length == 0) {
-				String proposals = ctx.getSession().showInProgress();
-				if(proposals.equals(""))
-					ctx.getIOStream().write("Nessuna proposta in lavorazione!\n");
-				else 
-					ctx.getIOStream().write("Le proposte in lavorazione:\n" + ctx.getSession().showInProgress());
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			String proposals = ctx.getSession().showInProgress();
+			if(proposals.equals(""))
+				ctx.getIOStream().write("Nessuna proposta in lavorazione!\n");
+			else 
+				ctx.getIOStream().write("Le proposte in lavorazione:\n" + ctx.getSession().showInProgress());
+			return true;
 		}),
 		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche","", (ctx, args)->{
-			if(args.length == 0) {
-				if(ctx.getSession().noMessages()) 
-					ctx.getIOStream().writeln("Nessun messaggio.");
-				else
-					ctx.getIOStream().writeln(ctx.getSession().showNotification());
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			if(ctx.getSession().noMessages()) 
+				ctx.getIOStream().writeln("Nessun messaggio.");
+			else
+				ctx.getIOStream().writeln(ctx.getSession().showNotification());
+			return true;
 		}),
 		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo", "rimuoviNotifica [id]",(ctx, args)->{
-			if(!paramCheck(ctx, args))
+			if(!checkOneParameter(ctx, args))
 				return false;
 			int id = -1;
 			try {
@@ -306,23 +286,19 @@ public enum Commands {
 			}
 		}),
 		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca","",(ctx, args)->{
-			if(args.length == 0) {
-				ctx.getProposalHandler().refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente utente vedrà la bacheca aggiornata
-				String content = ctx.getProposalHandler().showContent();
-				if(content.equals(""))
-					ctx.getIOStream().write("Nessuna proposta in bacheca!\n");
-				else 
-					ctx.getIOStream().write("Le proposte in bacheca:\n" + content);
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			ctx.getProposalHandler().refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente utente vedrà la bacheca aggiornata
+			String content = ctx.getProposalHandler().showContent();
+			if(content.equals(""))
+				ctx.getIOStream().write("Nessuna proposta in bacheca!\n");
+			else 
+				ctx.getIOStream().write("Le proposte in bacheca:\n" + content);
+			return true;
 		}),
 		//syntax : pubblica [id]
 		PUBLISH("pubblica", "Pubblica un evento creato", "pubblica [id]", (ctx, args)->{
-			if(!paramCheck(ctx, args))
+			if(!checkOneParameter(ctx, args))
 				return false;
 			int id = -1;
 			try {
@@ -351,7 +327,7 @@ public enum Commands {
 		}),
 		// syntax : partecipa [id]
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca", "partecipa [id]",(ctx, args)->{
-			if(!paramCheck(ctx, args))
+			if(!checkOneParameter(ctx, args))
 				return false;
 			int id = -1;
 			try {
@@ -390,33 +366,39 @@ public enum Commands {
 				return false;
 			}			
 		}),
-		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","disiscrivi [id]",(ctx, args)->{
-			if(!paramCheck(ctx, args))
+		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","",(ctx, args)->{
+			if(!checkNoParameter(ctx, args))
 				return false;
 			User actualUser = ctx.getSession().getOwner();
-			ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+			if(ctx.getProposalHandler().countUserSubscription(actualUser) == 0) {
+				ctx.getIOStream().writeln("Non sei iscritto a nessuna proposta");
 				return false;
-			}
-			if(ctx.getProposalHandler().isSignedUp(id, actualUser)) {
-				if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
-					ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
-					return true;
-				}else {
-					ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
+			} else {
+				ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
+				int id = -1;
+				try {
+					id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
+				}catch(NumberFormatException e) {
+					ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 					return false;
 				}
-			}else {
-				ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
-				return false;
+				if(ctx.getProposalHandler().isSignedUp(id, actualUser)) {
+					if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
+						ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
+						return true;
+					}else {
+						ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
+						return false;
+					}
+				}else {
+					ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
+					return false;
+				}
 			}
 		}),
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo","",(ctx, args)->{
-			if(args.length == 0) {
+				if(!checkNoParameter(ctx, args))
+					return false;
 				FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
 				FieldHeading field = FieldHeading.TITOLO;
 				String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
@@ -464,14 +446,9 @@ public enum Commands {
 						return false;
 					}
 				}
-			}
-			else {
-				System.out.println("Troppi parametri inseriti");
-				return false;
-			}
 		}),
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira[id]", (ctx, args)->{
-			if(!paramCheck(ctx, args))
+			if(!checkOneParameter(ctx, args))
 				return false;
 			int id = -1;
 			try {
@@ -495,28 +472,20 @@ public enum Commands {
 			}
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "",(ctx, args)->{
-			if(args.length == 0) {
-				ctx.getProposalHandler().refresh();
-				ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			ctx.getProposalHandler().refresh();
+			ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
+			return true;
 		}),
 		PRIVATE_SPACE_OUT("back", "Esci dal private space", "",(ctx, args)->{
-			if(args.length == 0) {
-				ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
+			return true;
 		}),
 		INVITE("invita", "Invita utenti ad una proposta","invita [id]",(ctx, args)->{
-			if(!paramCheck(ctx, args))
+			if(!checkOneParameter(ctx, args))
 				return false;
 			int id = -1;
 			try {
@@ -558,14 +527,10 @@ public enum Commands {
 			}
 		}),
 		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente","",(ctx, args)->{
-			if(args.length == 0) {
-				ctx.getIOStream().write(ctx.getSession().getOwner().showProfile());
-				return true;
-			}
-			else {
-				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
+			if(!checkNoParameter(ctx, args))
 				return false;
-			}
+			ctx.getIOStream().write(ctx.getSession().getOwner().showProfile());
+			return true;
 		});
 	
 		/**
@@ -656,12 +621,20 @@ public enum Commands {
 			return obj;
 		}
 		
-		private static boolean paramCheck(Context ctx, String args[]) {
+		private static boolean checkOneParameter(Context ctx, String args[]) {
 			if(args.length == 0) {
-				ctx.getIOStream().write("Inserisci un parametro");
+				ctx.getIOStream().writeln("Inserisci un parametro");
 				return false;
 			} else if(args.length > 1) {
-				ctx.getIOStream().write("Inserisci un solo parametro");
+				ctx.getIOStream().writeln("Inserisci un solo parametro");
+				return false;
+			}
+			return true;
+		}
+		
+		private static boolean checkNoParameter(Context ctx, String args[]) {
+			if(args.length != 0) {
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 			return true;

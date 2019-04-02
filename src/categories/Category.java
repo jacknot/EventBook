@@ -93,11 +93,14 @@ public abstract class Category implements Cloneable,Serializable{
 				//la data è seguente o uguale al termine ultimo iscrizione
 				&& (((LocalDate)fields.getValue(FieldHeading.DATA.getName()))
 										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName())) >= 0) 
-				//il termine ultimo iscrizione segue o egualia il termine di ritiro
+				//il termine ultimo iscrizione segue o eguaglia il termine di ritiro
 				&& (((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
 										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName())) >= 0)
 				//E' possibile iscriversi all'evento quando questo viene pubblicato
 				&& (((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
+										.compareTo(LocalDate.now()) >= 0) 
+				//Se presente il termine ultimo di ritiro è minimo il giorno corrente
+				&& (((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName()))
 										.compareTo(LocalDate.now()) >= 0) 
 				&& (((Double)fields.getValue(FieldHeading.QUOTA.getName())) >= 0)
 				&& (fields.getValue(FieldHeading.DURATA.getName())==null?true:
