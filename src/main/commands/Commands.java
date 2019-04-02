@@ -430,7 +430,7 @@ public enum Commands {
 			}
 
 		}),
-		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira [id]", (ctx, args)->{
+		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","", (ctx, args)->{
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
