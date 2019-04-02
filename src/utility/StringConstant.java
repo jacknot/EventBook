@@ -9,7 +9,12 @@ public class StringConstant {
 	public static final String NEW_LINE = "\n";
 	public static final String EMPTY_STRING = "";
 	public static final String INSERT_IDENTIFIER = "Inserisci l'identificatore : ";
-	public static final String INSERT_NUMBER = "Inserisci un numero";
+	public static final String INSERT_NUMBER = "Il parametro deve essere un numero";
+	
+	public static final String SPECIFY_CATEGORY_NAME = "Specifica il nome di una categoria";
+	public static final String CATEGORY_NOT_FOUND = "Il nome inserito non appartiene ad una categoria esistente";
+	
+	public static final String TOO_PARAMETERS = "Sono stati inseriti parametri superflui";
 	
 	public static final String SAVE_COMPLETED = "completato";
 	public static final String SAVE_FAILED = "fallito";

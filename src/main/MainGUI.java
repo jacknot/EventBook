@@ -10,8 +10,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
-import com.sun.javafx.scene.control.skin.TextFieldSkin;
-
 import main.commands.CommandsHandler;
 import main.commands.CommandsHistory;
 import main.commands.InOutStream;

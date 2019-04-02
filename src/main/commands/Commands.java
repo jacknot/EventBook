@@ -26,7 +26,7 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		}),
@@ -37,14 +37,13 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		}),
-		//syntax : categoria [category]
-		CATEGORY("categoria", "Mostra la categoria disponibile", "categoria [name]", (ctx, args)->{
+		CATEGORY("categoria", "Mostra la categoria specificata", "categoria [categoryName]", (ctx, args)->{
 			if(args.length == 0){
-			 	ctx.getIOStream().writeln("Inserisci il nome di una categoria");
+			 	ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 			  	return false;
 			}else if(Stream.of(CategoryHeading.values())
 			  					.anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
@@ -53,24 +52,22 @@ public enum Commands {
 			  								.findFirst().get().toString());
 			  	return true;
 			 }else{
-			  	ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
+			  	ctx.getIOStream().writeln(StringConstant.CATEGORY_NOT_FOUND);
 			  	return false;
 			  }
 		}),
-		//syntax : descrizione [category]
-		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria disponibile", "descrizione [name]", (ctx, args)->{
+		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria specificata", "descrizione [categoryName]", (ctx, args)->{
 			if(args.length == 0){
-		 		ctx.getIOStream().writeln("Inserisci il nome di una categoria");
+		 		ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 		  		return false;
 		  	}else if(Stream.of(CategoryHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
 		  		ctx.getIOStream().write(FieldSetFactory.getInstance().getSet(args[0]).getFeatures());
 		  		return true;
 		 	}else{
-		  		ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
+		  		ctx.getIOStream().writeln(StringConstant.CATEGORY_NOT_FOUND);
 		  		return false;
 		  	}
 		}),
-		//syntax : registra [name]
 		REGISTRATION("registra", "Registra un fruitore", "registra [name]", (ctx, args)->{
 			if(args.length == 0){
 		 		ctx.getIOStream().writeln("Inserisci il nomignolo dell'utente da registrare");
@@ -117,7 +114,7 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 			}),
@@ -131,7 +128,7 @@ public enum Commands {
 			try {
 				id = Integer.parseInt(args[0]);
 				if(!ctx.getSession().contains(id)) {
-					ctx.getIOStream().writeln("Identificatore non esistente");
+					ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo id");
 					return false;
 				}
 			}catch(NumberFormatException e) {
@@ -162,7 +159,7 @@ public enum Commands {
 					newValue = obj.toString();
 				String confirm = ctx.getIOStream()
 										.read("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + newValue 
-												+ "[y/n]");
+												+ " [y/n]");
 				if(confirm.equalsIgnoreCase("n")) {
 					valid = true;
 					ctx.getIOStream().writeln("La modifica è stata annullata");
@@ -181,7 +178,7 @@ public enum Commands {
 		}),
 		NEW_EVENT("crea", "Crea un nuovo evento", "crea [categoryName]", (ctx, args)->{
 			if(args.length == 0) {
-				ctx.getIOStream().write("Inserisci il nome di una categoria");
+				ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 				return false;
 			}
 			String categoryName = args[0];
@@ -213,7 +210,7 @@ public enum Commands {
 						boolean valid = false;
 						boolean keepField = false;
 						do {
-							String confirm = ctx.getIOStream().read(fd.toString() + "\nVuoi inserire questo campo opzionale?[y|n]");
+							String confirm = ctx.getIOStream().read(fd.toString() + "\nVuoi inserire questo campo opzionale? [y|n]");
 							if(confirm.equalsIgnoreCase("y")) {
 								valid = true;
 								keepField = true;
@@ -272,7 +269,7 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		}),
@@ -285,7 +282,7 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		}),
@@ -297,7 +294,7 @@ public enum Commands {
 			try {
 				id = Integer.parseInt(args[0]);
 			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln("Dato invalido, inserisci un numero");
+				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;
 			}
 			if(!ctx.getSession().getOwner().removeMsg(id)) {
@@ -319,7 +316,7 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		}),
@@ -393,32 +390,28 @@ public enum Commands {
 				return false;
 			}			
 		}),
-		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","",(ctx, args)->{
-			if(args.length == 0) {
-				User actualUser = ctx.getSession().getOwner();
-				ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
-				int id = -1;
-				try {
-					id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
-				}catch(NumberFormatException e) {
-					ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
-					return false;
-				}
-				if(ctx.getProposalHandler().isSignedUp(id, actualUser)) {
-					if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
-						ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
-						return true;
-					}else {
-						ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
-						return false;
-					}
-				}else {
-					ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
-					return false;
-				}
+		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","disiscrivi [id]",(ctx, args)->{
+			if(!paramCheck(ctx, args))
+				return false;
+			User actualUser = ctx.getSession().getOwner();
+			ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
+			int id = -1;
+			try {
+				id = Integer.parseInt(args[0]);
+			}catch(NumberFormatException e) {
+				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+				return false;
 			}
-			else {
-				System.out.println("Troppi parametri inseriti");
+			if(ctx.getProposalHandler().isSignedUp(id, actualUser)) {
+				if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
+					ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
+					return true;
+				}else {
+					ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
+					return false;
+				}
+			}else {
+				ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
 				return false;
 			}
 		}),
@@ -481,25 +474,25 @@ public enum Commands {
 			if(!paramCheck(ctx, args))
 				return false;
 			int id = -1;
-			/*try {
-				id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
-				return false;
-			}*/
 			try {
 				id = Integer.parseInt(args[0]);
 			}catch(NumberFormatException e) {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;
 			}
-			if(ctx.getProposalHandler().withdraw(id, ctx.getSession().getOwner())) {
-				ctx.getIOStream().writeln("La proposta è stata ritirata con successo");
-				return true;
+			User owner = ctx.getSession().getOwner();
+			if(ctx.getProposalHandler().isOwner(id, owner)) {
+				if(ctx.getProposalHandler().withdraw(id, owner)) {
+					ctx.getIOStream().writeln("La proposta è stata ritirata con successo");
+					return true;
+				}else {
+					ctx.getIOStream().writeln("La proposta non è stata ritirata");
+					return false;
+				}	
 			}else {
-				ctx.getIOStream().writeln("La proposta non è stata ritirata");
+				ctx.getIOStream().writeln("La proposta non è di tua proprietà");
 				return false;
-			}	
+			}
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "",(ctx, args)->{
 			if(args.length == 0) {
@@ -508,7 +501,7 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		}),
@@ -518,55 +511,49 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		}),
-		INVITE("invita", "Invita utenti ad una proposta","",(ctx, args)->{
-			if(args.length == 0) {
-				if(!paramCheck(ctx, args))
-					return false;
-				int id = -1;
-				try {
-					id = Integer.parseInt(args[0]);
-				}catch(NumberFormatException e) {
-					ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
-					return false;
-				}
-				User owner = ctx.getSession().getOwner();
-				if(ctx.getProposalHandler().isOwner(id, owner)) {
-					ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
-					ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
-					String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
-					if(confirm.equalsIgnoreCase("y")) {
-						MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-						return true;
-					}else if(confirm.equalsIgnoreCase("n")) {							
-						ArrayList<User> receivers = new ArrayList<>();
-						userList.stream()
-									.forEach(( u )->{
-										String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
-										if(answer.equalsIgnoreCase("y")) {
-											receivers.add(u);
-											ctx.getIOStream().writeln("L'utente verrà notificato");
-										}else if(answer.equalsIgnoreCase("n"))
-											ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
-										else
-											ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
-									});
-						MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-						return true;
-					}else {
-						ctx.getIOStream().writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
-						return false;
-					}
-				}else {
-					ctx.getIOStream().writeln("La proposta non è di tua proprietà");
-					return false;
-				}
+		INVITE("invita", "Invita utenti ad una proposta","invita [id]",(ctx, args)->{
+			if(!paramCheck(ctx, args))
+				return false;
+			int id = -1;
+			try {
+				id = Integer.parseInt(args[0]);
+			}catch(NumberFormatException e) {
+				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+				return false;
 			}
-			else {
-				System.out.println("Troppi parametri inseriti");
+			User owner = ctx.getSession().getOwner();
+			if(ctx.getProposalHandler().isOwner(id, owner)) {
+				ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
+				ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
+				String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
+				if(confirm.equalsIgnoreCase("y")) {
+					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+					return true;
+				}else if(confirm.equalsIgnoreCase("n")) {							
+					ArrayList<User> receivers = new ArrayList<>();
+					userList.stream()
+								.forEach(( u )->{
+									String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
+									if(answer.equalsIgnoreCase("y")) {
+										receivers.add(u);
+										ctx.getIOStream().writeln("L'utente verrà notificato");
+									}else if(answer.equalsIgnoreCase("n"))
+										ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
+									else
+										ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
+								});
+					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
+					return true;
+				}else {
+					ctx.getIOStream().writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
+					return false;
+				}
+			}else {
+				ctx.getIOStream().writeln("La proposta non è di tua proprietà");
 				return false;
 			}
 		}),
@@ -576,10 +563,11 @@ public enum Commands {
 				return true;
 			}
 			else {
-				System.out.println("Troppi parametri inseriti");
+				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
 				return false;
 			}
 		});
+	
 		/**
 		 * Il nome del comando
 		 */

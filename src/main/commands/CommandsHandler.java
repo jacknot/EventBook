@@ -17,7 +17,7 @@ public class CommandsHandler implements Closeable{
 	/**
 	 * Il formato con cui vengono stampati i comandi
 	 */
-	private static final String TOSTRING_FORMAT = "\n\t%-30s%-50s%-50s";
+	private static final String TOSTRING_FORMAT = "\n\t%-30s%-70s%-25s";
 	/**
 	 * Espressione regolare per l'estrazione del comando
 	 */
@@ -104,6 +104,7 @@ public class CommandsHandler implements Closeable{
 		cList.add(Commands.PRIVATE_SPACE_OUT); //Uscita dal private space
 		cList.add(Commands.SHOW_PROFILE);
 		cList.add(Commands.MODIFY_PROFILE);
+		cList.remove(Commands.SHOW_CATEGORIES);
 		cList.remove(Commands.CATEGORY);
 		cList.remove(Commands.DESCRIPTION);
 		cList.remove(Commands.LOGOUT);
@@ -122,6 +123,7 @@ public class CommandsHandler implements Closeable{
 	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un uscita dal private space
 	 */
 	private void privateSpaceOut() {
+		cList.add(Commands.SHOW_CATEGORIES);
 		cList.add(Commands.CATEGORY);
 		cList.add(Commands.DESCRIPTION);
 		cList.add(Commands.LOGOUT);

@@ -26,7 +26,7 @@ public enum ClassType{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		return LocalTime.parse(ora, formatter);
 	}),
-	INTERVAL(Interval.class, "\\d{1,2}-\\d{1,2}", "etàMinima-etàMassima", (interval) ->{
+	INTERVAL(Interval.class, "\\d{1,2}-\\d{1,2}", "etàMinima-etàMassima (età compresa tra 0 e 99 anni)", (interval) ->{
 		StringTokenizer tokenizer = new StringTokenizer(interval, "-");
 		return new Interval(Integer.parseInt(tokenizer.nextToken()), Integer.parseInt(tokenizer.nextToken()));
 	}),
@@ -34,14 +34,6 @@ public enum ClassType{
 		return new Gender(gender.matches("F"));
 	}),
 	INTEREST_CATEGORIES(CategoriesOfInterest.class, "[^\\n;]+(;[^\\n;]+)*", "Elenco di stringhe separate da ;", (array) -> {
-		CategoriesOfInterest arrayString = new CategoriesOfInterest();
-			StringTokenizer tokenizer = new StringTokenizer(array, ";");
-			while(tokenizer.hasMoreTokens()) {
-				arrayString.add(tokenizer.nextToken());
-			}
-		return arrayString;
-	}),
-	BOOLEAN(Boolean.class, "[^\\n;]+(;[^\\n;]+)*", "Elenco di stringhe separate da ;", (array) -> {
 		CategoriesOfInterest arrayString = new CategoriesOfInterest();
 			StringTokenizer tokenizer = new StringTokenizer(array, ";");
 			while(tokenizer.hasMoreTokens()) {
