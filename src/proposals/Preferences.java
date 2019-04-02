@@ -17,7 +17,7 @@ public class Preferences implements Serializable{
 	/**
 	 * Contiene le coppie: intestazione+preferenza  
 	 */
-	private HashMap<FieldHeading, Boolean> preferenze; //non dovrebbe essere fisso boolean ma di tipo variabile -> nuova classe extends HashMap<FieldHeading, T>
+	private HashMap<FieldHeading, Boolean> preferenze;
 	
 	/**
 	 * Costruttore

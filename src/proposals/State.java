@@ -2,10 +2,13 @@ package proposals;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
+import utility.MessageHandler;
 import utility.StringConstant;
 import fields.FieldHeading;
 import users.Message;
+import users.User;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare
@@ -77,31 +80,24 @@ public enum State implements Serializable{
 			int tol = p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())== null? 0:
 				(Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
 			int max = (Integer) p.getValue(FieldHeading.NUMPARTECIPANTI.getName());
-			//todayDate <= lastSubDate && subs == full
+			//todayDate <= lastSubDate && subs == full		
 			if((todayDate.compareTo(lastSubDate) == 0 && p.subNumber() - max <= tol) || 
 					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastSigningDay) >= 0) && p.subNumber() - max == tol) {
 				p.setState(CLOSED);
-				p.send(new Message(	//messaggio che avvisa che la proposta è chiusa
-						title+": "+LocalDate.now(),
-						StringConstant.CONFIRMOBJ,															
-						String.format(StringConstant.CONFIRMFORMAT, title,
-													p.getValue(FieldHeading.DATA.getName()),
-													p.getValue(FieldHeading.ORA.getName()),
-													p.getValue(FieldHeading.LUOGO.getName()),
-													p.getValue(FieldHeading.QUOTA.getName()))							
-						));
+				
+				MessageHandler.getInstance().eventConfirmed(p.getAllSubscribers(), title, 
+															p.getValue(FieldHeading.DATA.getName()),
+															p.getValue(FieldHeading.ORA.getName()),
+															p.getValue(FieldHeading.LUOGO.getName()),
+															p.getValue(FieldHeading.QUOTA.getName())
+											);
 				return true;
 			//todayDate >= lastSubDate && subs < full
 			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
 					p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMPARTECIPANTI.getName()))
 					) {
 				p.setState(FAILED);
-				
-				p.send(new Message(	//messaggio che avvisa che la proposta è fallita
-						title+": "+LocalDate.now(),	
-						StringConstant.FAILUREOBJ,
-						String.format(StringConstant.FAILUREFORMAT, title)
-						));
+				MessageHandler.getInstance().eventFailed(p.getAllSubscribers(), title);//messaggio che avvisa che la proposta è fallita
 				return true;
 			}
 			return false;
@@ -114,11 +110,7 @@ public enum State implements Serializable{
 				p.setState(WITHDRAWN);
 				String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 					(String)p.getValue(FieldHeading.TITOLO.getName());
-				p.send(new Message(	//messaggio che avvisa che la proposta è stata ritirata
-						title+": "+ LocalDate.now(),
-						StringConstant.WITHDRAWNOBJ,															
-						String.format(StringConstant.WITHDRAWNFORMAT, title)							
-						));
+				MessageHandler.getInstance().eventWithdrawn(p.getAllSubscribers(), title);//messaggio che avvisa che la proposta è stata ritirata
 				return true;
 			}
 			return false;

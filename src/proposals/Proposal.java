@@ -262,12 +262,23 @@ public class Proposal implements Serializable{
 	 * @return La lista di utenti iscritti all proposta
 	 */
 	public ArrayList<User> getSubscribers(){
-		//return subscribers;
 		return subscribers.stream()
 							.map((s) -> s.getUser())
 							.collect(Collectors.toCollection(ArrayList :: new));
 	}
 	
+	/**
+	 * Restituisce la lista di iscritti all proposta, compreso il proprietario
+	 * @return La lista di utenti iscritti all proposta, compreso il proprietario
+	 */
+	public ArrayList<User> getAllSubscribers(){
+		ArrayList<User> subs = subscribers.stream()
+							.map((s) -> s.getUser())
+							.collect(Collectors.toCollection(ArrayList :: new));
+		subs.add(owner.getUser());
+		return subs;	
+	}
+
 	/**
 	 * Restituisce il nome della categoria a cui la proposta fa riferimento
 	 * @return il nome della categoria a cui la proposta fa riferimento

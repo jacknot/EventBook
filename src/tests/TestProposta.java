@@ -146,7 +146,7 @@ class TestProposta {
 		event.setValue(FieldHeading.MERCHANDISE.getName(), FieldHeading.MERCHANDISE.getClassType().parse("20.00")); //Campo opzionale espresso
 		
 		Proposal proposal = new Proposal(event); //creata proposta
-		proposal.setOwner(owner, proposal.getPreferenze()); //PERCHè DEVO PASSARE ALL'OGGETTO proposal un metodo di proposal?
+		proposal.setOwner(owner, proposal.getPreferenze());
 	
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		bacheca.add(proposal); //proposta aggiunta correttamente	
