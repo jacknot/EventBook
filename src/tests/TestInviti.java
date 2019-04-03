@@ -30,6 +30,10 @@ class TestInviti {
 	}
 	
 	@org.junit.jupiter.api.Test
+	void testRicezioneNotifiche() {
+		assertFalse(true);
+	}
+	@org.junit.jupiter.api.Test
 	void notificaInteresse() { 
 		UserDatabase database = new UserDatabase(); //creazione database utenti
 		database.register("pinco");
