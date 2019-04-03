@@ -222,22 +222,7 @@ public enum Commands {
 			//iscrizione proprietario
 			Proposal p = new Proposal(event);
 			Preferences pref = p.getPreferenze();
-			Stream.of(pref.getChoices())
-					.forEach((fh)->{
-						boolean confirm = false;
-						boolean valid = false;
-						do {
-							String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne? [y|n]");
-							if(ok.equalsIgnoreCase("y")) {
-								confirm = true;
-								valid = true;
-							}else if(ok.equalsIgnoreCase("n"))
-								valid = true;
-							else
-								ctx.getIOStream().writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
-						}while(!valid);
-						pref.impostaPreferenza(fh, confirm);
-					});
+			pref = setPreference(pref, ctx);
 			p.setOwner(ctx.getSession().getOwner(), pref);
 			if(ctx.getSession().addProposal(p)) {
 				ctx.getIOStream().writeln("La proposta è stata aggiunta alla proposte in lavorazione");
@@ -336,35 +321,30 @@ public enum Commands {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;
 			}
-			Preferences pref = ctx.getProposalHandler().getPreferenze(id);
-			if(pref!=null) {
-				Stream.of(pref.getChoices())
-						.forEach((fh)->{
-							boolean confirm = false;
-							boolean valid = false;
-							do {
-								String ok = ctx.getIOStream().read(fh.toString() + "\nVuoi usufruirne?[y|n]> ");
-								if(ok.equalsIgnoreCase("y")) {
-									confirm = true;
-									valid = true;
-								}else if(ok.equalsIgnoreCase("n"))
-									valid = true;
-								else
-									ctx.getIOStream().writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
-							}while(!valid);
-							pref.impostaPreferenza(fh, confirm);
-						});
-				if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
-					ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
+			if(!ctx.getProposalHandler().isOwner(id, ctx.getSession().getOwner())) {
+				Preferences pref = ctx.getProposalHandler().getPreferenze(id);
+				if(pref!=null) {
+					FieldHeading[] optionalFields = pref.getChoices();
+					if(optionalFields.length != 0) {
+						ctx.getIOStream().writeln("Per completare l'iscrizione all'evento compilare i seguenti campi:");
+						pref = setPreference(pref, ctx);
+						ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
+					}
+					if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
+						ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
+						return false;
+					}else {
+						ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
+						return true;
+					}
+				} else {
+					ctx.getIOStream().writeln("Proposta non trovata");
 					return false;
-				}else {
-					ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
-					return true;
-				}
+				}	
 			} else {
-				ctx.getIOStream().writeln("Proposta non trovata");
+				ctx.getIOStream().writeln("Sei il proprietario della proposta, sei automaticamente iscritto");
 				return false;
-			}			
+			}
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","disiscrivi",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
@@ -497,6 +477,10 @@ public enum Commands {
 			User owner = ctx.getSession().getOwner();
 			if(ctx.getProposalHandler().isOwner(id, owner)) {
 				ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
+				if(userList.isEmpty()) {
+					ctx.getIOStream().writeln("Nessun utente trovato da invitare per questa proposta");
+					return false;
+				}
 				ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
 				String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
 				if(confirm.equalsIgnoreCase("y")) {
@@ -619,6 +603,26 @@ public enum Commands {
 					ctx.getIOStream().writeln("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
 			}while(!valid);
 			return obj;
+		}
+		
+		private static Preferences setPreference(Preferences pref, Context ctx) {
+			Stream.of(pref.getChoices())
+			.forEach((fh)->{
+				boolean confirm = false;
+				boolean valid = false;
+				do {
+					String ok = ctx.getIOStream().read(String.format("\n%s\n\tVuoi usufruirne? [y|n] > ", fh.toString()));
+					if(ok.equalsIgnoreCase("y")) {
+						confirm = true;
+						valid = true;
+					}else if(ok.equalsIgnoreCase("n"))
+						valid = true;
+					else
+						ctx.getIOStream().writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
+				}while(!valid);
+				pref.impostaPreferenza(fh, confirm);
+			});
+			return pref;
 		}
 		
 		private static boolean checkOneParameter(Context ctx, String args[]) {

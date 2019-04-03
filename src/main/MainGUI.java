@@ -121,6 +121,8 @@ public class MainGUI {
 				} else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
 					String hint = handler.hint(textFieldCommands.getText());
 					textFieldCommands.setText(hint);
+				} else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+					textFieldCommands.setText(StringConstant.EMPTY_STRING);
 				}
 			}
 		

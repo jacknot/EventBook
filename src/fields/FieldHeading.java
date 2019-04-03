@@ -42,7 +42,7 @@ public enum FieldHeading{
 					false, true, ClassType.REAL),
 	MEET_AND_GREET("Meet & Greet", "Prezzo del Meet & Greet per conoscere i membri della/e Band prima del concerto", 
 					false, true, ClassType.REAL),
-	MERCHANDISE("Merchandise", "Prezzo dei Gadet e Merchandise ufficiali della/e band", false, true, ClassType.REAL),
+	MERCHANDISE("Merchandise", "Prezzo dei Gadget e Merchandise ufficiali della/e band", false, true, ClassType.REAL),
 	
 	//campi per il profilo
 	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso", 

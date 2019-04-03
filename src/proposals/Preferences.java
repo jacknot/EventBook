@@ -71,7 +71,7 @@ public class Preferences implements Serializable{
 				Stream.of(p.getChoices()).allMatch((k)->this.contains(k));
 	}
 	/**
-	 * Restitusice le intestazioni dei campi sui quali è possibile fare scelte
+	 * Restituisce le intestazioni dei campi sui quali è possibile fare scelte
 	 * @return le intestazioni
 	 */
 	public FieldHeading[] getChoices() {
