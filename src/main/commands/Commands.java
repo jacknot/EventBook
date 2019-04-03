@@ -33,7 +33,7 @@ public enum Commands {
 			Stream.of(CategoryHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
 			return true;
 		}),
-		CATEGORY("categoria", "Mostra la categoria specificata", "categoria [categoryName]", (ctx, args)->{
+		CATEGORY("descrizione", "Mostra la categoria specificata", "descrizione [categoryName]", (ctx, args)->{
 			if(args.length == 0){
 			 	ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 			  	return false;
@@ -48,7 +48,7 @@ public enum Commands {
 			  	return false;
 			  }
 		}),
-		DESCRIPTION("descrizione", "Mostra le caratteristiche della categoria specificata", "descrizione [categoryName]", (ctx, args)->{
+		DESCRIPTION("caratteristiche", "Mostra le caratteristiche della categoria specificata", "caratteristiche [categoryName]", (ctx, args)->{
 			if(args.length == 0){
 		 		ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 		  		return false;
@@ -478,7 +478,7 @@ public enum Commands {
 			ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
 			return true;
 		}),
-		PRIVATE_SPACE_OUT("back", "Esci dal private space", "",(ctx, args)->{
+		PRIVATE_SPACE_OUT("home", "Esci dal private space", "",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
