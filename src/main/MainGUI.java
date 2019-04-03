@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import javax.swing.JButton;
 
 public class MainGUI {
 	
@@ -34,6 +35,7 @@ public class MainGUI {
 	private JTextArea textArea;
 	private JTextField textFieldCommands;
 	private CommandsHistory commandsHistory;
+	private JButton btnSend;
 
 	/**
 	 * Launch the application.
@@ -93,22 +95,17 @@ public class MainGUI {
 		textFieldCommands = new JTextField();		
 		textFieldCommands.setColumns(10);
 		panelCommands.add(textFieldCommands);	
-		textFieldCommands.requestFocus();
+		
+		btnSend = new JButton("Invia");
+		panelCommands.add(btnSend, BorderLayout.EAST);
 		
 		GUIStream guis = new GUIStream();
 		
 		handler = CommandsHandler.getInstance(guis);	
 		
-		textFieldCommands.addActionListener(event -> {
-				String command = textFieldCommands.getText().trim();
-				if(command != null) {
-					textArea.append(command + "\n");
-					commandsHistory.add(command);
-					handler.run(command);
-				}
-				textFieldCommands.setText("");
-				textFieldCommands.requestFocus();
-		});
+		textFieldCommands.addActionListener(event -> sendCommand());
+		
+		btnSend.addActionListener(event -> sendCommand());
 		
 		textFieldCommands.addKeyListener(new KeyAdapter() { 
 
@@ -139,6 +136,19 @@ public class MainGUI {
 				}			
 			}			  
 		});
+		
+		textFieldCommands.requestFocus();
+	}
+	
+	private void sendCommand() {
+		String command = textFieldCommands.getText().trim();
+		if(command != null) {
+			textArea.append(command + "\n");
+			commandsHistory.add(command);
+			handler.run(command);
+		}
+		textFieldCommands.setText("");
+		textFieldCommands.requestFocus();
 	}
 	
 	 class GUIStream implements InOutStream{

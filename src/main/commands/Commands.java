@@ -198,20 +198,20 @@ public enum Commands {
 						boolean valid = false;
 						boolean keepField = false;
 						do {
-							String confirm = ctx.getIOStream().read(fd.toString() + "\nVuoi inserire questo campo opzionale? [y|n]");
+							String confirm = ctx.getIOStream().read(String.format("\n%s\n\tVuoi inserire questo campo opzionale? [y|n] > ", fd.toString()));
 							if(confirm.equalsIgnoreCase("y")) {
 								valid = true;
 								keepField = true;
 							}else if(confirm.equalsIgnoreCase("n")) 
 								valid = true;
 							else
-								ctx.getIOStream().writeln("Valore inserito errato: inserisci 'y' o 'n'");
+								ctx.getIOStream().writeln("\n\tValore inserito errato: inserisci 'y' o 'n'");
 						}while(!valid);
 						if(!keepField) {
-							ctx.getIOStream().writeln("Il campo opzionale " + fd.getName() + " non verrà inserito nella categoria");
+							ctx.getIOStream().writeln("\tIl campo opzionale " + fd.getName() + " non verrà inserito nella categoria");
 							event.removeOptionalField(fd);
 						}else {
-							ctx.getIOStream().writeln("Il campo opzionale " + fd.getName() + " verrà inserito nella categoria");
+							ctx.getIOStream().writeln("\tIl campo opzionale " + fd.getName() + " verrà inserito nella categoria");
 							Object obj = acceptValue(ctx, fd, "Inserisci un valore per il campo: ");
 							if(event.setValue(fd.getName(), obj))
 								ctx.getIOStream().writeln("\tDato inserito correttamente\n");
@@ -223,6 +223,7 @@ public enum Commands {
 			Proposal p = new Proposal(event);
 			Preferences pref = p.getPreferenze();
 			pref = setPreference(pref, ctx);
+			ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
 			p.setOwner(ctx.getSession().getOwner(), pref);
 			if(ctx.getSession().addProposal(p)) {
 				ctx.getIOStream().writeln("La proposta è stata aggiunta alla proposte in lavorazione");
@@ -251,7 +252,6 @@ public enum Commands {
 				ctx.getIOStream().writeln(ctx.getSession().showNotification());
 			return true;
 		}),
-		//syntax : rimuoviNotifica [id]
 		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo", "rimuoviNotifica [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
@@ -281,7 +281,6 @@ public enum Commands {
 				ctx.getIOStream().write("Le proposte in bacheca:\n" + content);
 			return true;
 		}),
-		//syntax : pubblica [id]
 		PUBLISH("pubblica", "Pubblica un evento creato", "pubblica [id]", (ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
@@ -310,7 +309,6 @@ public enum Commands {
 				return false;
 			}		
 		}),
-		// syntax : partecipa [id]
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca", "partecipa [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
@@ -322,25 +320,30 @@ public enum Commands {
 				return false;
 			}
 			if(!ctx.getProposalHandler().isOwner(id, ctx.getSession().getOwner())) {
-				Preferences pref = ctx.getProposalHandler().getPreferenze(id);
-				if(pref!=null) {
-					FieldHeading[] optionalFields = pref.getChoices();
-					if(optionalFields.length != 0) {
-						ctx.getIOStream().writeln("Per completare l'iscrizione all'evento compilare i seguenti campi:");
-						pref = setPreference(pref, ctx);
-						ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
-					}
-					if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
-						ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
+				if(!ctx.getProposalHandler().isSignedUp(id, ctx.getSession().getOwner())) {
+					Preferences pref = ctx.getProposalHandler().getPreferenze(id);
+					if(pref!=null) {
+						FieldHeading[] optionalFields = pref.getChoices();
+						if(optionalFields.length != 0) {
+							ctx.getIOStream().writeln("Per completare l'iscrizione all'evento compilare i seguenti campi:");
+							pref = setPreference(pref, ctx);
+							ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
+						}
+						if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
+							ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
+							return false;
+						}else {
+							ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
+							return true;
+						}
+					} else {
+						ctx.getIOStream().writeln("Proposta non trovata");
 						return false;
-					}else {
-						ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
-						return true;
-					}
+					}	
 				} else {
-					ctx.getIOStream().writeln("Proposta non trovata");
+					ctx.getIOStream().writeln("Sei già iscritto a questa proposta");
 					return false;
-				}	
+				}
 			} else {
 				ctx.getIOStream().writeln("Sei il proprietario della proposta, sei automaticamente iscritto");
 				return false;
@@ -605,6 +608,12 @@ public enum Commands {
 			return obj;
 		}
 		
+		/**
+		 * Chiede all'utente di quali campi opzionali vuole usufruire e imposta la Preferenza
+		 * @param pref Preferenza da impostare
+		 * @param ctx Contesto
+		 * @return Preferenza impostata dall'utente
+		 */
 		private static Preferences setPreference(Preferences pref, Context ctx) {
 			Stream.of(pref.getChoices())
 			.forEach((fh)->{
@@ -618,13 +627,20 @@ public enum Commands {
 					}else if(ok.equalsIgnoreCase("n"))
 						valid = true;
 					else
-						ctx.getIOStream().writeln("Il valore inserito non è corretto: inserisci 'y' o 'n'");
+						ctx.getIOStream().writeln("\n\tIl valore inserito non è corretto: inserisci 'y' o 'n'");
 				}while(!valid);
 				pref.impostaPreferenza(fh, confirm);
 			});
 			return pref;
 		}
 		
+
+		/**
+		 * Controlla se nella chiamata di un comando è stato passato un parametro
+		 * @param ctx Contesto
+		 * @param args Parametri di un comando
+		 * @return True - Se il parametro è uno <br> False - altrimenti
+		 */
 		private static boolean checkOneParameter(Context ctx, String args[]) {
 			if(args.length == 0) {
 				ctx.getIOStream().writeln("Inserisci un parametro");
@@ -636,6 +652,12 @@ public enum Commands {
 			return true;
 		}
 		
+		/**
+		 * Controlla se nella chiamata di un comando non è stato passato nessun parametro
+		 * @param ctx Contesto
+		 * @param args Parametri di un comando
+		 * @return True - Se nessun parametro passato <br> False - altrimenti
+		 */
 		private static boolean checkNoParameter(Context ctx, String args[]) {
 			if(args.length != 0) {
 				ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
