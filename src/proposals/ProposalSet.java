@@ -57,13 +57,13 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return il contenuto dell'insieme in forma testuale
 	 */
 	public String showContent() {
+		//Il sort ordina le proposte
 		sort();
 		StringBuilder sb = new StringBuilder();
 		IntStream.range(0, this.size())
 					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, this.get(i).toString())));
-		
 		return sb.toString();
-	}	
+	}	 
 	/**
 	 * Restuisce lo stato che devono avere tutte le proposte
 	 * @return stato
