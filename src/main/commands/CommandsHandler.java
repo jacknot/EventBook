@@ -166,7 +166,7 @@ public class CommandsHandler implements Closeable{
 		Matcher matcher = Pattern.compile(REGEX_COMMAND).matcher(input);
 		if(matcher.find())
 			return matcher.group().trim();
-		return "";
+		return StringConstant.EMPTY_STRING;
 	}
 	
 	/**
