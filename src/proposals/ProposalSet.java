@@ -57,7 +57,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return il contenuto dell'insieme in forma testuale
 	 */
 	public String showContent() {
-		//sort();
+		sort();
 		StringBuilder sb = new StringBuilder();
 		IntStream.range(0, this.size())
 					.forEachOrdered((i)->sb.append(String.format(PROPOSAL, i, this.get(i).toString())));
