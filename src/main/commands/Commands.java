@@ -20,13 +20,13 @@ import utility.StringConstant;
  */
 public enum Commands {
 
-		EXIT("exit", "Esci dal programma","",(ctx, args)->{
+		EXIT("exit", "Esci dal programma","exit",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			System.exit(0);
 			return true;
 		}),
-		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", "", (ctx, args)->{
+		SHOW_CATEGORIES("mostraCategorie", "Mostra le categorie disponibili", "mostraCategorie", (ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getIOStream().writeln("Le categorie disponibili: ");
@@ -99,7 +99,7 @@ public enum Commands {
 		  		return false;
 		  	}
 		}),
-		LOGOUT("logout", "Per uscire","", (ctx, args)->{
+		LOGOUT("logout", "Per uscire","logout", (ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.resetSession();
@@ -247,7 +247,7 @@ public enum Commands {
 				return false;
 			}
 		}),
-		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte","", (ctx, args)->{
+		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte","mostraInLavorazione", (ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			String proposals = ctx.getSession().showInProgress();
@@ -257,7 +257,7 @@ public enum Commands {
 				ctx.getIOStream().write("Le proposte in lavorazione:\n" + ctx.getSession().showInProgress());
 			return true;
 		}),
-		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche","", (ctx, args)->{
+		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche","mostraNotifiche", (ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			if(ctx.getSession().noMessages()) 
@@ -285,7 +285,7 @@ public enum Commands {
 				return true;
 			}
 		}),
-		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca","",(ctx, args)->{
+		SHOW_NOTICEBOARD("mostraBacheca","Mostra tutte le proposte in bacheca","mostraBacheca",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getProposalHandler().refresh(); //refresh forzato quando viene richiesta la bacheca, sicuramente utente vedrà la bacheca aggiornata
@@ -366,7 +366,7 @@ public enum Commands {
 				return false;
 			}			
 		}),
-		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","",(ctx, args)->{
+		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","disiscrivi",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			User actualUser = ctx.getSession().getOwner();
@@ -396,7 +396,7 @@ public enum Commands {
 				}
 			}
 		}),
-		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo","",(ctx, args)->{
+		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo","modificaProfilo",(ctx, args)->{
 				if(!checkNoParameter(ctx, args))
 					return false;
 				FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
@@ -471,14 +471,14 @@ public enum Commands {
 				return false;
 			}
 		}),
-		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "",(ctx, args)->{
+		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "spazioPersonale",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getProposalHandler().refresh();
 			ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
 			return true;
 		}),
-		PRIVATE_SPACE_OUT("home", "Esci dal private space", "",(ctx, args)->{
+		PRIVATE_SPACE_OUT("home", "Esci dal private space", "home",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
@@ -526,7 +526,7 @@ public enum Commands {
 				return false;
 			}
 		}),
-		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente","",(ctx, args)->{
+		SHOW_PROFILE("mostraProfilo", "Mostra il profilo dell'utente","mostraProfilo",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getIOStream().write(ctx.getSession().getOwner().showProfile());
