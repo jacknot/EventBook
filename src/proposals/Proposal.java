@@ -244,7 +244,7 @@ public class Proposal implements Serializable{
 	 * @param name il nome della categoria di evento
 	 * @return True - la proposta è relativa alla categoria<br>False - la proposta non è legata alla categoria
 	 */
-	public boolean isCategory(String name) {
+	public boolean hasCategory(String name) {
 		return event.hasName(name);
 	}
 

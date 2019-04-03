@@ -77,8 +77,7 @@ public enum State implements Serializable{
 			LocalDate lastSigningDay = (LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName());
 			String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 															(String)p.getValue(FieldHeading.TITOLO.getName());
-			int tol = p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())== null? 0:
-				(Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
+			int tol = (Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
 			int max = (Integer) p.getValue(FieldHeading.NUMPARTECIPANTI.getName());
 			//todayDate <= lastSubDate && subs == full		
 			if((todayDate.compareTo(lastSubDate) == 0 && p.subNumber() - max <= tol) || 
@@ -96,7 +95,7 @@ public enum State implements Serializable{
 				return true;
 			//todayDate >= lastSubDate && subs < full
 			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
-					p.subNumber() < Integer.class.cast(p.getValue(FieldHeading.NUMPARTECIPANTI.getName()))
+					p.subNumber() < (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())
 					) {
 				p.setState(FAILED);
 				MessageHandler.getInstance().eventFailed(p.getSubscribers(), title);

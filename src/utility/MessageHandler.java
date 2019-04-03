@@ -71,7 +71,7 @@ public class MessageHandler {
 											data,
 											ora,
 											luogo,
-											quota) + (p.getSecond() == 0?"":String.format(StringConstant.OPTIONAL_AMOUNT, p.getSecond()))
+											quota) + (p.getSecond() == 0?"":String.format(StringConstant.OPTIONAL_AMOUNT, p.getSecond() + (Double)quota))
 							))
 					);	
 	}

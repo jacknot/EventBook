@@ -101,19 +101,19 @@ public abstract class Category implements Cloneable,Serializable{
 										.compareTo(LocalDate.now()) >= 0) 
 				//Se presente il termine ultimo di ritiro è minimo il giorno corrente
 				&& (((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName()))
-										.compareTo(LocalDate.now()) >= 0) 
+										.compareTo(LocalDate.now()) >= 0)
 				&& (((Double)fields.getValue(FieldHeading.QUOTA.getName())) >= 0)
 				&& (fields.getValue(FieldHeading.DATAFINE.getName())==null?true:
 						(((LocalDate)fields.getValue(FieldHeading.DATAFINE.getName()))
 												.compareTo((LocalDate)fields.getValue(FieldHeading.DATA.getName())) >= 0))
-				&& (fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())==null?true:
-						(((Integer)fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())) >= 0))
-				&& (fields.getValue(FieldHeading.NUMPARTECIPANTI.getName())==null?true:
-					(((Integer)fields.getValue(FieldHeading.NUMPARTECIPANTI.getName())) > 0))
+				//pre-impostato dal metodo di reset
+				&& (((Integer)fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())) >= 0)
+				&& (((Integer)fields.getValue(FieldHeading.NUMPARTECIPANTI.getName())) > 0)
 				&& Stream.of(FieldHeading.values())
 							.filter((fh)->fh.isOptional())
 							.filter((fh)->containsField(fh.getName()))
-							.allMatch((fh)-> fields.getValue(fh.getName())==null?true:(((Double)fields.getValue(fh.getName())) >= 0))
+							//i campi opzionali devono essere compilati dal propositore
+							.allMatch((fh)-> fields.getValue(fh.getName())==null?false:(((Double)fields.getValue(fh.getName())) >= 0))
 				)
 			return true;
 		return false;

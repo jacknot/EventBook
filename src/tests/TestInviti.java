@@ -20,6 +20,16 @@ import utility.MessageHandler;
 class TestInviti {
 
 	@org.junit.jupiter.api.Test
+	void controlloPreferenze() {
+		assertFalse(true);
+	}
+	
+	@org.junit.jupiter.api.Test
+	void correttaIscrizioneConPreferenzeModificate() {
+		assertFalse(true);
+	}
+	
+	@org.junit.jupiter.api.Test
 	void notificaInteresse() { 
 		UserDatabase database = new UserDatabase(); //creazione database utenti
 		database.register("pinco");

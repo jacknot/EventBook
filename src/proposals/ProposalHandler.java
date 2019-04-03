@@ -184,7 +184,7 @@ public class ProposalHandler implements Serializable{
 		ArrayList<User> userList = new ArrayList<User>();
 		Stream.concat(proposteConcluse.stream(), proposteChiuse.stream())
 			.filter((p)->p.isOwner(owner))
-			.filter((p)->p.isCategory(categoryName))
+			.filter((p)->p.hasCategory(categoryName))
 			.map((p) -> p.getUsers())
 			.forEach((l) -> l.stream()
 								.forEach((u) -> {
