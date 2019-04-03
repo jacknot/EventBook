@@ -189,7 +189,9 @@ public class Proposal implements Serializable{
 	public Double additionalCostsOf(User u) {
 		if(!isSignedUp(u))
 			return 0.00;
-		Subscriber s = getSubscribers().stream().filter((sub)->sub.getUser().equals(u)).findFirst().get();
+		Subscriber s = getSubscribers().stream()
+				.filter((sub)->sub.getUser().equals(u))
+				.findFirst().get();
 		return Stream.of(s.getPreferenze().getChoices())
 				.filter((fh)-> s.getPreferenze().getPreferenza(fh))
 				.map((fh)->(Double) getValue(fh.getName()))

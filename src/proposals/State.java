@@ -79,12 +79,13 @@ public enum State implements Serializable{
 															(String)p.getValue(FieldHeading.TITOLO.getName());
 			int tol = (Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
 			int max = (Integer) p.getValue(FieldHeading.NUMPARTECIPANTI.getName());
-			//todayDate <= lastSubDate && subs == full		
-			if((todayDate.compareTo(lastSubDate) == 0 && p.subNumber() - max <= tol) || 
-					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastSigningDay) >= 0) && p.subNumber() - max == tol) {
+			
+			if((todayDate.compareTo(lastSubDate) == 0 && p.subNumber() - max <= tol && 0 <= p.subNumber() - max) || 
+					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastSigningDay) >= 0 && p.subNumber() - max == tol)) {
 				p.setState(CLOSED);
 				
 				ArrayList<Pair<Subscriber, Double>> sub_cost = new ArrayList<Pair<Subscriber, Double>>();
+				p.getSubscribers().stream().forEach((s)->sub_cost.add(new Pair<Subscriber, Double>(s, p.additionalCostsOf(s.getUser()))));
 				MessageHandler.getInstance().eventConfirmed(sub_cost, 
 															title, 
 															p.getValue(FieldHeading.DATA.getName()),
@@ -94,9 +95,8 @@ public enum State implements Serializable{
 											);
 				return true;
 			//todayDate >= lastSubDate && subs < full
-			}else if(todayDate.compareTo(lastSubDate) >= 0 &&
-					p.subNumber() < (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())
-					) {
+			}else if(todayDate.compareTo(lastSubDate) == 0 
+					&& p.subNumber() < (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())) {
 				p.setState(FAILED);
 				MessageHandler.getInstance().eventFailed(p.getSubscribers(), title);
 				return true;
@@ -125,15 +125,15 @@ public enum State implements Serializable{
 			LocalDate tDate = LocalDate.now();
 			Object tmp = p.getValue(FieldHeading.DATAFINE.getName());
 			if(tmp == null) {
-				LocalDate date = LocalDate.class.cast(p.getValue(FieldHeading.DATA.getName()));
-				if(tDate.compareTo(date) > 0) {
+				LocalDate date = (LocalDate) p.getValue(FieldHeading.DATA.getName());
+				if(tDate.compareTo(date.plusDays(1)) == 0) {
 					p.setState(ENDED);
 					return true;
 				}
 				return false;
 			}else {
-				LocalDate endDate = LocalDate.class.cast(tmp);
-				if(tDate.compareTo(endDate) > 0) {
+				LocalDate endDate = (LocalDate)tmp;
+				if(tDate.compareTo(endDate.plusDays(1)) == 0) {
 					p.setState(ENDED);
 					return true;
 				}

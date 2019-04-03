@@ -195,4 +195,14 @@ class TestProposta {
 		Proposal p = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName()));
 		assertTrue(p.getPreferenze().sameChoices(p.getPreferenze()));
 	}
+	
+	@org.junit.jupiter.api.Test
+	void testPropostaInBachecaConTerminiVariAOggi() {
+		assertTrue(false);
+	}
+	
+	@org.junit.jupiter.api.Test
+	void testPropostaConNPartecipantiA1() {
+		assertTrue(false);
+	}
 }

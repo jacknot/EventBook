@@ -9,6 +9,7 @@ import categories.Category;
 import categories.CategoryCache;
 import categories.CategoryHeading;
 import fields.FieldHeading;
+import proposals.Preferences;
 import proposals.Proposal;
 import proposals.ProposalHandler;
 import proposals.State;
@@ -21,18 +22,69 @@ class TestInviti {
 
 	@org.junit.jupiter.api.Test
 	void controlloPreferenze() {
-		assertFalse(true);
+		Proposal p1 = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName()));
+		Preferences pref = p1.getPreferenze();
+		assertTrue(p1.getPreferenze().sameChoices(pref));
+		assertTrue(pref.contains(FieldHeading.BACKSTAGE_PASS));
+		assertTrue(pref.impostaPreferenza(FieldHeading.BACKSTAGE_PASS, true));
+		assertTrue(p1.getPreferenze().sameChoices(pref));
 	}
 	
 	@org.junit.jupiter.api.Test
 	void correttaIscrizioneConPreferenzeModificate() {
-		assertFalse(true);
+		UserDatabase database = new UserDatabase();
+		database.register("pinco");
+		database.register("Mario");
+		ProposalHandler noticeBoard = new ProposalHandler();
+		
+		//Creazione nuova categoria
+		Category c1 = CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName());
+		c1.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
+		c1.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
+		c1.setValue(FieldHeading.LUOGO.getName(), "Brescia");
+		c1.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(2));
+		c1.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		c1.setValue(FieldHeading.QUOTA.getName(),10.00);
+		c1.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
+		c1.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
+		c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().plusDays(1));
+		c1.setValue(FieldHeading.BACKSTAGE_PASS.getName(), 20.00);
+		c1.removeOptionalField(FieldHeading.MEET_AND_GREET);
+		c1.removeOptionalField(FieldHeading.MERCHANDISE);
+		//non rimuovo campi non opzionali
+		assertFalse(c1.removeOptionalField(FieldHeading.FASCIA_ETA));
+		assertTrue(c1.containsField(FieldHeading.BACKSTAGE_PASS.getName()));
+		assertFalse(c1.containsField(FieldHeading.MEET_AND_GREET.getName()));
+		assertFalse(c1.containsField(FieldHeading.MERCHANDISE.getName()));
+		
+		Proposal proposal = new Proposal(c1);
+		assertTrue(proposal.setOwner(database.getUser("Mario"), proposal.getPreferenze()));
+		assertTrue(proposal.hasState(State.VALID));
+		noticeBoard.add(proposal);
+		
+		//la proposta può chiudersi solo quando ho abbastanza utenti e la data attuale è > data termine ultimo ritiro
+		//devo impostare la data termine < data attuale
+		proposal.setState(State.VALID);
+		assertTrue(c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1)));
+		proposal.setState(State.OPEN);
+		assertTrue(((LocalDate)proposal.getValue(FieldHeading.TERMINE_RITIRO.getName())).compareTo(LocalDate.now().minusDays(1)) == 0);
+		
+		Preferences pref = noticeBoard.getPreferenze(0);
+
+		assertFalse(pref.contains(FieldHeading.MEET_AND_GREET));
+		assertFalse(pref.contains(FieldHeading.MERCHANDISE));
+		assertTrue(pref.contains(FieldHeading.BACKSTAGE_PASS));
+		
+		assertTrue(pref.impostaPreferenza(FieldHeading.BACKSTAGE_PASS, true));
+		assertTrue(noticeBoard.signUp(0, database.getUser("pinco"), pref));
+		assertTrue(proposal.hasState(State.CLOSED));
+		
+		assertFalse(database.getUser("Mario").noMessages());
+		assertFalse(database.getUser("pinco").noMessages());
+		System.out.println("Test : correttaIscrizioneConPreferenzeModificate ->" + database.getUser("pinco").showNotifications());
+		System.out.println("\n" + database.getUser("Mario").showNotifications());
 	}
 	
-	@org.junit.jupiter.api.Test
-	void testRicezioneNotifiche() {
-		assertFalse(true);
-	}
 	@org.junit.jupiter.api.Test
 	void notificaInteresse() { 
 		UserDatabase database = new UserDatabase(); //creazione database utenti
@@ -93,6 +145,9 @@ class TestInviti {
 		c1.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		c1.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1));
+		//la data di ritiro è precedente la data attuale
+		assertFalse(c1.isValid());
+		c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().plusDays(1));
 		assertTrue(c1.isValid());
 		
 		Proposal p1 = new Proposal(c1);
@@ -104,6 +159,12 @@ class TestInviti {
 		assertTrue(p1.hasState(State.OPEN));
 		assertTrue(ph.contains(p1));
 		assertTrue(ph.isSignedUp(0, db.getUser("mario")));
+		//la proposta può chiudersi solo quando ho abbastanza utenti e la data attuale è > data termine ultimo ritiro
+		//devo impostare la data termine < data attuale
+		p1.setState(State.VALID);
+		assertTrue(c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1)));
+		p1.setState(State.OPEN);
+		assertTrue(((LocalDate)p1.getValue(FieldHeading.TERMINE_RITIRO.getName())).compareTo(LocalDate.now().minusDays(1)) == 0);
 		//ho iscritto gente fino a far riempire la proposta (APERTA -> CHIUSA)
 		ph.signUp(0, db.getUser("carlo"), ph.getPreferenze(0));
 		assertTrue(p1.hasState(State.CLOSED));
@@ -119,7 +180,7 @@ class TestInviti {
 		c2.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
 		c2.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		c2.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
-		c2.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1));
+		c2.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().plusDays(1));
 		assertTrue(c2.isValid());
 		
 		Proposal p2 = new Proposal(c2);
@@ -137,7 +198,7 @@ class TestInviti {
 		assertTrue(receivers.contains(db.getUser("carlo")));
 		receivers.stream().forEach((u)->u.receive(new Message("prova","prova","Invito te!")));
 		assertFalse(db.getUser("carlo").noMessages());
-		System.out.println(db.getUser("carlo").showNotifications());
+		System.out.println("Test : invitaTutti ->" + db.getUser("carlo").showNotifications());
 	}
 
 }

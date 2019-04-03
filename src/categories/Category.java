@@ -10,7 +10,6 @@ import fields.FieldHeading;
 import fields.FieldSet;
 import proposals.Preferences;
 
-
 /**
  * Classe con il compito di definire il comportamento di una categoria.<br>
  * Implementa l'interfaccia Cloneable per poter consentire l'utilizzo del Design Pattern Prototype.<br>
@@ -96,9 +95,6 @@ public abstract class Category implements Cloneable,Serializable{
 				//il termine ultimo iscrizione segue o eguaglia il termine di ritiro
 				&& (((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
 										.compareTo((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName())) >= 0)
-				//E' possibile iscriversi all'evento quando questo viene pubblicato
-				&& (((LocalDate)fields.getValue(FieldHeading.TERMINEISCRIZIONE.getName()))
-										.compareTo(LocalDate.now()) >= 0) 
 				//Se presente il termine ultimo di ritiro è minimo il giorno corrente
 				&& (((LocalDate)fields.getValue(FieldHeading.TERMINE_RITIRO.getName()))
 										.compareTo(LocalDate.now()) >= 0)
