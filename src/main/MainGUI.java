@@ -27,6 +27,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import javax.swing.JButton;
+import javax.swing.border.TitledBorder;
 
 public class MainGUI {
 	
@@ -88,7 +89,7 @@ public class MainGUI {
 		panelWelcome.add(lblWelcome);
 
 		JPanel panelCommands = new JPanel();
-		panelCommands.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panelCommands.setBorder(new TitledBorder(null, "Comandi", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		frame.getContentPane().add(panelCommands, BorderLayout.SOUTH);
 		panelCommands.setLayout(new BorderLayout(0, 0));
 		
