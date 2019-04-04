@@ -8,7 +8,7 @@ import categories.Category;
 import categories.CategoryCache;
 import categories.CategoryHeading;
 import fields.FieldHeading;
-import proposals.Preferences;
+import proposals.OptionsSet;
 import proposals.Proposal;
 import proposals.ProposalHandler;
 import proposals.State;
@@ -30,7 +30,7 @@ class TestProposta {
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event);
 		assertFalse(proposal.isValid()); //deve essere invalida
-		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
+		proposal.setOwner(new User("Mario"), proposal.getOptions());
 		assertFalse(proposal.isValid() && proposal.hasState(State.INVALID));
 	}
 	
@@ -46,7 +46,7 @@ class TestProposta {
 		event.setValue(FieldHeading.GENERE.getName(),  FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse( "10-50"));
 		Proposal proposal = new Proposal(event);
-		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
+		proposal.setOwner(new User("Mario"), proposal.getOptions());
 		assertFalse(proposal.isValid()); //deve essere invalida
 	}
 	
@@ -63,7 +63,7 @@ class TestProposta {
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event);
 		assertFalse(proposal.isValid()); //deve essere valida
-		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
+		proposal.setOwner(new User("Mario"), proposal.getOptions());
 		assertTrue(proposal.isValid()); //deve essere valida
 	}
 	
@@ -79,7 +79,7 @@ class TestProposta {
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));	//categoria valida generata
 		Proposal proposal = new Proposal(event); //creata proposta
-		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
+		proposal.setOwner(new User("Mario"), proposal.getOptions());
 		assertTrue(proposal.isValid()); //deve essere valida
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		bacheca.add(proposal);
@@ -99,7 +99,7 @@ class TestProposta {
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50")); //categoria valida generata (con un termine di ritiro corretto)
 		Proposal proposal = new Proposal(event); //creata proposta
-		proposal.setOwner(owner, proposal.getPreferenze());
+		proposal.setOwner(owner, proposal.getOptions());
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		bacheca.add(proposal); //proposta aggiunta correttamente
 		bacheca.withdraw(0, owner); //rimossa proposta
@@ -123,7 +123,7 @@ class TestProposta {
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		
 		Proposal proposal = new Proposal(event); //creata proposta
-		proposal.setOwner(owner, proposal.getPreferenze());
+		proposal.setOwner(owner, proposal.getOptions());
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal)); //proposta aggiunta correttamente		
 		assertTrue(bacheca.signUp(0, user, bacheca.getPreferenze(0)));
@@ -149,15 +149,15 @@ class TestProposta {
 		event.removeOptionalField(FieldHeading.BACKSTAGE_PASS);
 		assertTrue(event.isValid());
 		Proposal proposal = new Proposal(event); //creata proposta
-		proposal.setOwner(owner, proposal.getPreferenze());
+		proposal.setOwner(owner, proposal.getOptions());
 		
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal)); //proposta aggiunta correttamente	
-		Preferences pref = bacheca.getPreferenze(0);
+		OptionsSet pref = bacheca.getPreferenze(0);
 		
-		pref.impostaPreferenza(FieldHeading.MEET_AND_GREET,  true); //accetta la prima
-		pref.impostaPreferenza(FieldHeading.MERCHANDISE, false); //rifiuta la seconda
-		assertTrue(pref.sameChoices(proposal.getPreferenze()));
+		pref.makeChoice(FieldHeading.MEET_AND_GREET,  true); //accetta la prima
+		pref.makeChoice(FieldHeading.MERCHANDISE, false); //rifiuta la seconda
+		assertTrue(pref.hasSameChoices(proposal.getOptions()));
 		
 		assertTrue(bacheca.signUp(0, user, pref));
 	}
@@ -182,30 +182,30 @@ class TestProposta {
 		assertTrue(event.isValid());
 		
 		Proposal proposal = new Proposal(event); //creata proposta
-		proposal.setOwner(owner, proposal.getPreferenze());
+		proposal.setOwner(owner, proposal.getOptions());
 		
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal));
 		assertTrue(proposal.hasState(State.OPEN));
 		proposal.setState(State.VALID);
-		proposal.modify(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().minusDays(1));
+		proposal.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().minusDays(1));
 		proposal.setState(State.OPEN);
 		proposal.update();
 		
 		//la proposta inoltre mantiene il suo stato -> non posso iscrivermi direttamente ad essa
-		assertFalse(proposal.signUp(user, proposal.getPreferenze()));
+		assertFalse(proposal.signUp(user, proposal.getOptions()));
 		bacheca.refresh(); //La bacheca si aggiorna e cambia stato alla proposta -> passa a Fallita
 		assertFalse(bacheca.contains(proposal));
 		assertTrue(proposal.hasState(State.FAILED));
 		//La proposta, avendo superato la data ultima di termine iscrizione, viene rimossa dalla bacheca
 		//La bacheca ora è vuota -> non posso iscrivermi
-		assertFalse(bacheca.signUp(0, user, proposal.getPreferenze())); 
+		assertFalse(bacheca.signUp(0, user, proposal.getOptions())); 
 	}
 	
 	@org.junit.jupiter.api.Test
 	void ugualianazaPreferenze() { 
 		Proposal p = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName()));
-		assertTrue(p.getPreferenze().sameChoices(p.getPreferenze()));
+		assertTrue(p.getOptions().hasSameChoices(p.getOptions()));
 	}
 	
 	@org.junit.jupiter.api.Test
@@ -226,7 +226,7 @@ class TestProposta {
 		assertTrue(event.isValid());
 		
 		Proposal p = new Proposal(event);
-		p.setOwner(owner, p.getPreferenze());
+		p.setOwner(owner, p.getOptions());
 		assertTrue(p.hasState(State.VALID));
 		
 		ProposalHandler ph = new ProposalHandler();
@@ -235,17 +235,8 @@ class TestProposta {
 		
 		assertTrue(ph.signUp(0, pinco, ph.getPreferenze(0)));
 		ph.refresh();
-		//subNumber == max && termine_ritiro == tDay -> la proposta non può ancora andare in CHIUSA, può ancora essere ritirata
-		assertTrue(p.hasState(State.OPEN));
-		
-		//set(data Ritiro < tDate) --> la proposta può ora può andare da OPEN -> CLOSED (-> ENDED)
-		//modificando così la data ritiro genererei una proposta INVALIDA, mettendola a OPEN salto il controllo
-		//è un metodo per far passare il tempo
-		p.setState(State.VALID);
-		p.modify(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(4));
-		p.setState(State.OPEN);
-		
-		ph.refresh();
+		//subNumber == max && tDate == termine_ritiro == termine_iscrizione -> do precedenza al termine_ iscrizione -> proposta è CLOSED
+		assertTrue(p.hasState(State.CLOSED));
 		assertFalse(ph.contains(0));
 		//ho inviato messaggi relativi alla conferma dell'evento
 		assertFalse(pinco.noMessages());
@@ -268,9 +259,9 @@ class TestProposta {
 		assertFalse(event.isValid());
 		
 		Proposal p = new Proposal(event);
-		p.setOwner(owner, p.getPreferenze());
+		p.setOwner(owner, p.getOptions());
 		assertTrue(p.hasState(State.INVALID));
-		assertFalse(p.signUp(pinco, p.getPreferenze()));
+		assertFalse(p.signUp(pinco, p.getOptions()));
 		
 		ProposalHandler ph = new ProposalHandler();
 		assertFalse(ph.add(p));

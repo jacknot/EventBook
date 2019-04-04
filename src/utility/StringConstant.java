@@ -1,8 +1,8 @@
 package utility;
 
 /**
- * Contiene tutte le stringhe costanti usate
- * @author Matteo
+ * Classe che contiene gran parte delle stringhe usate nelle varie parti del programma
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public class StringConstant {

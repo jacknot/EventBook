@@ -6,6 +6,11 @@ import java.util.stream.Stream;
 
 import users.User;
 
+/**
+ * Classe con il compito di gestire un insieme di proposte in base al loro stato
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
 public class ProposalHandler implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -75,7 +80,7 @@ public class ProposalHandler implements Serializable{
 	 * @param user l'utente da aggiungere alla proposta 
 	 * @return l'esito dell'iscrizione
 	 */
-	public synchronized boolean signUp(int id, User user, Preferences preferenze) {
+	public synchronized boolean signUp(int id, User user, OptionsSet preferenze) {
 		if(bacheca.contains(id)) 
 			if(bacheca.get(id).signUp(user, preferenze)) {
 				this.refresh();
@@ -210,9 +215,21 @@ public class ProposalHandler implements Serializable{
 	 * @param id l'identificativo della proposta interessata
 	 * @return l'insieme di scelte che è possibile fare sulla proposta, null se la proposta non esiste
 	 */
-	public synchronized Preferences getPreferenze(int id) {
+	public synchronized OptionsSet getPreferenze(int id) {
 		if(bacheca.contains(id))
-			return bacheca.get(id).getPreferenze();
+			return bacheca.get(id).getOptions();
 		return null;
 	}
+	/**
+	 * Invita gli utenti inseriti alla proposta
+	 * @param id l'identificatore della proposta a cui invitare gli utenti
+	 * @param users gli utenti da invitare alla proposta
+	 * @return True - se gli inviti sono stati inviati correttamente<br>False - se gli inviti non sono stati inviati
+	 */
+	public synchronized boolean inviteTo(int id, ArrayList<User> users) {
+		if(bacheca.contains(id)) {
+			return bacheca.get(id).invite(id, users);
+		}
+		return false;
+	} 
 }

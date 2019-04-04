@@ -19,20 +19,20 @@ public class User implements Serializable{
 	/**
 	 * Lo spazio personale del fruitore
 	 */
-	private PersonalSpace privateSpace;
+	private PersonalSpace personalSpace;
 	
 	/**
-	 * Costruttore per la classe User
-	 * @param name Il nome del fruitore
+	 * Costruttore
+	 * @param name Il nome dell'utente
 	 */
 	public User(String name) {
 		this.profile = new Profile(name);
-		this.privateSpace = new PersonalSpace();
+		this.personalSpace = new PersonalSpace();
 	}
 	
 	/**
-	 * Ritorna il nome del fruitore
-	 * @return Il nome del fruitore
+	 * Ritorna il nome dell'utente
+	 * @return Il nome dell'utente
 	 */
 	public String getName() {
 		return profile.getValue(FieldHeading.NOMIGNOLO.getName()).toString();
@@ -43,22 +43,22 @@ public class User implements Serializable{
 	 * @param message Il messaggio da aggiungere
 	 */
 	public void receive(Message message) {
-		privateSpace.add(message);
+		personalSpace.add(message);
 	}
 	
 	/**
 	 * Rimuove un messaggio 
-	 * @param index l'id del messaggio
+	 * @param id l'identificatore del messaggio
 	 * @return l'esito della rimozione
 	 */
-	public boolean removeMsg(int index) {
-		return privateSpace.remove(index);
+	public boolean removeMsg(int id) {
+		return personalSpace.remove(id);
 	}
 	
 	/**
-	 * Controlla se i due utenti sono uguali (hanno lo stesso nome)
+	 * Controlla se i due utenti sono uguali
 	 * @param f utente da confrontare
-	 * @return true se uguali<br>false altrimenti
+	 * @return True - se i due utenti sono uguali<br>False - altrimenti
 	 */
 	public boolean equals(User f) {
 		return getName().equals(f.getName());
@@ -69,7 +69,7 @@ public class User implements Serializable{
 	 * @return il contenuto dello spazio personale come testo
 	 */
 	public String showNotifications() {
-		return this.privateSpace.toString();
+		return this.personalSpace.toString();
 	}
 	
 	/**
@@ -101,8 +101,8 @@ public class User implements Serializable{
 	/**
 	 * Modifica la lista di categoria di interesse dell'utente
 	 * @param category categoria di riferimento
-	 * @param add True se categoria è da aggiungere <br> False se da rimuovere
-	 * @return True se operazione completata correttamente <br> False altrimenti
+	 * @param add True - se categoria è da aggiungere <br> False - se la categoria è da rimuovere
+	 * @return True se l'operazione è stata completata con successo<br> False - altrimenti
 	 */
 	public boolean modifyCategory(String category, boolean add) {
 		return profile.modifyCategory(category, add);
@@ -110,26 +110,25 @@ public class User implements Serializable{
 	
 	/**
 	 * Verifica se tra le categorie di interesse dell'utente compare la categoria il cui nome è passato come parametro
-	 * @param categoryName nome della categoria
-	 * @return True se presente <br> False altrimenti
+	 * @param categoryName nome della categoria da verificare
+	 * @return True - se la categoria è di interesse per l'utente<br> False - la categoria non è di interesse per l'utente
 	 */
 	public boolean containsCategory(String categoryName) {
 		return profile.containsCategory(categoryName);
 	}
 	
 	/**
-	 * Verifica se lo spazio personale è vuoto (non ha messaggi)
-	 * @return True se nessun messaggio presente <br> False altrimenti
+	 * Verifica se lo spazio personale è vuoto
+	 * @return True - se non è presente alcun messaggio<br> False - se lo spazio personale contiene dei messaggi
 	 */
 	public boolean noMessages() {
-		return privateSpace.noMessages();
+		return personalSpace.noMessages();
 	}	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		//Modifica per la versione 4 -> E' meglio mettere qua dentro showProfile()???
 		return profile.getValue(FieldHeading.NOMIGNOLO.getName()).toString();
 	}
 }

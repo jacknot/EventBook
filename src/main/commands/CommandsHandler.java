@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 import utility.StringConstant;
 
 /**
- * Contenitore in grado di gestire una lista di comandi e di poter fare operazioni su di essi
+ * Classe in grado di gestire un insieme di comandi e di poter fare operazioni su di essi.<br>
+ * La classe implementa il design pattern Singleton
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
@@ -39,21 +40,24 @@ public class CommandsHandler implements Closeable{
 	 */
 	private CommandsHandler(InOutStream IOStream) {
 		cList = new ArrayList<Commands>();
-		
 		this.context = new Context(IOStream);
-		
 		cList.add(Commands.EXIT);
 		cList.add(Commands.REGISTRATION);
 		cList.add(Commands.LOGIN);
 	}
 	
+	/**
+	 * Restituisce una istanza della classe
+	 * @param IOStream lo stream di Input Output su cui si vuole operare
+	 * @return l'istanza della classe
+	 */
 	public static CommandsHandler getInstance(InOutStream IOStream) {
 		if(instance == null)
 			instance = new CommandsHandler(IOStream);
 		return instance;
 	}
 	/**
-	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logIn
+	 * Operazioni sulla lista di comandi a seguito di un logIn
 	 */
 	private void logIn() {
 		cList.add(Commands.SHOW_CATEGORIES);
@@ -74,7 +78,7 @@ public class CommandsHandler implements Closeable{
 		cList.remove(Commands.LOGIN);	
 	}
 	/**
-	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un logOut
+	 * Operazioni sulla lista di comandi a seguito di un logOut
 	 */
 	private void logOut() {
 		cList.add(Commands.REGISTRATION);
@@ -96,12 +100,12 @@ public class CommandsHandler implements Closeable{
 	}
 	
 	/**
-	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un accesso al private space
+	 * Operazioni sulla lista di comandi a seguito della richiesta di accesso allo spazio personale
 	 */
 	private void privateSpaceIn() {
 		cList.add(Commands.SHOW_NOTIFICATIONS);
 		cList.add(Commands.REMOVE_NOTIFICATION);
-		cList.add(Commands.PRIVATE_SPACE_OUT); //Uscita dal private space
+		cList.add(Commands.PRIVATE_SPACE_OUT); //Uscita dallo spazio personale
 		cList.add(Commands.SHOW_PROFILE);
 		cList.add(Commands.MODIFY_PROFILE);
 		cList.remove(Commands.SHOW_CATEGORIES);
@@ -114,13 +118,13 @@ public class CommandsHandler implements Closeable{
 		cList.remove(Commands.SHOW_NOTICEBOARD);
 		cList.remove(Commands.PUBLISH);
 		cList.remove(Commands.PARTICIPATE);
-		cList.remove(Commands.UNSUBSCRIBE); //Comando aggiunto nella V3
+		cList.remove(Commands.UNSUBSCRIBE);
 		cList.remove(Commands.WITHDRAW_PROPOSAL);
 		cList.remove(Commands.INVITE);
-		cList.remove(Commands.PRIVATE_SPACE_IN); //Accesso al private space
+		cList.remove(Commands.PRIVATE_SPACE_IN); //Accesso allo spazio personale
 	}
 	/**
-	 * Operazioni sulla lista di comandi di rimozione/aggiunta comandi a seguito di un uscita dal private space
+	 * Operazioni sulla lista di comandi a seguito della richiesta di uscita dallo spazio personale
 	 */
 	private void privateSpaceOut() {
 		cList.add(Commands.SHOW_CATEGORIES);
@@ -150,8 +154,8 @@ public class CommandsHandler implements Closeable{
 	 */
 	public String hint(String initial) {
 		for(Commands command: cList) {
-			if(command.getNome().startsWith(initial))
-				return command.getNome() + " ";
+			if(command.getName().startsWith(initial))
+				return command.getName() + " ";
 		}
 		return initial;
 	}
@@ -196,21 +200,21 @@ public class CommandsHandler implements Closeable{
 		}
 		if(command.equals("help"))
 			context.getIOStream().writeln(toString());
-		else if(contains(command)) {
-			if(cList.stream()
-				.filter((c)->c.hasName(command))
-				.findFirst().get().run(context, args)) {
-					if(Commands.LOGIN.hasName(command))
-						logIn();
-					else if(Commands.LOGOUT.hasName(command))
-						logOut();
-					else if(Commands.PRIVATE_SPACE_IN.hasName(command))
-						privateSpaceIn();
-					else if(Commands.PRIVATE_SPACE_OUT.hasName(command))
-						privateSpaceOut();
-			}
-		}else 
+		else if(!contains(command)) 
 			context.getIOStream().writeln(StringConstant.ERROR_UNKNOWN_COMMAND);
+		if(cList.stream()
+			.filter((c)->c.hasName(command))
+			.findFirst().get()
+			.run(context, args)) {
+				if(Commands.LOGIN.hasName(command))
+					logIn();
+				else if(Commands.LOGOUT.hasName(command))
+					logOut();
+				else if(Commands.PRIVATE_SPACE_IN.hasName(command))
+					privateSpaceIn();
+				else if(Commands.PRIVATE_SPACE_OUT.hasName(command))
+					privateSpaceOut();	
+		}
 		context.getIOStream().write(StringConstant.NEW_LINE + StringConstant.WAITING);
 	}
 	
@@ -220,7 +224,7 @@ public class CommandsHandler implements Closeable{
 	public String toString() {
 		StringBuilder sb = new StringBuilder("I comandi a tua disposizione:");
 		cList.stream()
-			.forEachOrdered((c)->sb.append(String.format(TOSTRING_FORMAT, c.getNome(), c.getDescription(), c.getSyntax())));
+			.forEachOrdered((c)->sb.append(String.format(TOSTRING_FORMAT, c.getName(), c.getDescription(), c.getSyntax())));
 		return sb.toString();
 	}
 
@@ -230,7 +234,6 @@ public class CommandsHandler implements Closeable{
 	 */
 	@Override
 	public void close() throws IOException {
-		// TODO Auto-generated method stub
 		context.close();
 	}
 }

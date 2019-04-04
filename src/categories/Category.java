@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import fields.FieldHeading;
 import fields.FieldSet;
-import proposals.Preferences;
+import proposals.OptionsSet;
 
 /**
  * Classe con il compito di definire il comportamento di una categoria.<br>
@@ -190,8 +190,8 @@ public abstract class Category implements Cloneable,Serializable{
 	 * Restituisce l'insieme delle varie opzioni disponibili sulla categoria
 	 * @return il set delle varie opzioni
 	 */
-	public Preferences getPreferenze() {
-		return new Preferences(Stream.of(FieldHeading.values())
+	public OptionsSet getOptions() {
+		return new OptionsSet(Stream.of(FieldHeading.values())
 									.filter((fh)->fh.isOptional())
 									.filter((fh)->this.containsField(fh.getName()))
 									.collect(Collectors.toCollection(ArrayList::new))

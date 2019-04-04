@@ -9,10 +9,10 @@ import users.Message;
 
 
 /**
- * Classe che gestisce la lista di tutti i Fruitori registrati al programma.<br>
+ * Classe che gestisce l'insieme di tutti gli utentu registrati al sistema.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public class UserDatabase implements Serializable{
+public class UserRepository implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	/**
@@ -22,13 +22,13 @@ public class UserDatabase implements Serializable{
 	/**
 	 * Costruttore
 	 */
-	public UserDatabase() {
+	public UserRepository() {
 		this.users = new ArrayList<User>();
 	}
 	/**
-	 * Restituisce il Fruitore di cui si è passato il nome come parametro, se presente nella lista
-	 * @param name il nome del fruitore
-	 * @return il fruitore di cui si è inserito il nome, null altrimenti
+	 * Restituisce l'utente di cui si è passato il nome come parametro, se presente nella lista
+	 * @param name il nome dell'utente
+	 * @return l'utente di cui si è inserito il nome, null altrimenti
 	 */
 	public User getUser(String name) {
 		if(contains(name))
@@ -38,9 +38,9 @@ public class UserDatabase implements Serializable{
 		return null;
 	}
 	/**
-	 * Controlla se il Fruitore è registrato
-	 * @param name Il nome del fruitore da cercare
-	 * @return True - se esiste un fruitore con tale nome <br>False - se il fruitore non esiste
+	 * Controlla se l'utente è registrato
+	 * @param name Il nome dell'utente da cercare
+	 * @return True - se esiste un utente con tale nome <br>False - se l'utente non esiste
 	 */
 	public boolean contains(String name) {
 		for(User fruitore: users) {
@@ -51,8 +51,8 @@ public class UserDatabase implements Serializable{
 	}
 	
 	/**
-	 * Registra un Fruitore nella lista
-	 * @param name Nome del fruitore da registrare
+	 * Registra un utente
+	 * @param name Nome dell'utente da registrare
 	 * @return True - l'utente è stato registrato con successo<br>False - l'utente non è stato registrato
 	 */
 	public boolean register(String name) {
@@ -64,9 +64,9 @@ public class UserDatabase implements Serializable{
 	}
 	
 	/**
-	 * Permette al Fruitore specificato di ricevere il Messaggio inviato come parametro
-	 * @param name nome del Fruitore
-	 * @param message messaggio da inviare al fruitore
+	 * Permette all'utente specificato di ricevere il messaggio inviato come parametro
+	 * @param name nome dell'utente
+	 * @param message messaggio da inviare all'utente
 	 */
 	@Deprecated
 	public void receive(String name, Message message) {

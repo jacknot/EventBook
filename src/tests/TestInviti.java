@@ -9,11 +9,11 @@ import categories.Category;
 import categories.CategoryCache;
 import categories.CategoryHeading;
 import fields.FieldHeading;
-import proposals.Preferences;
+import proposals.OptionsSet;
 import proposals.Proposal;
 import proposals.ProposalHandler;
 import proposals.State;
-import users.UserDatabase;
+import users.UserRepository;
 import users.Message;
 import users.User;
 import utility.MessageHandler;
@@ -23,17 +23,17 @@ class TestInviti {
 	@org.junit.jupiter.api.Test
 	void confrontoPreferenze() {
 		Proposal p1 = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName()));
-		Preferences pref = p1.getPreferenze();
-		assertTrue(p1.getPreferenze().sameChoices(pref));
+		OptionsSet pref = p1.getOptions();
+		assertTrue(p1.getOptions().hasSameChoices(pref));
 		assertTrue(pref.contains(FieldHeading.BACKSTAGE_PASS));
-		assertTrue(pref.impostaPreferenza(FieldHeading.BACKSTAGE_PASS, true));
-		assertTrue(p1.getPreferenze().sameChoices(pref));
+		assertTrue(pref.makeChoice(FieldHeading.BACKSTAGE_PASS, true));
+		assertTrue(p1.getOptions().hasSameChoices(pref));
 	}
 	
 	@org.junit.jupiter.api.Test
 	void iscrizioneConOpzioni() {
 		//creazione database
-		UserDatabase database = new UserDatabase();
+		UserRepository database = new UserRepository();
 		database.register("pinco");
 		database.register("Mario");
 		ProposalHandler noticeBoard = new ProposalHandler();
@@ -60,7 +60,7 @@ class TestInviti {
 		
 		//proposta aggiunta in bacheca
 		Proposal proposal = new Proposal(c1);
-		assertTrue(proposal.setOwner(database.getUser("Mario"), proposal.getPreferenze()));
+		assertTrue(proposal.setOwner(database.getUser("Mario"), proposal.getOptions()));
 		assertTrue(proposal.hasState(State.VALID));
 		noticeBoard.add(proposal);
 		
@@ -72,12 +72,12 @@ class TestInviti {
 		assertTrue(((LocalDate)proposal.getValue(FieldHeading.TERMINE_RITIRO.getName())).compareTo(LocalDate.now().minusDays(1)) == 0);
 		
 		//effettuo iscrizione
-		Preferences pref = noticeBoard.getPreferenze(0);
+		OptionsSet pref = noticeBoard.getPreferenze(0);
 
 		assertFalse(pref.contains(FieldHeading.MEET_AND_GREET));
 		assertFalse(pref.contains(FieldHeading.MERCHANDISE));
 		assertTrue(pref.contains(FieldHeading.BACKSTAGE_PASS));
-		assertTrue(pref.impostaPreferenza(FieldHeading.BACKSTAGE_PASS, true));
+		assertTrue(pref.makeChoice(FieldHeading.BACKSTAGE_PASS, true));
 		
 		//iscrizione alla proposta
 		assertTrue(noticeBoard.signUp(0, database.getUser("pinco"), pref));
@@ -86,14 +86,16 @@ class TestInviti {
 		assertTrue(proposal.hasState(State.CLOSED));
 		assertFalse(database.getUser("Mario").noMessages());
 		assertFalse(database.getUser("pinco").noMessages());
-		System.out.println("Test : correttaIscrizioneConPreferenzeModificate ->" + database.getUser("pinco").showNotifications());
-		System.out.println("\n" + database.getUser("Mario").showNotifications());
+		System.out.println("--------------------------------------------------------------------------- \n"
+							+ "iscrizioneConOpzioni ->\n"
+							+ "Pinco: " + database.getUser("pinco").showNotifications());
+		System.out.println("\nMario: " + database.getUser("Mario").showNotifications());
 	}
 	
 	@org.junit.jupiter.api.Test
 	void avvisoAgliInteressatiAllaCreazione() { 
 		//creazione database utenti
-		UserDatabase database = new UserDatabase();
+		UserRepository database = new UserRepository();
 		database.register("pinco");
 		database.register("Mario");
 		database.getUser("pinco").setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), 
@@ -111,7 +113,7 @@ class TestInviti {
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event);
-		proposal.setOwner(database.getUser("Mario"), proposal.getPreferenze());
+		proposal.setOwner(database.getUser("Mario"), proposal.getOptions());
 		assertTrue(proposal.isValid() && proposal.hasState(State.VALID));
 		
 		noticeBoard.add(proposal); //Proposta aggiunta in bacheca
@@ -133,7 +135,7 @@ class TestInviti {
 //			7. invito gente
 //			8. controllo che la gente sia stata corretamente invitata
 		
-		UserDatabase db = new UserDatabase();
+		UserRepository db = new UserRepository();
 		ProposalHandler ph = new ProposalHandler();
 		db.register("mario");
 		db.register("carlo");
@@ -158,7 +160,7 @@ class TestInviti {
 		assertTrue(c1.isValid());
 		
 		Proposal p1 = new Proposal(c1);
-		p1.setOwner(db.getUser("mario"), p1.getPreferenze());
+		p1.setOwner(db.getUser("mario"), p1.getOptions());
 		
 		assertTrue(p1.hasState(State.VALID));
 		//aggiungo la proposta al gestore
@@ -191,7 +193,7 @@ class TestInviti {
 		assertTrue(c2.isValid());
 		
 		Proposal p2 = new Proposal(c2);
-		p2.setOwner(db.getUser("mario"), p2.getPreferenze());
+		p2.setOwner(db.getUser("mario"), p2.getOptions());
 		assertTrue(p2.hasState(State.VALID));
 		
 		//aggiungo la proposta al gestore
@@ -203,9 +205,11 @@ class TestInviti {
 		//invito gente (carlo)
 		ArrayList<User> receivers = ph.searchBy(db.getUser("mario"), p2.getCategoryName());
 		assertTrue(receivers.contains(db.getUser("carlo")));
-		receivers.stream().forEach((u)->u.receive(new Message("prova","prova","Invito te!")));
+		assertTrue(ph.inviteTo(0, receivers));		
 		assertFalse(db.getUser("carlo").noMessages());
-		System.out.println("Test : invitaTutti ->" + db.getUser("carlo").showNotifications());
+		System.out.println("--------------------------------------------------------------------------- \n"
+								+ "invitiAPropostaAPERTA ->"
+								+ "\ncarlo: " + db.getUser("carlo").showNotifications());
 	}
 
 }

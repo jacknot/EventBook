@@ -8,7 +8,7 @@ import categories.CategoryCache;
 import categories.CategoryHeading;
 import fields.FieldHeading;
 import fields.FieldSetFactory;
-import proposals.Preferences;
+import proposals.OptionsSet;
 import proposals.Proposal;
 import users.User;
 import utility.MessageHandler;
@@ -19,7 +19,6 @@ import utility.StringConstant;
  *
  */
 public enum Commands {
-
 		EXIT("exit", "Esci dal programma","exit",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
@@ -221,8 +220,8 @@ public enum Commands {
 					});
 			//iscrizione proprietario
 			Proposal p = new Proposal(event);
-			Preferences pref = p.getPreferenze();
-			pref = setPreference(pref, ctx);
+			OptionsSet pref = p.getOptions();
+			pref = makeChoices(pref, ctx);
 			ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
 			p.setOwner(ctx.getSession().getOwner(), pref);
 			if(ctx.getSession().addProposal(p)) {
@@ -319,34 +318,31 @@ public enum Commands {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;
 			}
-			if(!ctx.getProposalHandler().isOwner(id, ctx.getSession().getOwner())) {
-				if(!ctx.getProposalHandler().isSignedUp(id, ctx.getSession().getOwner())) {
-					Preferences pref = ctx.getProposalHandler().getPreferenze(id);
-					if(pref!=null) {
-						FieldHeading[] optionalFields = pref.getChoices();
-						if(optionalFields.length != 0) {
-							ctx.getIOStream().writeln("Per completare l'iscrizione all'evento compilare i seguenti campi:");
-							pref = setPreference(pref, ctx);
-							ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
-						}
-						if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
-							ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
-							return false;
-						}else {
-							ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
-							return true;
-						}
-					} else {
-						ctx.getIOStream().writeln("Proposta non trovata");
-						return false;
-					}	
-				} else {
-					ctx.getIOStream().writeln("Sei già iscritto a questa proposta");
-					return false;
-				}
-			} else {
+			if(ctx.getProposalHandler().isOwner(id, ctx.getSession().getOwner())) {
 				ctx.getIOStream().writeln("Sei il proprietario della proposta, sei automaticamente iscritto");
 				return false;
+			}
+			if(ctx.getProposalHandler().isSignedUp(id, ctx.getSession().getOwner())) {
+				ctx.getIOStream().writeln("Sei già iscritto a questa proposta");
+				return false;
+			}
+			if(!ctx.getProposalHandler().contains(id)) {
+				ctx.getIOStream().writeln("Proposta non trovata");
+				return false;
+			}
+			OptionsSet pref = ctx.getProposalHandler().getPreferenze(id);
+			FieldHeading[] optionalFields = pref.getOptions();
+			if(optionalFields.length != 0) {
+				ctx.getIOStream().writeln("Per completare l'iscrizione all'evento compilare i seguenti campi:");
+				pref = makeChoices(pref, ctx);
+				ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
+			}
+			if(!ctx.getProposalHandler().signUp(id, ctx.getSession().getOwner(), pref)) {
+				ctx.getIOStream().writeln("L'iscrizione non è andata a buon fine");
+				return false;
+			}else {
+				ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
+				return true;
 			}
 		}),
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","disiscrivi",(ctx, args)->{
@@ -356,79 +352,76 @@ public enum Commands {
 			if(ctx.getProposalHandler().countUserSubscription(actualUser) == 0) {
 				ctx.getIOStream().writeln("Non sei iscritto a nessuna proposta");
 				return false;
-			} else {
-				ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
-				int id = -1;
-				try {
-					id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
-				}catch(NumberFormatException e) {
-					ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
-					return false;
-				}
-				if(ctx.getProposalHandler().isSignedUp(id, actualUser)) {
-					if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
-						ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
-						return true;
-					}else {
-						ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
-						return false;
-					}
-				}else {
-					ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
-					return false;
-				}
+			}
+			ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
+			int id = -1;
+			try {
+				id = Integer.parseInt(ctx.getIOStream().read(StringConstant.INSERT_IDENTIFIER));
+			}catch(NumberFormatException e) {
+				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+				return false;
+			}
+			if(!ctx.getProposalHandler().isSignedUp(id, actualUser)) {
+				ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
+				return false;
+			}
+			if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
+				ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
+				return true;
+			}else {
+				ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
+				return false;
 			}
 		}),
 		MODIFY_PROFILE("modificaProfilo", "Modifica le caratteristiche del tuo profilo","modificaProfilo",(ctx, args)->{
-				if(!checkNoParameter(ctx, args))
-					return false;
-				FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
-				FieldHeading field = FieldHeading.TITOLO;
-				String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
-				if(Stream.of(fields).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
-						field = Stream.of(fields)
-										.filter((fh)->fh.getName().equalsIgnoreCase(newField))
-										.findAny()
-										.get();
-				else {
-					ctx.getIOStream().writeln("Il nome inserito non appartiene ad un campo modificabile");
+			if(!checkNoParameter(ctx, args))
+				return false;
+			FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
+			FieldHeading field = FieldHeading.TITOLO;
+			String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
+			if(!Stream.of(fields).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField))) {
+				ctx.getIOStream().writeln("Il nome inserito non appartiene ad un campo modificabile");
+				return false;
+			}
+			field = Stream.of(fields)
+							.filter((fh)->fh.getName().equalsIgnoreCase(newField))
+							.findFirst().get();
+			if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
+				boolean add = true;
+				String confirm = ctx.getIOStream().read("Inserisci modalità di modifica: [\"a\" - aggiungi | \"r\" - togli] > ");
+				if(confirm.equalsIgnoreCase("r"))
+					add = false;
+				else if(!confirm.equalsIgnoreCase("a")){
+					ctx.getIOStream().writeln("Il valore inserito non è corretto");
 					return false;
 				}
-				if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
-					boolean add = true;
-					String confirm = ctx.getIOStream().read("Inserisci modalità di modifica: \"a\" aggiungi - \"r\" togli");
-					if(confirm.equalsIgnoreCase("r"))
-						add = false;
-					else if(!confirm.equalsIgnoreCase("a")){
-						ctx.getIOStream().writeln("Errore");
-						return false;
-					}
-					String categoryName = ctx.getIOStream().read("Inserisci il nome della categoria da " + (add? "aggiungere" : "rimuovere") + "> ");
-					if(Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
-						String cat = Stream.of(CategoryHeading.values()).filter((fh) -> fh.getName().equalsIgnoreCase(categoryName)).findFirst().get().getName();
-						if(ctx.getSession().getOwner().modifyCategory(cat, add)) {
-							ctx.getIOStream().writeln("Categoria modificata con successo");
-							return true;
-						}else {
-							ctx.getIOStream().writeln("La modifica non è andata a buon fine");
-							return false;
-						}
-					}else {
-						ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
-						return false;
-					}
+				String categoryName = ctx.getIOStream().read("Inserisci il nome della categoria da " + (add?"aggiungere":"rimuovere") + "> ");
+				if(!Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
+					ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
+					return false;
+				}
+				String cat = Stream.of(CategoryHeading.values())
+									.filter((fh) -> fh.getName().equalsIgnoreCase(categoryName))
+									.findFirst().get()
+									.getName();
+				if(ctx.getSession().getOwner().modifyCategory(cat, add)) {
+					ctx.getIOStream().writeln("Categoria modificata con successo");
+					return true;
 				}else {
-					//inserisci valore del campo da modificare
-					Object obj = null;
-					obj = acceptValue(ctx, field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
-					if(ctx.getSession().getOwner().setValue(field.getName(), obj)) {
-						ctx.getIOStream().writeln("Modifica avvenuta con successo");
-						return true;
-					}else {
-						ctx.getIOStream().writeln("Modifica fallita");
-						return false;
-					}
+					ctx.getIOStream().writeln("La modifica non è andata a buon fine");
+					return false;
 				}
+			}else {
+				//inserisci valore del campo da modificare
+				Object obj = null;
+				obj = acceptValue(ctx, field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+				if(ctx.getSession().getOwner().setValue(field.getName(), obj)) {
+					ctx.getIOStream().writeln("Modifica avvenuta con successo");
+					return true;
+				}
+				ctx.getIOStream().writeln("Modifica fallita");
+				return false;
+			}
 		}),
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira[id]", (ctx, args)->{
 			if(!checkOneParameter(ctx, args))
@@ -441,18 +434,16 @@ public enum Commands {
 				return false;
 			}
 			User owner = ctx.getSession().getOwner();
-			if(ctx.getProposalHandler().isOwner(id, owner)) {
-				if(ctx.getProposalHandler().withdraw(id, owner)) {
-					ctx.getIOStream().writeln("La proposta è stata ritirata con successo");
-					return true;
-				}else {
-					ctx.getIOStream().writeln("La proposta non è stata ritirata");
-					return false;
-				}	
-			}else {
+			if(!ctx.getProposalHandler().isOwner(id, owner)) {
 				ctx.getIOStream().writeln("La proposta non è di tua proprietà");
 				return false;
 			}
+			if(ctx.getProposalHandler().withdraw(id, owner)) {
+				ctx.getIOStream().writeln("La proposta è stata ritirata con successo");
+				return true;
+			}
+			ctx.getIOStream().writeln("La proposta non è stata ritirata");
+			return false;
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "spazioPersonale",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
@@ -478,38 +469,43 @@ public enum Commands {
 				return false;
 			}
 			User owner = ctx.getSession().getOwner();
-			if(ctx.getProposalHandler().isOwner(id, owner)) {
-				ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
-				if(userList.isEmpty()) {
-					ctx.getIOStream().writeln("Nessun utente trovato da invitare per questa proposta");
-					return false;
-				}
-				ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
-				String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
-				if(confirm.equalsIgnoreCase("y")) {
-					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-					return true;
-				}else if(confirm.equalsIgnoreCase("n")) {							
-					ArrayList<User> receivers = new ArrayList<>();
-					userList.stream()
-								.forEach(( u )->{
-									String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
-									if(answer.equalsIgnoreCase("y")) {
-										receivers.add(u);
-										ctx.getIOStream().writeln("L'utente verrà notificato");
-									}else if(answer.equalsIgnoreCase("n"))
-										ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
-									else
-										ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
-								});
-					MessageHandler.getInstance().inviteUsers(userList, owner.getName(), id);
-					return true;
-				}else {
-					ctx.getIOStream().writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
-					return false;
-				}
-			}else {
+			if(!ctx.getProposalHandler().contains(id)) {
+				ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
+				return false;
+			}
+			if(!ctx.getProposalHandler().isOwner(id, owner)) {
 				ctx.getIOStream().writeln("La proposta non è di tua proprietà");
+				return false;
+			}
+			ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
+			if(userList.isEmpty()) {
+				ctx.getIOStream().writeln("Nessun utente trovato da invitare per questa proposta");
+				return false;
+			}
+			ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
+			String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
+			if(confirm.equalsIgnoreCase("n")) {							
+				ArrayList<User> receivers = new ArrayList<>();
+				userList.stream()
+							.forEach(( u )->{
+								String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
+								if(answer.equalsIgnoreCase("y")) {
+									receivers.add(u);
+									ctx.getIOStream().writeln("L'utente verrà notificato");
+								}else if(answer.equalsIgnoreCase("n"))
+									ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
+								else
+									ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
+							});
+			}else if(!confirm.equalsIgnoreCase("y")){
+				ctx.getIOStream().writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
+				return false;
+			}
+			if(ctx.getProposalHandler().inviteTo(id, userList)) {
+				ctx.getIOStream().writeln("Gli sono stati inviati con successo");
+				return true;
+			}else {
+				ctx.getIOStream().writeln("Gli inviti non sono stati inviati");
 				return false;
 			}
 		}),
@@ -541,6 +537,7 @@ public enum Commands {
 		 * Costruttore
 		 * @param comand il nome del comando
 		 * @param description la descrizione del comando
+		 * @param syntax la sintassi del comando
 		 * @param runnable ciò che il comando deve fare
 		 */
 		private Commands(String comand, String description, String syntax, Shell runnable) {
@@ -554,7 +551,7 @@ public enum Commands {
 		 * Restituisce il nome del comando
 		 * @return il nome del comando
 		 */
-		public String getNome() {
+		public String getName() {
 			return name;
 		}
 	
@@ -567,7 +564,7 @@ public enum Commands {
 		}
 		
 		/**
-		 * Restituisce la sintassi per l'esecuzione del comando
+		 * Restituisce la sintassi del comando
 		 * @return sintassi del comando
 		 */
 		public String getSyntax() {
@@ -576,7 +573,7 @@ public enum Commands {
 	
 		/**
 		 * Esegue il comando
-		 * @param ctx il contesto sul quale deve operare il comando
+		 * @param ctx il contesto sul quale deve lavorare il comando
 		 * @param args gli argomenti del comando
 		 * @return l'esito del comando
 		 */
@@ -586,6 +583,7 @@ public enum Commands {
 		
 		/**
 		 * Richiede all'utente di inserire un valore e ne verifica la validità in base al campo
+		 * @param ctx il contesto su cui si deve operare
 		 * @param field campo su cui verificare la validità del dato
 		 * @param message richiesta all'utente di inserire il dato
 		 * @return Oggetto correttamente elaborato in base al campo
@@ -609,37 +607,36 @@ public enum Commands {
 		}
 		
 		/**
-		 * Chiede all'utente di quali campi opzionali vuole usufruire e imposta la Preferenza
+		 * Chiede all'utente di quali campi opzionali vuole usufruire
 		 * @param pref Preferenza da impostare
-		 * @param ctx Contesto
-		 * @return Preferenza impostata dall'utente
+		 * @param ctx Contesto su cui operare
+		 * @return le scelte dell'utente
 		 */
-		private static Preferences setPreference(Preferences pref, Context ctx) {
-			Stream.of(pref.getChoices())
-			.forEach((fh)->{
-				boolean confirm = false;
-				boolean valid = false;
-				do {
-					String ok = ctx.getIOStream().read(String.format("\n%s\n\tVuoi usufruirne? [y|n] > ", fh.toString()));
-					if(ok.equalsIgnoreCase("y")) {
-						confirm = true;
-						valid = true;
-					}else if(ok.equalsIgnoreCase("n"))
-						valid = true;
-					else
-						ctx.getIOStream().writeln("\n\tIl valore inserito non è corretto: inserisci 'y' o 'n'");
-				}while(!valid);
-				pref.impostaPreferenza(fh, confirm);
-			});
+		private static OptionsSet makeChoices(OptionsSet pref, Context ctx) {
+			Stream.of(pref.getOptions())
+					.forEach((fh)->{
+						boolean confirm = false;
+						boolean valid = false;
+						do {
+							String ok = ctx.getIOStream().read(String.format("\n%s\n\tVuoi usufruirne? [y|n] > ", fh.toString()));
+							if(ok.equalsIgnoreCase("y")) {
+								confirm = true;
+								valid = true;
+							}else if(ok.equalsIgnoreCase("n"))
+								valid = true;
+							else
+								ctx.getIOStream().writeln("\n\tIl valore inserito non è corretto: inserisci 'y' o 'n'");
+						}while(!valid);
+						pref.makeChoice(fh, confirm);
+					});
 			return pref;
 		}
 		
-
 		/**
 		 * Controlla se nella chiamata di un comando è stato passato un parametro
-		 * @param ctx Contesto
-		 * @param args Parametri di un comando
-		 * @return True - Se il parametro è uno <br> False - altrimenti
+		 * @param ctx Contesto su cui operare
+		 * @param args Parametri passati al comando
+		 * @return True - Se è stato passato un unico parametro <br> False - altrimenti
 		 */
 		private static boolean checkOneParameter(Context ctx, String args[]) {
 			if(args.length == 0) {
@@ -654,9 +651,9 @@ public enum Commands {
 		
 		/**
 		 * Controlla se nella chiamata di un comando non è stato passato nessun parametro
-		 * @param ctx Contesto
-		 * @param args Parametri di un comando
-		 * @return True - Se nessun parametro passato <br> False - altrimenti
+		 * @param ctx Contesto su cui operare
+		 * @param args Parametri passati al comando
+		 * @return True - Se non è stato passato nessun parametro <br> False - altrimenti
 		 */
 		private static boolean checkNoParameter(Context ctx, String args[]) {
 			if(args.length != 0) {
@@ -668,7 +665,7 @@ public enum Commands {
 		
 		/**
 		 * Controlla se il comando ha il nome inserito
-		 * @param comando il nome presunto del comando
+		 * @param comando il presunto nome del comando
 		 * @return True - il comando ha il nome inserito<br>False - il comando non ha il nome inserito
 		 */
 		public boolean hasName(String comando) {

@@ -78,7 +78,7 @@ public class Session {
 	 */
 	public boolean modifyProposal(int id, String campo, Object valore) {
 		if(contains(id)) {
-			return proposalsSet.get(id).modify(campo, valore);
+			return proposalsSet.get(id).setValue(campo, valore);
 			}
 		return false;
 	}

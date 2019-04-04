@@ -8,7 +8,7 @@ import dataTypes.Pair;
 import utility.MessageHandler;
 import utility.StringConstant;
 import fields.FieldHeading;
-import users.Subscriber;
+import users.User;
 
 /**
  * Contiene un set predefiniti di stati in cui la proposta si può trovare
@@ -74,19 +74,20 @@ public enum State implements Serializable{
 		public boolean transition(Proposal p) {
 			LocalDate todayDate = LocalDate.now();
 			LocalDate lastSubDate = (LocalDate) p.getValue(FieldHeading.TERMINEISCRIZIONE.getName());
-			LocalDate lastSigningDay = (LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName());
+			LocalDate lastWithdrawalDay = (LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName());
 			String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 															(String)p.getValue(FieldHeading.TITOLO.getName());
 			int tol = (Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
 			int max = (Integer) p.getValue(FieldHeading.NUMPARTECIPANTI.getName());
 			
 			if((todayDate.compareTo(lastSubDate) == 0 && p.subNumber() - max <= tol && 0 <= p.subNumber() - max) || 
-					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastSigningDay) >= 0 && p.subNumber() - max == tol)) {
+					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastWithdrawalDay) > 0 && p.subNumber() - max == tol)) {
 				p.setState(CLOSED);
 				
-				ArrayList<Pair<Subscriber, Double>> sub_cost = new ArrayList<Pair<Subscriber, Double>>();
-				p.getSubscribers().stream().forEach((s)->sub_cost.add(new Pair<Subscriber, Double>(s, p.additionalCostsOf(s.getUser()))));
-				MessageHandler.getInstance().eventConfirmed(sub_cost, 
+				ArrayList<Pair<User, Double>> user_cost = new ArrayList<Pair<User, Double>>();
+				p.getUsers().stream()
+								.forEach((u)->user_cost.add(new Pair<User, Double>(u, p.additionalCostsOf(u))));
+				MessageHandler.getInstance().eventConfirmed(user_cost, 
 															title, 
 															p.getValue(FieldHeading.DATA.getName()),
 															p.getValue(FieldHeading.ORA.getName()),
@@ -98,7 +99,7 @@ public enum State implements Serializable{
 			}else if(todayDate.compareTo(lastSubDate) >= 0 
 					&& p.subNumber() < (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())) {
 				p.setState(FAILED);
-				MessageHandler.getInstance().eventFailed(p.getSubscribers(), title);
+				MessageHandler.getInstance().eventFailed(p.getUsers(), title);
 				return true;
 			}
 			return false;
@@ -111,10 +112,17 @@ public enum State implements Serializable{
 				p.setState(WITHDRAWN);
 				String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 					(String)p.getValue(FieldHeading.TITOLO.getName());
-				MessageHandler.getInstance().eventWithdrawn(p.getSubscribers(), title);
+				MessageHandler.getInstance().eventWithdrawn(p.getUsers(), title);
 				return true;
 			}
 			return false;
+		}
+		/* (non-Javadoc)
+		 * @see proposals.State#invite(proposals.Proposal, java.util.ArrayList)
+		 */
+		public boolean invite(Proposal p, int id, ArrayList<User> invitedU) {
+			MessageHandler.getInstance().inviteUsers(invitedU, p.getOwner().getName(), id);
+			return true;
 		}
 	},
 	CLOSED{
@@ -187,6 +195,7 @@ public enum State implements Serializable{
 	public boolean canSet() {
 		return false;
 	}
+	
 	/**
 	 * Verifica se la proposta è nello stato di potersi iscrivere
 	 * @param p la proposta inserita
@@ -195,12 +204,24 @@ public enum State implements Serializable{
 	public boolean canSignUp(Proposal p) {
 		return false;
 	}
+	
 	/**
 	 * Modifica lo stato della proposta in modo da ritirarla
 	 * @param p la proposta da ritirare
 	 * @return True - se è avvenuto il ritiro della proposta<br>False - la proposta non è stata ritirata
 	 */
 	public boolean withdraw(Proposal p) {
+		return false;
+	}
+	
+	/**
+	 * Invita un insieme di utenti alla proposta
+	 * @param p la proposta a cui invitare gli utenti
+	 * @param id l'identificativo della proposta
+	 * @param invitedU gli utenti da invitare
+	 * @return True - se gli utenti vengono invitati con successo<br>False - se gli utenti non vengono invitati
+	 */
+	public boolean invite(Proposal p, int id, ArrayList<User> invitedU) {
 		return false;
 	}
 }

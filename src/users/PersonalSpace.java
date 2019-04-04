@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-/**La classe PrivateSpace ha il compito di fornire una struttura adatta a contenere e gestire un insieme di messaggi.<br>
+/**La classe PersonalSpace ha il compito di fornire una struttura adatta a contenere e gestire un insieme di messaggi.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
 public class PersonalSpace implements Serializable{

@@ -39,7 +39,10 @@ public class Proposal implements Serializable{
 	 * Contiene informazioni legate al passaggio di stato della proposta
 	 */
 	private ArrayList<Pair<State, LocalDate>> statePassages;
-	
+	/**
+	 * Contiene informazioni su tutti gli utenti invitati a questa proposta
+	 */
+	private ArrayList<Pair<User, LocalDate>> invitations;
 	/**
 	 * Costruttore di una proposta
 	 * @param event L'evento a cui farà riferimento la proposta
@@ -51,6 +54,7 @@ public class Proposal implements Serializable{
 		this.subscribers = new ArrayList<Subscriber>();
 		this.aState = State.INVALID;
 		statePassages = new ArrayList<Pair<State, LocalDate>>();
+		invitations = new ArrayList<Pair<User, LocalDate>>();
 		update();
 	}
 	
@@ -60,8 +64,8 @@ public class Proposal implements Serializable{
 	 * @param pref le preferenze espresse dal proprietario
 	 * @return True - l'utente inserito è stato impostato come proprietario<br>False - l'utente inserito non è stato inserito come proprietario
 	 */
-	public boolean setOwner(User nOwner, Preferences pref) {
-		if(getPreferenze().sameChoices(pref) && this.owner == null) {
+	public boolean setOwner(User nOwner, OptionsSet pref) {
+		if(getOptions().hasSameChoices(pref) && this.owner == null) {
 			this.owner = new Subscriber(nOwner, pref);
 			this.update();
 			return true;
@@ -109,7 +113,7 @@ public class Proposal implements Serializable{
 	 * @param value il nuovo valore del campo
 	 * @return l'esito della modifica
 	 */
-	public boolean modify(String name, Object value) {
+	public boolean setValue(String name, Object value) {
 		if(aState.canSet()) {
 			boolean outcome = event.setValue(name, value);
 			update();
@@ -128,12 +132,13 @@ public class Proposal implements Serializable{
 	/**
 	 * Iscrive un fruitore alla proposta 
 	 * @param user il fruitore da iscrivere
+	 * @param choices le scelte effettuate dall'utente
 	 * @return True - l'utente è stato correttamente iscritto alla proposta<br>False - l'utente non è stato iscritto alla proposta
 	 */
-	public boolean signUp(User user, Preferences preferenza) {
+	public boolean signUp(User user, OptionsSet choices) {
 		if(aState.canSignUp(this)){
-			if(!isSignedUp(user) && getPreferenze().sameChoices(preferenza)) {
-				Subscriber sub = new Subscriber(user, preferenza);
+			if(!isSignedUp(user) && getOptions().hasSameChoices(choices)) {
+				Subscriber sub = new Subscriber(user, choices);
 				subscribers.add(sub);
 				update();
 				return true;
@@ -189,14 +194,14 @@ public class Proposal implements Serializable{
 	public Double additionalCostsOf(User u) {
 		if(!isSignedUp(u))
 			return 0.00;
-		Subscriber s = getSubscribers().stream()
-				.filter((sub)->sub.getUser().equals(u))
-				.findFirst().get();
-		return Stream.of(s.getPreferenze().getChoices())
-				.filter((fh)-> s.getPreferenze().getPreferenza(fh))
-				.map((fh)->(Double) getValue(fh.getName()))
-				.mapToDouble(Double::doubleValue)
-				.sum();
+		Subscriber s = getSubscribers()
+						.filter((sub)->sub.getUser().equals(u))
+						.findFirst().get();
+		return Stream.of(s.getChoices().getOptions())
+						.filter((fh)-> s.getChoices().getChoice(fh))
+						.map((fh)->(Double) getValue(fh.getName()))
+						.mapToDouble(Double::doubleValue)
+						.sum();
 	}
 	/**
 	 * Restituisce il numero di iscritti alla proposta
@@ -220,7 +225,7 @@ public class Proposal implements Serializable{
 	 * @return True se proprietario<br> False altrimenti
 	 */
 	public boolean isOwner(User user) {
-		return owner.getUser().equals(user);
+		return this.owner.getUser().equals(user);
 	}
 	
 	/**
@@ -250,28 +255,23 @@ public class Proposal implements Serializable{
 	public boolean hasCategory(String name) {
 		return event.hasName(name);
 	}
-
 	/**
-	 * Restituisce la lista di iscritti all proposta
+	 * Restituisce lo stream di tutti gli iscritti, propositore compreso
+	 * @return lo stream di tutti gli iscritti
+	 */
+	private Stream<Subscriber> getSubscribers(){
+		return Stream.concat(subscribers.stream(), Stream.of(owner));
+	}
+	/**
+	 * Restituisce la lista di iscritti all proposta, compreso il creatore della proposta
 	 * @return La lista di utenti iscritti all proposta
 	 */
 	public ArrayList<User> getUsers(){
-		return subscribers.stream()
-							.map((s) -> s.getUser())
-							.collect(Collectors.toCollection(ArrayList :: new));
+		return getSubscribers()
+					.map((s) -> s.getUser())
+					.collect(Collectors.toCollection(ArrayList :: new));
 	}
 	
-	/**
-	 * Restituisce la lista di iscritti all proposta, compreso il proprietario
-	 * @return La lista di utenti iscritti all proposta, compreso il proprietario
-	 */
-	public ArrayList<Subscriber> getSubscribers(){
-		ArrayList<Subscriber> subs = subscribers.stream()
-							.collect(Collectors.toCollection(ArrayList :: new));
-		subs.add(owner);
-		return subs;	
-	}
-
 	/**
 	 * Restituisce il nome della categoria a cui la proposta fa riferimento
 	 * @return il nome della categoria a cui la proposta fa riferimento
@@ -283,7 +283,30 @@ public class Proposal implements Serializable{
 	 * Restituisce l'insieme delle varie opzioni disponibili sulla proposta
 	 * @return il set delle varie opzioni
 	 */
-	public Preferences getPreferenze() {
-		return event.getPreferenze();
+	public OptionsSet getOptions() {
+		return event.getOptions();
+	}
+	
+	/**
+	 * Restituisce il proprietario della proposta
+	 * @return il proprietario della proposta
+	 */
+	public User getOwner() {
+		return owner.getUser();
+	}
+	
+	/**
+	 * Invita un gruppo di utenti alla proposta
+	 * @param id l'identificativo della proposta
+	 * @param invitedUsers gli utenti da invitare
+	 * @return True - se gli inviti vengono inviati correttamente<br>False - se gli inviti non vengono inviati
+	 */
+	public boolean invite(int id, ArrayList<User> invitedUsers) {
+		if(aState.invite(this, id, invitedUsers)) {
+			invitedUsers.stream()
+							.forEach((u)->invitations.add(new Pair<User, LocalDate>(u, LocalDate.now())));
+			return true;
+		}
+		return false;
 	}
 }

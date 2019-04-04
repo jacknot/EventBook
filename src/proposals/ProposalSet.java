@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 import users.User;
 
 /**
- * Un InsiemeProposte è un oggetto in grado di gestire un certo set di proposte, tutte quante nello stesso stato
+ * Classe in grado di gestire un certo set di proposte, tutte nello stesso stato
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
@@ -57,7 +57,6 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	 * @return il contenuto dell'insieme in forma testuale
 	 */
 	public String showContent() {
-		//Il sort ordina le proposte
 		sort();
 		StringBuilder sb = new StringBuilder();
 		IntStream.range(0, this.size())
@@ -113,7 +112,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	}
 	
 	/**
-	 * Ordina le proposte nel ProposalSet in ordine di categoria
+	 * Ordina le proposte nel ProposalSet in base alla categoria
 	 */
 	private void sort() {
 		super.sort((p1, p2) -> p1.getCategoryName().compareTo(p2.getCategoryName()));

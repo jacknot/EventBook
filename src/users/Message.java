@@ -9,13 +9,20 @@ import java.io.Serializable;
 public class Message implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	
-	private String addresser;
-	private String object;
-	private String description;
-	
 	private final static String TOSTRING_FORMAT ="<%s> %s : %s";
 	
+	/**
+	 * Il mittente
+	 */
+	private String addresser;
+	/**
+	 * L'oggetto del messaggio
+	 */
+	private String object;
+	/**
+	 * La descrizione del messaggio
+	 */
+	private String description;
 	
 	/**
 	 * Costruttore per la classe messaggio

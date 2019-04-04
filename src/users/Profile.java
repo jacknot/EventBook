@@ -52,8 +52,8 @@ public class Profile implements Serializable{
 	/**
 	 * Modifica (aggiunge/rimuove) una categoria alla lista delle categorie di interesse dell'utente
 	 * @param category nome della categoria da modificare
-	 * @param add True se categoria è da aggiungere <br> False se da rimuovere
-	 * @return True se operazione completata correttamente <br> False altrimenti
+	 * @param add True - si vuole aggiungere la categoria<br> False - si vuole rimuovere la categoria
+	 * @return True - se l'operazione è stata completata correttamente <br> False - altrimenti
 	 */
 	public boolean modifyCategory(String category, boolean add) {
 		CategoriesOfInterest cat = getCategories();
@@ -80,7 +80,7 @@ public class Profile implements Serializable{
 	/**
 	 * Verifica se tra le categorie di interesse dell'utente compare la categoria il cui nome è passato come argomento
 	 * @param categoryName nome della categoria
-	 * @return True se presente <br> False altrimenti
+	 * @return True - la categoria è di interesse per l'utente<br> False - altrimenti
 	 */
 	public boolean containsCategory(String categoryName) {
 		ArrayList<String> cat = getCategories();

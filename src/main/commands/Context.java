@@ -6,22 +6,43 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import proposals.ProposalHandler;
-import users.UserDatabase;
+import users.UserRepository;
 import utility.FileHandler;
 import utility.Session;
 import utility.StringConstant;
 
+/**
+ * Classe con il compito di gestire il contesto generale dell'applicazione
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
 public class Context implements Closeable{
-	
 	private static final String NOTICEBOARD = "resource/bacheca.ser";
 	private static final String DATABASE = "resource/registrazioni.ser";
 
+	/**
+	 * Periodo fondamentale con il quale lavora il timer di refresh
+	 */
 	private static final long DELAY = 3600000;//60MIN
-	
+	/**
+	 * Timer con il compito di fare refresh periodico del gestore di proposte
+	 */
 	private Timer refreshTimer;
+	/**
+	 * La sessione attuale
+	 */
 	private Session session;
-	private UserDatabase database;
-	private ProposalHandler noticeBoard;
+	/**
+	 * La repository in cui sono presenti tutti gli utenti del sistema
+	 */
+	private UserRepository database;
+	/**
+	 * La repository in cui sono presenti tutte le proposte del sistema
+	 */
+	private ProposalHandler proposalHandler;
+	/**
+	 * Lo stream di entrata/uscita sul quale lavora il contesto
+	 */
 	private InOutStream inOut;
 	
 	/**
@@ -37,7 +58,7 @@ public class Context implements Closeable{
 		refreshTimer = new Timer("RefreshNoticeBoard");
 		refreshTimer.schedule(new TimerTask() {
 			public void run() {
-				noticeBoard.refresh();
+				proposalHandler.refresh();
 			}
 		}, DELAY, DELAY);
 	}
@@ -47,15 +68,15 @@ public class Context implements Closeable{
 	 */
 	private void load() {
 		inOut.writeln("Caricamento database ...");
-		database = (UserDatabase)new FileHandler().load(DATABASE);
+		database = (UserRepository)new FileHandler().load(DATABASE);
 		if(database == null) {
-			database = new UserDatabase();
+			database = new UserRepository();
 			inOut.writeln("Caricato nuovo database");
 			}
 		inOut.writeln("Caricamento bacheca ...");
-		noticeBoard = (ProposalHandler)new FileHandler().load(NOTICEBOARD);
-		if(noticeBoard == null) {
-			noticeBoard = new ProposalHandler();
+		proposalHandler = (ProposalHandler)new FileHandler().load(NOTICEBOARD);
+		if(proposalHandler == null) {
+			proposalHandler = new ProposalHandler();
 			inOut.writeln("Caricata nuova bacheca");
 			}
 		inOut.writeln("Fine caricamento");
@@ -68,7 +89,7 @@ public class Context implements Closeable{
 	 */
 	private void save() {
 		inOut.write("Salvataggio bacheca... ");
-		inOut.writeln((new FileHandler().save(NOTICEBOARD, noticeBoard))? StringConstant.SAVE_COMPLETED : StringConstant.SAVE_FAILED);
+		inOut.writeln((new FileHandler().save(NOTICEBOARD, proposalHandler))? StringConstant.SAVE_COMPLETED : StringConstant.SAVE_FAILED);
 		inOut.write("Salvataggio database... ");
 		inOut.writeln((new FileHandler().save(DATABASE, database))? StringConstant.SAVE_COMPLETED : StringConstant.SAVE_FAILED);
 	}
@@ -108,7 +129,7 @@ public class Context implements Closeable{
 	 * Restituisce il database di utenti
 	 * @return il database di utenti
 	 */
-	public UserDatabase getDatabase() {
+	public UserRepository getDatabase() {
 		return database;
 	}
 	/**
@@ -116,7 +137,7 @@ public class Context implements Closeable{
 	 * @return il gestore delle proposte
 	 */
 	public ProposalHandler getProposalHandler() {
-		return noticeBoard;
+		return proposalHandler;
 	}
 	/**
 	 * Chiude tutte le risorse usate dal contesto.<br>

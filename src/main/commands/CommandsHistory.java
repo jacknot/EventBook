@@ -8,6 +8,9 @@ import java.util.ArrayList;
  */
 public class CommandsHistory {
 	
+	/**
+	 * Contiene la storia dei comandi
+	 */
 	private ArrayList<String> history;
 	private int index;
 	
@@ -48,7 +51,7 @@ public class CommandsHistory {
 	}
 	
 	/*
-	 * 
+	 * Restituisce la dimensione della storia dei comandi
 	 */
 	private int size() {
 		return history.size();

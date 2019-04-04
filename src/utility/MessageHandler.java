@@ -5,15 +5,30 @@ import java.util.ArrayList;
 
 import dataTypes.Pair;
 import users.Message;
-import users.Subscriber;
 import users.User;
 
+/**
+ * Classe con il compito di gestire l'invio di messaggi a gruppi di utenti.<br>
+ * Implementa il design pattern Singleton
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
 public class MessageHandler {
 
+	/**
+	 * L'istanza del gestore di messaggi
+	 */
 	private static MessageHandler instance;
 	
+	/**
+	 * Costruttore, privato per implementare Singleton
+	 */
 	private MessageHandler() {}
 	
+	/**
+	 * Metodo con il compito di restituire un'istanza del gestore di messaggi
+	 * @return l'istanza del gestore di messaggi
+	 */
 	public static MessageHandler getInstance() {
 		if(instance == null)
 			instance = new MessageHandler();
@@ -61,7 +76,7 @@ public class MessageHandler {
 	 * @param luogo luogo di svolgimento
 	 * @param quota quota da portare per partecipare
 	 */
-	public void eventConfirmed(ArrayList<Pair<Subscriber, Double>> userList, Object title, Object data, Object ora, Object luogo, Object quota) {
+	public void eventConfirmed(ArrayList<Pair<User, Double>> userList, Object title, Object data, Object ora, Object luogo, Object quota) {
 		userList.stream()
 				.forEach((p)->
 					p.getFirst().receive( new Message(
@@ -81,7 +96,7 @@ public class MessageHandler {
 	 * @param userList lista di utenti
 	 * @param title titolo della proposta
 	 */
-	public void eventFailed(ArrayList<Subscriber> userList, Object title) {
+	public void eventFailed(ArrayList<User> userList, Object title) {
 		userList.stream().forEach((u)->	u.receive(
 				new Message(
 					title+": "+LocalDate.now(),
@@ -96,7 +111,7 @@ public class MessageHandler {
 	 * @param userList lista di utenti
 	 * @param title titolo della proposta
 	 */
-	public void eventWithdrawn(ArrayList<Subscriber> userList, Object title) {
+	public void eventWithdrawn(ArrayList<User> userList, Object title) {
 		userList.stream().forEach((u)->	u.receive(
 				new Message(
 					title+": "+LocalDate.now(),
