@@ -143,15 +143,16 @@ public class ProposalHandler implements Serializable{
 		//ritirate fallite concluse non vanno da nessuna parte
 		//chiuse vanno in concluse
 		//aperte -> fallite/ritirate/chiuse
-		bacheca.refresh().stream()
-				.forEach(( p )->{
-					if(p.hasState(proposteChiuse.getState())) 
-						proposteChiuse.add(p);
-					else if(p.hasState(proposteFallite.getState()))
-						proposteFallite.add(p);
-					else if(p.hasState(proposteRitirate.getState()))
-						proposteRitirate.add(p);
-		});
+		bacheca.refresh()
+				.stream()
+					.forEach(( p )->{
+						if(p.hasState(proposteChiuse.getState())) 
+							proposteChiuse.add(p);
+						else if(p.hasState(proposteFallite.getState()))
+							proposteFallite.add(p);
+						else if(p.hasState(proposteRitirate.getState()))
+							proposteRitirate.add(p);
+					});
 		proposteChiuse.refresh().stream()
 				.forEach(( p )->proposteConcluse.add(p));
 	}
