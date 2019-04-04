@@ -22,7 +22,7 @@ class TestProposta {
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
-		//Viene prima di termine iscrizone: Invalida
+		//TermineIscrizione > data --> invalida
 		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().minusDays(1)); 
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
@@ -31,7 +31,7 @@ class TestProposta {
 		Proposal proposal = new Proposal(event);
 		assertFalse(proposal.isValid()); //deve essere invalida
 		proposal.setOwner(new User("Mario"), proposal.getPreferenze());
-		assertFalse(proposal.isValid());
+		assertFalse(proposal.isValid() && proposal.hasState(State.INVALID));
 	}
 	
 	@org.junit.jupiter.api.Test
@@ -142,19 +142,23 @@ class TestProposta {
 		event.setValue(FieldHeading.DATA.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
 		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
-		event.setValue(FieldHeading.MEET_AND_GREET.getName(), FieldHeading.MEET_AND_GREET.getClassType().parse("90.00")); //Campo opzionale espresso
-		event.setValue(FieldHeading.MERCHANDISE.getName(), FieldHeading.MERCHANDISE.getClassType().parse("20.00")); //Campo opzionale espresso
-		
+		event.setValue(FieldHeading.MEET_AND_GREET.getName(), 90.00); //Campo opzionale espresso
+		event.setValue(FieldHeading.MERCHANDISE.getName(), 20.00); //Campo opzionale espresso
+		assertFalse(event.isValid());
+		//BACKSTAGE_PASS.value == null -> evento è INVALIDO (devo dare valore a tutti i campi opzionali)
+		event.removeOptionalField(FieldHeading.BACKSTAGE_PASS);
+		assertTrue(event.isValid());
 		Proposal proposal = new Proposal(event); //creata proposta
 		proposal.setOwner(owner, proposal.getPreferenze());
-	
+		
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
-		bacheca.add(proposal); //proposta aggiunta correttamente	
+		assertTrue(bacheca.add(proposal)); //proposta aggiunta correttamente	
 		Preferences pref = bacheca.getPreferenze(0);
 		
 		pref.impostaPreferenza(FieldHeading.MEET_AND_GREET,  true); //accetta la prima
 		pref.impostaPreferenza(FieldHeading.MERCHANDISE, false); //rifiuta la seconda
-			
+		assertTrue(pref.sameChoices(proposal.getPreferenze()));
+		
 		assertTrue(bacheca.signUp(0, user, pref));
 	}
 
@@ -173,6 +177,8 @@ class TestProposta {
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(3));
+		assertFalse(event.isValid());	//Termine_ritiro < tDate
+		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), null);
 		assertTrue(event.isValid());
 		
 		Proposal proposal = new Proposal(event); //creata proposta
@@ -180,29 +186,94 @@ class TestProposta {
 		
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal));
+		assertTrue(proposal.hasState(State.OPEN));
 		proposal.setState(State.VALID);
 		proposal.modify(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().minusDays(1));
 		proposal.setState(State.OPEN);
+		proposal.update();
+		
+		//la proposta inoltre mantiene il suo stato -> non posso iscrivermi direttamente ad essa
+		assertFalse(proposal.signUp(user, proposal.getPreferenze()));
 		bacheca.refresh(); //La bacheca si aggiorna e cambia stato alla proposta -> passa a Fallita
 		assertFalse(bacheca.contains(proposal));
 		assertTrue(proposal.hasState(State.FAILED));
 		//La proposta, avendo superato la data ultima di termine iscrizione, viene rimossa dalla bacheca
 		//La bacheca ora è vuota -> non posso iscrivermi
-		assertFalse(bacheca.signUp(0, user, null)); 
+		assertFalse(bacheca.signUp(0, user, proposal.getPreferenze())); 
 	}
+	
 	@org.junit.jupiter.api.Test
-	void testUgualianazaPreferenze() { 
+	void ugualianazaPreferenze() { 
 		Proposal p = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName()));
 		assertTrue(p.getPreferenze().sameChoices(p.getPreferenze()));
 	}
 	
 	@org.junit.jupiter.api.Test
-	void testPropostaInBachecaConTerminiVariAOggi() {
-		assertTrue(false);
+	void propostaTermineRitiroAlGiornoAttuale() {
+		User owner =  new User("Mario");
+		User pinco = new User("pinco");
+		
+		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
+		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now());
+		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
+		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
+		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
+		event.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now());
+		assertTrue(event.isValid());
+		
+		Proposal p = new Proposal(event);
+		p.setOwner(owner, p.getPreferenze());
+		assertTrue(p.hasState(State.VALID));
+		
+		ProposalHandler ph = new ProposalHandler();
+		assertTrue(ph.add(p));
+		assertTrue(ph.contains(p));
+		
+		assertTrue(ph.signUp(0, pinco, ph.getPreferenze(0)));
+		ph.refresh();
+		//subNumber == max && termine_ritiro == tDay -> la proposta non può ancora andare in CHIUSA, può ancora essere ritirata
+		assertTrue(p.hasState(State.OPEN));
+		
+		//set(data Ritiro < tDate) --> la proposta può ora può andare da OPEN -> CLOSED (-> ENDED)
+		//modificando così la data ritiro genererei una proposta INVALIDA, mettendola a OPEN salto il controllo
+		//è un metodo per far passare il tempo
+		p.setState(State.VALID);
+		p.modify(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(4));
+		p.setState(State.OPEN);
+		
+		ph.refresh();
+		assertFalse(ph.contains(0));
+		//ho inviato messaggi relativi alla conferma dell'evento
+		assertFalse(pinco.noMessages());
 	}
 	
 	@org.junit.jupiter.api.Test
-	void testPropostaConNPartecipantiA1() {
-		assertTrue(false);
+	void propostaConNPartecipantiA1() {
+		User owner =  new User("Mario");
+		User pinco = new User("pinco");
+		
+		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 1);
+		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
+		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
+		event.setValue(FieldHeading.DATA.getName(), LocalDate.now());
+		event.setValue(FieldHeading.ORA.getName(), FieldHeading.ORA.getClassType().parse("20:00"));
+		event.setValue(FieldHeading.QUOTA.getName(), FieldHeading.QUOTA.getClassType().parse("10.00"));
+		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
+		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
+		assertFalse(event.isValid());
+		
+		Proposal p = new Proposal(event);
+		p.setOwner(owner, p.getPreferenze());
+		assertTrue(p.hasState(State.INVALID));
+		assertFalse(p.signUp(pinco, p.getPreferenze()));
+		
+		ProposalHandler ph = new ProposalHandler();
+		assertFalse(ph.add(p));
+		assertFalse(ph.contains(p));
 	}
 }

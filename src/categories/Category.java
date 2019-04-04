@@ -104,7 +104,8 @@ public abstract class Category implements Cloneable,Serializable{
 												.compareTo((LocalDate)fields.getValue(FieldHeading.DATA.getName())) >= 0))
 				//pre-impostato dal metodo di reset
 				&& (((Integer)fields.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())) >= 0)
-				&& (((Integer)fields.getValue(FieldHeading.NUMPARTECIPANTI.getName())) > 0)
+				//non ha senso un evento in cui si richiede un solo partecipante
+				&& (((Integer)fields.getValue(FieldHeading.NUMPARTECIPANTI.getName())) > 1)
 				&& Stream.of(FieldHeading.values())
 							.filter((fh)->fh.isOptional())
 							.filter((fh)->containsField(fh.getName()))

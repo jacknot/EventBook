@@ -210,7 +210,8 @@ public class Proposal implements Serializable{
 	 * @return True - la proposta è valida<br>False - la proposta è invalida
 	 */
 	public boolean isValid() {
-		return hasOwner() && event.isValid();
+		return hasOwner() 
+				&& event.isValid();
 	}
 	
 	/**

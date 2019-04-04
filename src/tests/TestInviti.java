@@ -21,7 +21,7 @@ import utility.MessageHandler;
 class TestInviti {
 
 	@org.junit.jupiter.api.Test
-	void controlloPreferenze() {
+	void confrontoPreferenze() {
 		Proposal p1 = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName()));
 		Preferences pref = p1.getPreferenze();
 		assertTrue(p1.getPreferenze().sameChoices(pref));
@@ -31,7 +31,8 @@ class TestInviti {
 	}
 	
 	@org.junit.jupiter.api.Test
-	void correttaIscrizioneConPreferenzeModificate() {
+	void iscrizioneConOpzioni() {
+		//creazione database
 		UserDatabase database = new UserDatabase();
 		database.register("pinco");
 		database.register("Mario");
@@ -57,6 +58,7 @@ class TestInviti {
 		assertFalse(c1.containsField(FieldHeading.MEET_AND_GREET.getName()));
 		assertFalse(c1.containsField(FieldHeading.MERCHANDISE.getName()));
 		
+		//proposta aggiunta in bacheca
 		Proposal proposal = new Proposal(c1);
 		assertTrue(proposal.setOwner(database.getUser("Mario"), proposal.getPreferenze()));
 		assertTrue(proposal.hasState(State.VALID));
@@ -69,16 +71,19 @@ class TestInviti {
 		proposal.setState(State.OPEN);
 		assertTrue(((LocalDate)proposal.getValue(FieldHeading.TERMINE_RITIRO.getName())).compareTo(LocalDate.now().minusDays(1)) == 0);
 		
+		//effettuo iscrizione
 		Preferences pref = noticeBoard.getPreferenze(0);
 
 		assertFalse(pref.contains(FieldHeading.MEET_AND_GREET));
 		assertFalse(pref.contains(FieldHeading.MERCHANDISE));
 		assertTrue(pref.contains(FieldHeading.BACKSTAGE_PASS));
-		
 		assertTrue(pref.impostaPreferenza(FieldHeading.BACKSTAGE_PASS, true));
-		assertTrue(noticeBoard.signUp(0, database.getUser("pinco"), pref));
-		assertTrue(proposal.hasState(State.CLOSED));
 		
+		//iscrizione alla proposta
+		assertTrue(noticeBoard.signUp(0, database.getUser("pinco"), pref));
+		
+		//check iscrizione -> capienza MAX -> proposta CHIUSA -> eventi legati al passaggio di stato
+		assertTrue(proposal.hasState(State.CLOSED));
 		assertFalse(database.getUser("Mario").noMessages());
 		assertFalse(database.getUser("pinco").noMessages());
 		System.out.println("Test : correttaIscrizioneConPreferenzeModificate ->" + database.getUser("pinco").showNotifications());
@@ -86,10 +91,11 @@ class TestInviti {
 	}
 	
 	@org.junit.jupiter.api.Test
-	void notificaInteresse() { 
-		UserDatabase database = new UserDatabase(); //creazione database utenti
+	void avvisoAgliInteressatiAllaCreazione() { 
+		//creazione database utenti
+		UserDatabase database = new UserDatabase();
 		database.register("pinco");
-		database.register("Mario"); //registrati nel database
+		database.register("Mario");
 		database.getUser("pinco").setValue(FieldHeading.CATEGORIE_INTERESSE.getName(), 
 											FieldHeading.CATEGORIE_INTERESSE.getClassType().parse("Partita di Calcio")); //Interessato a calcio
 		
@@ -106,6 +112,7 @@ class TestInviti {
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event);
 		proposal.setOwner(database.getUser("Mario"), proposal.getPreferenze());
+		assertTrue(proposal.isValid() && proposal.hasState(State.VALID));
 		
 		noticeBoard.add(proposal); //Proposta aggiunta in bacheca
 		ArrayList<User> receivers = database.searchBy(proposal.getCategoryName()); //Lista di utenti interessati in base alla categoria
@@ -115,7 +122,7 @@ class TestInviti {
 	}
 	
 	@org.junit.jupiter.api.Test
-	void invitaTutti() {
+	void invitiAPropostaAPERTA() {
 //		idea:
 //			1. creo proposta
 //			2. aggiungo proposta in bacheca

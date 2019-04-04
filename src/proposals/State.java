@@ -95,7 +95,7 @@ public enum State implements Serializable{
 											);
 				return true;
 			//todayDate >= lastSubDate && subs < full
-			}else if(todayDate.compareTo(lastSubDate) == 0 
+			}else if(todayDate.compareTo(lastSubDate) >= 0 
 					&& p.subNumber() < (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())) {
 				p.setState(FAILED);
 				MessageHandler.getInstance().eventFailed(p.getSubscribers(), title);
@@ -126,14 +126,14 @@ public enum State implements Serializable{
 			Object tmp = p.getValue(FieldHeading.DATAFINE.getName());
 			if(tmp == null) {
 				LocalDate date = (LocalDate) p.getValue(FieldHeading.DATA.getName());
-				if(tDate.compareTo(date.plusDays(1)) == 0) {
+				if(tDate.compareTo(date.plusDays(1)) >= 0) {
 					p.setState(ENDED);
 					return true;
 				}
 				return false;
 			}else {
 				LocalDate endDate = (LocalDate)tmp;
-				if(tDate.compareTo(endDate.plusDays(1)) == 0) {
+				if(tDate.compareTo(endDate.plusDays(1)) >= 0) {
 					p.setState(ENDED);
 					return true;
 				}
