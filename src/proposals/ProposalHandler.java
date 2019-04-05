@@ -106,7 +106,9 @@ public class ProposalHandler implements Serializable{
 	 * @return True se iscritto - False se non iscritto
 	 */
 	public synchronized boolean isSignedUp(int id, User user) {
-		return bacheca.isSignedUp(id,user);
+		if(bacheca.contains(id))
+			return bacheca.isSignedUp(id,user);
+		return false;
 
 	}
 	/**
