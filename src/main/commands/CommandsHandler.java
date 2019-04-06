@@ -202,7 +202,7 @@ public class CommandsHandler implements Closeable{
 			context.getIOStream().writeln(toString());
 		else if(!contains(command)) 
 			context.getIOStream().writeln(StringConstant.ERROR_UNKNOWN_COMMAND);
-		if(cList.stream()
+		else if(cList.stream()
 			.filter((c)->c.hasName(command))
 			.findFirst().get()
 			.run(context, args)) {
