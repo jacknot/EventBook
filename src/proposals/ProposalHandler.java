@@ -78,6 +78,7 @@ public class ProposalHandler implements Serializable{
 	 * Iscrivi un utente nella proposta di cui si è inserito l'identificatore
 	 * @param id l'identificatore della proposta a cui aggiungere l'utente
 	 * @param user l'utente da aggiungere alla proposta 
+	 * @param preferenze preferenze impostate dall'utente
 	 * @return l'esito dell'iscrizione
 	 */
 	public synchronized boolean signUp(int id, User user, OptionsSet preferenze) {
@@ -173,6 +174,8 @@ public class ProposalHandler implements Serializable{
 	
 	/**
 	 * Verifica che l'utente passato per parametro sia il proprietario della proposta identificata dall'id
+	 * @param id identficatore della proposta
+	 * @param user utente
 	 * @return True se proprietario <br> False altrimenti
 	 */
 	public synchronized boolean isOwner(int id, User user) {

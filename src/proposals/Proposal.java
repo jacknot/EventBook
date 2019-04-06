@@ -46,7 +46,6 @@ public class Proposal implements Serializable{
 	/**
 	 * Costruttore di una proposta
 	 * @param event L'evento a cui farà riferimento la proposta
-	 * @param owner Il proprietario della proposta
 	 */
 	public Proposal(Category event) {
 		this.event = event;

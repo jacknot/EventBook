@@ -46,6 +46,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	}
 	/**
 	 * Effettua un refresh delle proposte nel set
+	 * @return lista di proposte rimaste in bacheca
 	 */
 	public ArrayList<Proposal> refresh() {
 		this.stream()

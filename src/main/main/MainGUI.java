@@ -40,6 +40,7 @@ public class MainGUI {
 
 	/**
 	 * Launch the application.
+	 * @param args arguments
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(()->{
@@ -54,7 +55,6 @@ public class MainGUI {
 	
 	/**
 	 * Create the application.
-	 * @wbp.parser.entryPoint
 	 */
 	public MainGUI() {
 		initialize();
