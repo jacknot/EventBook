@@ -146,7 +146,7 @@ public class Context implements Closeable{
 	 */
 	@Override
 	public void close() throws IOException {
-		save();
 		refreshTimer.cancel();
+		save();
 	}
 }
