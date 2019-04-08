@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  */
 public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private static final String INTERLINE = "%n*******************************%n";
+	private static final String INTERLINE = "%n--------------------------------%n";
 	
 	/**
 	 * Controlla se il contenitore contiene un campo
@@ -84,6 +84,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 */
 	public String getFeatures() {
 		StringBuilder sb = new StringBuilder();
+		sb.append("Contiene:\n");
 		this.stream()
 			.forEachOrdered((f)->sb.append(f.getFeatures()).append(String.format(INTERLINE)));
 		return sb.toString();

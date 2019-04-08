@@ -19,7 +19,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	/**
 	 * Formattazione per la visualizzazione testuale della singola proposta
 	 */
-	private static final String PROPOSAL = "\n%d : %s";
+	private static final String PROPOSAL = "\n[id : %d] %s\n-";
 	/**
 	 * Lo stato che desidero tutte le proposte nella lista abbiano
 	 */

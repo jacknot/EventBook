@@ -130,7 +130,6 @@ public class MainGUI {
 			public void windowClosing(WindowEvent e) {
 				try {
 					handler.close();
-					guis.writeln(StringConstant.EXITMSG);
 					guis.close();
 				} catch (IOException exc) {
 					JOptionPane.showConfirmDialog(frame, "Errore", exc.toString(), JOptionPane.WARNING_MESSAGE);

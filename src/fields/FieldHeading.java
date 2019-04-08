@@ -76,7 +76,7 @@ public enum FieldHeading{
 	 * Formattazione per la visualizzazione testuale dell'oggetto
 	 */
 	//private final static String STRINGA_TO_STRING = "Nome: %s%nDescrizione: %s%nObbligatorio: %s";
-	private final static String TOSTRING_FORMAT = "Nome: %s%s%s%nDescrizione: %s";
+	private final static String TOSTRING_FORMAT = "Campo: %s%s%s%nDescrizione: %s";
 	
 	/**
 	 * Costruttore

@@ -25,7 +25,6 @@ public class Main {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {	
 			try {
 				handler.close();
-				ssa.writeln(StringConstant.EXITMSG);
 				ssa.close();
 			} catch (IOException e) {
 				e.printStackTrace();

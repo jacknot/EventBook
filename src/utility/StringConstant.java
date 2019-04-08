@@ -8,10 +8,10 @@ package utility;
 public class StringConstant {
 	public static final String NEW_LINE = "\n";
 	public static final String EMPTY_STRING = "";
-	public static final String INSERT_IDENTIFIER = "Inserisci l'identificatore : ";
+	public static final String INSERT_IDENTIFIER = "Inserisca l'identificatore : ";
 	public static final String INSERT_NUMBER = "Il parametro deve essere un numero";
 	
-	public static final String SPECIFY_CATEGORY_NAME = "Specifica il nome di una categoria";
+	public static final String SPECIFY_CATEGORY_NAME = "Specifichi il nome di una categoria";
 	public static final String CATEGORY_NOT_FOUND = "Il nome inserito non appartiene ad una categoria esistente";
 	
 	public static final String TOO_PARAMETERS = "Sono stati inseriti parametri superflui";
@@ -21,9 +21,8 @@ public class StringConstant {
 	public static final String WAITING = "> ";
 	
 	public static final String WELCOME = "Welcome to EventBook";
-	public static final String EXITMSG = "Bye Bye";
 
-	public static final String ERROR_UNKNOWN_COMMAND = "Il comando inserito non è stato riconosciuto ('help' per i comandi a disposizione)";
+	public static final String ERROR_UNKNOWN_COMMAND = "Il comando inserito non è stato riconosciuto (inserisci 'help' per vedere i comandi a tua disposizione)";
 	
 	//Stringhe per State (e Message)
 	public static final String UNKNOWN_TITLE = "(titolo mancante)";

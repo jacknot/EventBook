@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Message implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private final static String TOSTRING_FORMAT ="<%s> %s : %s";
+	private final static String TOSTRING_FORMAT ="Mittente: %s\nOggetto: %s\nCorpo: %s";
 	
 	/**
 	 * Il mittente

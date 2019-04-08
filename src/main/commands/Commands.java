@@ -61,18 +61,18 @@ public enum Commands {
 		}),
 		REGISTRATION("registra", "Registra un fruitore", "registra [name]", (ctx, args)->{
 			if(args.length == 0){
-		 		ctx.getIOStream().writeln("Inserisci il nomignolo dell'utente da registrare");
+		 		ctx.getIOStream().writeln("Inserisca il nomignolo del nuovo utente");
 		  		return false;
 		  	}else if(!ctx.getDatabase().contains(args[0])){
 		  		ctx.getDatabase().register(args[0]);
 				ctx.getIOStream().writeln("L'utente è stato registrato con successo");
-				ctx.getIOStream().writeln("Compilare, se si vuole, il proprio Profilo personale:\n");
+				ctx.getIOStream().writeln("Compilare, se si vuole, il proprio Profilo personale (si lasci il campo vuoto se non lo si vuole compilare):\n");
 				User user = ctx.getDatabase().getUser(args[0]);
 				FieldHeading[] fields = user.getEditableFields();
 				Stream.of(fields)
 						.forEach((fh)->{
 							ctx.getIOStream().writeln(fh.toString());
-							Object obj = acceptValue(ctx, fh, "Inserisci un valore per il campo: ");
+							Object obj = acceptValue(ctx, fh, "Inserisca il valore del campo (" + fh.getType().getSimpleName()+ ") : ");
 							if(user.setValue(fh.getName(), obj))
 								ctx.getIOStream().writeln("\tDato inserito correttamente\n");
 							else
@@ -87,18 +87,18 @@ public enum Commands {
 		//syntax : login [name]
 		LOGIN("login", "Accedi", "login [name]", (ctx, args)->{
 			if(args.length == 0){
-		 		ctx.getIOStream().writeln("Inserisci il nomignolo di un utente contenuto nel database");
+		 		ctx.getIOStream().writeln("Inserisca il nomignolo di un utente già registrato");
 		  		return false;
 		  	}else if(ctx.getDatabase().contains(args[0])){
 		  		ctx.newSession(args[0]);
-		  		ctx.getIOStream().writeln("Loggato come: " + args[0]);
+		  		ctx.getIOStream().writeln("Accesso eseguito come: " + args[0]);
 		  		return true;
 		 	}else{
 		  		ctx.getIOStream().writeln("Utente non registrato");
 		  		return false;
 		  	}
 		}),
-		LOGOUT("logout", "Per uscire","logout", (ctx, args)->{
+		LOGOUT("logout", "Per eseguire il logout","logout", (ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.resetSession();
@@ -115,7 +115,7 @@ public enum Commands {
 			try {
 				id = Integer.parseInt(args[0]);
 				if(!ctx.getSession().contains(id)) {
-					ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo id");
+					ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo identificatore");
 					return false;
 				}
 			}catch(NumberFormatException e) {
@@ -124,7 +124,7 @@ public enum Commands {
 			}
 			//inserisci nome del campo da modificare
 			FieldHeading field = FieldHeading.TITOLO;
-			String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
+			String newField = ctx.getIOStream().read("Inserisca il nome del campo da modificare : ");
 			if(Stream.of(FieldHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField)))
 				field = Stream.of(FieldHeading.values())
 						.filter((fh)->fh.getName().equalsIgnoreCase(newField))
@@ -136,17 +136,17 @@ public enum Commands {
 			}
 			//inserisci valore del campo da modificare
 			Object obj = null;
-			obj = acceptValue(ctx, field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+			obj = acceptValue(ctx, field, String.format("Inserisca il nuovo valore (%s) : ", field.getType().getSimpleName()));
 			//conferma modifica
 			valid = false;
 			do {
-				ctx.getIOStream().writeln("Sei sicuro di voler modificare ?");
+				ctx.getIOStream().writeln("E' sicuro di voler modificare ?");
 				String newValue = "";
 				if(obj!=null)
 					newValue = obj.toString();
 				String confirm = ctx.getIOStream()
-										.read("Proposta : " + id + ", Campo : " + field.getName() + ", nuovo valore: " + newValue 
-												+ " [y/n]>");
+										.read("Proposta : " + id + ", Campo : " + field.getName() + ", Nuovo valore: " + newValue 
+												+ " [y|n]>");
 				if(confirm.equalsIgnoreCase("n")) {
 					valid = true;
 					ctx.getIOStream().writeln("La modifica è stata annullata");
@@ -156,10 +156,10 @@ public enum Commands {
 			}while(!valid);
 			//modifica effetiva
 			if(ctx.getSession().modifyProposal(id, field.getName(), obj)) {
-				ctx.getIOStream().writeln("Modifica avvenuta con successo");
+				ctx.getIOStream().writeln("La modifica ha avuto successo");
 				return true;
 			}else {
-				ctx.getIOStream().writeln("Modifica fallita");
+				ctx.getIOStream().writeln("La modifica non ha avuto successo");
 				return false;
 			}
 		}),
@@ -183,7 +183,7 @@ public enum Commands {
 					.filter(( fd )->!fd.isOptional())
 					.forEachOrdered(( fd )->{	
 						ctx.getIOStream().writeln(fd.toString());
-						Object obj = acceptValue(ctx, fd, "Inserisci un valore per il campo: ");
+						Object obj = acceptValue(ctx, fd, "Inserisca il valore del campo (" + fd.getType().getSimpleName()+ ") : ");
 						if(event.setValue(fd.getName(), obj))
 							ctx.getIOStream().writeln("\tDato inserito correttamente\n");
 						else
@@ -197,21 +197,21 @@ public enum Commands {
 						boolean valid = false;
 						boolean keepField = false;
 						do {
-							String confirm = ctx.getIOStream().read(String.format("\n%s\n\tVuoi inserire questo campo opzionale? [y|n] > ", fd.toString()));
+							String confirm = ctx.getIOStream().read(String.format("\n%s\n\tVuole utilizzare questo campo opzionale? [y|n] > ", fd.toString()));
 							if(confirm.equalsIgnoreCase("y")) {
 								valid = true;
 								keepField = true;
 							}else if(confirm.equalsIgnoreCase("n")) 
 								valid = true;
 							else
-								ctx.getIOStream().writeln("\n\tValore inserito errato: inserisci 'y' o 'n'");
+								ctx.getIOStream().writeln("\n\tIl valore inserito è errato: inserisca 'y' o 'n'");
 						}while(!valid);
 						if(!keepField) {
 							ctx.getIOStream().writeln("\tIl campo opzionale " + fd.getName() + " non verrà inserito nella categoria");
 							event.removeOptionalField(fd);
 						}else {
 							ctx.getIOStream().writeln("\tIl campo opzionale " + fd.getName() + " verrà inserito nella categoria");
-							Object obj = acceptValue(ctx, fd, "Inserisci un valore per il campo: ");
+							Object obj = acceptValue(ctx, fd, "Inserisca il valore del campo (" + fd.getType().getSimpleName()+ ") : ");
 							if(event.setValue(fd.getName(), obj))
 								ctx.getIOStream().writeln("\tDato inserito correttamente\n");
 							else
@@ -225,14 +225,14 @@ public enum Commands {
 			ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);
 			p.setOwner(ctx.getSession().getOwner(), pref);
 			if(ctx.getSession().addProposal(p)) {
-				ctx.getIOStream().writeln("La proposta è stata aggiunta alla proposte in lavorazione");
+				ctx.getIOStream().writeln("La proposta è stata aggiunta alle proposte in lavorazione");
 				return true;
 			}else {
 				ctx.getIOStream().writeln("La proposta non è stata aggiunta");
 				return false;
 			}
 		}),
-		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le tue proposte","mostraInLavorazione", (ctx, args)->{
+		SHOW_WORKINPROGRESS("mostraInLavorazione", "Visualizza le sue proposte in lavorazione","mostraInLavorazione", (ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			String proposals = ctx.getSession().showInProgress();
@@ -252,7 +252,7 @@ public enum Commands {
 				ctx.getIOStream().writeln(ctx.getSession().showNotification());
 			return true;
 		}),
-		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuovi la notifica inserendo il loro identificativo", "rimuoviNotifica [id]",(ctx, args)->{
+		REMOVE_NOTIFICATION("rimuoviNotifica","Rimuove la notifica usando il suo identificativo", "rimuoviNotifica [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
 			int id = -1;
@@ -312,7 +312,6 @@ public enum Commands {
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca", "partecipa [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
-			ctx.getProposalHandler().refresh();
 			int id = -1;
 			try {
 				id = Integer.parseInt(args[0]);
@@ -325,11 +324,11 @@ public enum Commands {
 				return false;
 			}
 			if(ctx.getProposalHandler().isOwner(id, ctx.getSession().getOwner())) {
-				ctx.getIOStream().writeln("Sei il proprietario della proposta, sei automaticamente iscritto");
+				ctx.getIOStream().writeln("E' il proprietario della proposta, è automaticamente iscritto");
 				return false;
 			}
 			if(ctx.getProposalHandler().isSignedUp(id, ctx.getSession().getOwner())) {
-				ctx.getIOStream().writeln("Sei già iscritto a questa proposta");
+				ctx.getIOStream().writeln("E' già iscritto a questa proposta");
 				return false;
 			}
 			if(ctx.getProposalHandler().isFull(id)) {
@@ -357,7 +356,7 @@ public enum Commands {
 			ctx.getProposalHandler().refresh();
 			User actualUser = ctx.getSession().getOwner();
 			if(ctx.getProposalHandler().countUserSubscription(actualUser) == 0) {
-				ctx.getIOStream().writeln("Non sei iscritto a nessuna proposta");
+				ctx.getIOStream().writeln("Non è iscritto ad alcuna proposta");
 				return false;
 			}
 			ctx.getIOStream().writeln(ctx.getProposalHandler().showUserSubscription(actualUser));
@@ -369,18 +368,18 @@ public enum Commands {
 				return false;
 			}
 			if(ctx.getProposalHandler().isOwner(id, actualUser)) {
-				ctx.getIOStream().writeln("Sei il propositore, non puoi disiscriverti. In caso prova a ritirarla");
+				ctx.getIOStream().writeln("E' il propositore, non può disiscriversi.");
 				return false;
 			}
 			if(!ctx.getProposalHandler().isSignedUp(id, actualUser)) {
-				ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
+				ctx.getIOStream().writeln("Non è iscritto a questa proposta");
 				return false;
 			}
 			if(ctx.getProposalHandler().unsubscribe(id , actualUser)) {
 				ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
 				return true;
 			}else {
-				ctx.getIOStream().writeln("La disiscrizione non è andata a buon fine");
+				ctx.getIOStream().writeln("Impossibile disicriversi dalla proposta");
 				return false;
 			}
 		}),
@@ -389,7 +388,7 @@ public enum Commands {
 				return false;
 			FieldHeading[] fields = ctx.getSession().getOwner().getEditableFields();
 			FieldHeading field = FieldHeading.TITOLO;
-			String newField = ctx.getIOStream().read("Inserisci il nome del campo che vuoi modificare : ");
+			String newField = ctx.getIOStream().read("Inserisca il nome del campo che vuole modificare : ");
 			if(!Stream.of(fields).anyMatch((fh)->fh.getName().equalsIgnoreCase(newField))) {
 				ctx.getIOStream().writeln("Il nome inserito non appartiene ad un campo modificabile");
 				return false;
@@ -399,14 +398,14 @@ public enum Commands {
 							.findFirst().get();
 			if(field.getName().equals(FieldHeading.CATEGORIE_INTERESSE.getName())) {
 				boolean add = true;
-				String confirm = ctx.getIOStream().read("Inserisci modalità di modifica: [\"a\" - aggiungi | \"r\" - togli] > ");
+				String confirm = ctx.getIOStream().read("Inserisca la modalità di modifica: [\"a\" - aggiungi | \"r\" - togli] > ");
 				if(confirm.equalsIgnoreCase("r"))
 					add = false;
 				else if(!confirm.equalsIgnoreCase("a")){
 					ctx.getIOStream().writeln("Il valore inserito non è corretto");
 					return false;
 				}
-				String categoryName = ctx.getIOStream().read("Inserisci il nome della categoria da " + (add?"aggiungere":"rimuovere") + "> ");
+				String categoryName = ctx.getIOStream().read("Inserisca il nome della categoria da " + (add?"aggiungere":"rimuovere") + "> ");
 				if(!Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
 					ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
 					return false;
@@ -416,28 +415,27 @@ public enum Commands {
 									.findFirst().get()
 									.getName();
 				if(ctx.getSession().getOwner().modifyCategory(cat, add)) {
-					ctx.getIOStream().writeln("Categoria modificata con successo");
+					ctx.getIOStream().writeln("Categori d'interesse modificate con successo");
 					return true;
 				}else {
-					ctx.getIOStream().writeln("La modifica non è andata a buon fine");
+					ctx.getIOStream().writeln("La modifica non ha avuto successo");
 					return false;
 				}
 			}else {
 				//inserisci valore del campo da modificare
 				Object obj = null;
-				obj = acceptValue(ctx, field, String.format("Inserisci il nuovo valore (%s) : ", field.getType().getSimpleName()));
+				obj = acceptValue(ctx, field, String.format("Inserisca il nuovo valore (%s) : ", field.getType().getSimpleName()));
 				if(ctx.getSession().getOwner().setValue(field.getName(), obj)) {
-					ctx.getIOStream().writeln("Modifica avvenuta con successo");
+					ctx.getIOStream().writeln("La modifica è avvenuta con successo");
 					return true;
 				}
-				ctx.getIOStream().writeln("Modifica fallita");
+				ctx.getIOStream().writeln("La modifica non ha avuto successo");
 				return false;
 			}
 		}),
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira[id]", (ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
-			ctx.getProposalHandler().refresh();
 			int id = -1;
 			try {
 				id = Integer.parseInt(args[0]);
@@ -447,33 +445,32 @@ public enum Commands {
 			}
 			User owner = ctx.getSession().getOwner();
 			if(!ctx.getProposalHandler().isOwner(id, owner)) {
-				ctx.getIOStream().writeln("La proposta non è di tua proprietà");
+				ctx.getIOStream().writeln("La proposta non è di sua proprietà");
 				return false;
 			}
 			if(ctx.getProposalHandler().withdraw(id, owner)) {
 				ctx.getIOStream().writeln("La proposta è stata ritirata con successo");
 				return true;
 			}
-			ctx.getIOStream().writeln("La proposta non è stata ritirata");
+			ctx.getIOStream().writeln("Impossibile ritirare la proposta");
 			return false;
 		}),
 		PRIVATE_SPACE_IN("spazioPersonale", "Accedi allo spazio personale", "spazioPersonale",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getProposalHandler().refresh();
-			ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi)");
+			ctx.getIOStream().writeln("Accesso completato allo spazio personale ('help' per i comandi a disposizione)");
 			return true;
 		}),
-		PRIVATE_SPACE_OUT("home", "Esci dal private space", "home",(ctx, args)->{
+		PRIVATE_SPACE_OUT("home", "Esce dallo spazio personale", "home",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
-			ctx.getIOStream().writeln("Sei uscito dal tuo spazio personale");
+			ctx.getIOStream().writeln("Ritorno in Home");
 			return true;
 		}),
 		INVITE("invita", "Invita utenti ad una proposta","invita [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
-			ctx.getProposalHandler().refresh();
 			int id = -1;
 			try {
 				id = Integer.parseInt(args[0]);
@@ -487,29 +484,29 @@ public enum Commands {
 				return false;
 			}
 			if(!ctx.getProposalHandler().isOwner(id, owner)) {
-				ctx.getIOStream().writeln("La proposta non è di tua proprietà");
+				ctx.getIOStream().writeln("La proposta non è di sua proprietà");
 				return false;
 			}
 			ArrayList<User> userList = ctx.getProposalHandler().searchBy(owner, ctx.getProposalHandler().getCategory(id));
 			if(userList.isEmpty()) {
-				ctx.getIOStream().writeln("Nessun utente trovato da invitare per questa proposta");
+				ctx.getIOStream().writeln("Nessun utente trovato da invitare a questa proposta");
 				return false;
 			}
-			ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
-			String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
+			ctx.getIOStream().writeln("Utenti da invitare: " + userList.toString());
+			String confirm = ctx.getIOStream().read("Vuole mandare un invito a tutti?" + "\n[y|n]> ");
 			ArrayList<User> receivers = new ArrayList<>();
 			receivers.addAll(userList);
 			if(confirm.equalsIgnoreCase("n")) {							
 				userList.stream()
 							.forEach(( u )->{
-								String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
+								String answer = ctx.getIOStream().read("Vuole invitare " + u.getName() + " ? [y|n]> ");
 								if(answer.equalsIgnoreCase("y")) 
-									ctx.getIOStream().writeln("L'utente verrà notificato");
+									ctx.getIOStream().writeln("L'utente verrà invitato");
 								else if(answer.equalsIgnoreCase("n")) {
-									ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
+									ctx.getIOStream().writeln("L'utente non verrà invitato ");
 									receivers.remove(u);
 								}else {
-									ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
+									ctx.getIOStream().writeln("Il valore non è valido. L'utente non verrà invitato");
 									receivers.remove(u);
 								}
 							});
@@ -518,10 +515,10 @@ public enum Commands {
 				return false;
 			}
 			if(ctx.getProposalHandler().inviteTo(id, receivers)) {
-				ctx.getIOStream().writeln("Gli inviti sono stati inviati con successo");
+				ctx.getIOStream().writeln("Gli utenti sono stati inviati con successo");
 				return true;
 			}else {
-				ctx.getIOStream().writeln("Gli inviti non sono stati inviati");
+				ctx.getIOStream().writeln("Impossibile spedire gli inviti");
 				return false;
 			}
 		}),
@@ -617,7 +614,7 @@ public enum Commands {
 					valid = true;
 				}
 				if(!valid)
-					ctx.getIOStream().writeln("\tIl valore inserito non è corretto.\n\tInserisci qualcosa del tipo: " + field.getClassType().getSyntax());
+					ctx.getIOStream().writeln("\tIl valore inserito non è corretto.\n\tInserisca qualcosa del tipo: " + field.getClassType().getSyntax());
 			}while(!valid);
 			return obj;
 		}
@@ -634,14 +631,14 @@ public enum Commands {
 						boolean confirm = false;
 						boolean valid = false;
 						do {
-							String ok = ctx.getIOStream().read(String.format("\n%s\n\tVuoi usufruirne? [y|n] > ", fh.toString()));
+							String ok = ctx.getIOStream().read(String.format("\n%s\n\tVuole sceglierlo? [y|n] > ", fh.toString()));
 							if(ok.equalsIgnoreCase("y")) {
 								confirm = true;
 								valid = true;
 							}else if(ok.equalsIgnoreCase("n"))
 								valid = true;
 							else
-								ctx.getIOStream().writeln("\n\tIl valore inserito non è corretto: inserisci 'y' o 'n'");
+								ctx.getIOStream().writeln("\n\tIl valore inserito non è corretto: inserisca 'y' o 'n'");
 						}while(!valid);
 						pref.makeChoice(fh, confirm);
 					});
@@ -656,10 +653,10 @@ public enum Commands {
 		 */
 		private static boolean checkOneParameter(Context ctx, String args[]) {
 			if(args.length == 0) {
-				ctx.getIOStream().writeln("Inserisci un parametro");
+				ctx.getIOStream().writeln("Inserisca un parametro");
 				return false;
 			} else if(args.length > 1) {
-				ctx.getIOStream().writeln("Inserisci un solo parametro");
+				ctx.getIOStream().writeln("Inserisca un solo parametro");
 				return false;
 			}
 			return true;

@@ -19,11 +19,11 @@ public class PersonalSpace implements Serializable{
 	/**
 	 * Formato in stringa dello spazio personale
 	 */
-	private final static String TOSTRING_FORMAT ="Spazio personale : %n%n";	
+	private final static String TOSTRING_FORMAT ="Spazio personale: %n";	
 	/**
 	 * Formattazione per la visualizzazione testuale dell singolo messaggio
 	 */
-	private static final String MESSAGE = "\n%d : %s";
+	private static final String MESSAGE = "\n[id : %d] %s\n-";
 	/**
 	 * Rappresentazione testuale della classe quand non ci sono messaggi non ci sono messaggi
 	 */

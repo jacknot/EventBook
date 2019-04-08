@@ -243,9 +243,9 @@ public class Proposal implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Propositore : " + owner + "\n" + event.toString()
+		return event.toString() + "\n" + "Proposto da : " + owner.getName() + "\n"
 					+ "\tIscritti: " + subNumber()
-					+ "\n\t" +subscribers.toString() + "\n";
+					+ "\n\t" + getSubscribers().collect(Collectors.toCollection(ArrayList::new)).toString();
 	}
 	
 	/**
@@ -261,7 +261,7 @@ public class Proposal implements Serializable{
 	 * @return lo stream di tutti gli iscritti
 	 */
 	public Stream<Subscriber> getSubscribers(){
-		return Stream.concat(subscribers.stream(), Stream.of(owner));
+		return Stream.concat(Stream.of(owner), subscribers.stream());
 	}
 
 	/**
