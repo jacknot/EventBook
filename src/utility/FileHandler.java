@@ -45,17 +45,20 @@ public class FileHandler{
 	 */
 	public boolean save(String path, Object obj) {
 		File f = new File(path);
-		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f, false))){
-			if(!f.exists()) {
-				f.getParentFile().mkdirs();
+		if(!f.exists()) {
+			f.getParentFile().mkdirs();
+			try {
 				f.createNewFile();
+			} catch (IOException e) {
+				return false;
 			}
+		}
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f, false))){
 			if(f.exists() && f.canWrite()) {
 				out.writeObject(obj);
 				return true;
 			}
 		}catch(IOException e) {
-			e.printStackTrace();
 			return false;
 		}
 		return false;
