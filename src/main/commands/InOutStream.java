@@ -12,7 +12,7 @@ public interface InOutStream extends Closeable{
 
 	/**
 	 * Legge una stringa dallo stream in ingresso
-	 * @param ciò che si deve leggere
+	 * @param str ciò che si deve leggere
 	 * @return la stringa letta dallo stream in ingresso
 	 */
 	public String read(String str);

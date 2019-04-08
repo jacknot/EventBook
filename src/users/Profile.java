@@ -27,6 +27,7 @@ public class Profile implements Serializable{
 	private final static String TOSTRING_FORMAT = "Nomignolo: %s%nFascia di età utente: %s%nCategorie di interesse:%n%s"; 
 	/**
 	 * Costruttore
+	 * @param name nome del profilo
 	 */
 	public Profile(String name) {
 		fields = FieldSetFactory.getInstance().getSet("Profile");

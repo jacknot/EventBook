@@ -20,6 +20,8 @@ public class Pair<T1, T2> implements Serializable{
 	
 	/**
 	 * Costruttore
+	 * @param first primo elemento
+	 * @param second secondo elemento
 	 */
 	public Pair(T1 first, T2 second) {
 		this.first = first;

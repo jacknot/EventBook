@@ -90,14 +90,14 @@ public class Context implements Closeable{
 	}
 	/**
 	 * Restituisce l'attuale sessione
-	 * @return
+	 * @return la sessione attuale
 	 */
 	public Session getSession() {
 		return session;
 	}
 	/**
 	 * Inizializza la sessione legandola all'utente di cui si è inserito il nomignolo se questo è registrato nel databse
-	 * @param nomignolo
+	 * @param nomignolo nomignolo dell'utente
 	 * @return True - la sezione è stata inizializzata correttamente<br>False - la sessione non è stata inizializzata correttamente
 	 */
 	public boolean newSession(String nomignolo) {
