@@ -393,6 +393,7 @@ public enum Commands {
 				ctx.getIOStream().writeln("Il nome inserito non appartiene ad un campo modificabile");
 				return false;
 			}
+			
 			field = Stream.of(fields)
 							.filter((fh)->fh.getName().equalsIgnoreCase(newField))
 							.findFirst().get();
