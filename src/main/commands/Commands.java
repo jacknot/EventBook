@@ -368,6 +368,10 @@ public enum Commands {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				return false;
 			}
+			if(ctx.getProposalHandler().isOwner(id, actualUser)) {
+				ctx.getIOStream().writeln("Sei il propositore, non puoi disiscriverti. In caso prova a ritirarla");
+				return false;
+			}
 			if(!ctx.getProposalHandler().isSignedUp(id, actualUser)) {
 				ctx.getIOStream().writeln("Non sei iscritto a questa proposta");
 				return false;
@@ -376,7 +380,7 @@ public enum Commands {
 				ctx.getIOStream().writeln("La disiscrizione è andata a buon fine");
 				return true;
 			}else {
-				ctx.getIOStream().writeln("La disiscrizione NON è andata a buon fine");
+				ctx.getIOStream().writeln("La disiscrizione non è andata a buon fine");
 				return false;
 			}
 		}),
