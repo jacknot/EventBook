@@ -18,7 +18,7 @@ public class CommandsHandler implements Closeable{
 	/**
 	 * Il formato con cui vengono stampati i comandi
 	 */
-	private static final String TOSTRING_FORMAT = "\n\t%-30s%-70s%-25s";
+	private static final String TOSTRING_FORMAT = "\n\t%-30s%-65s%-25s";
 	/**
 	 * Espressione regolare per l'estrazione del comando
 	 */

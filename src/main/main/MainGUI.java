@@ -130,7 +130,6 @@ public class MainGUI {
 			public void windowClosing(WindowEvent e) {
 				try {
 					handler.close();
-					guis.close();
 				} catch (IOException exc) {
 					JOptionPane.showConfirmDialog(frame, "Errore", exc.toString(), JOptionPane.WARNING_MESSAGE);
 				}			
@@ -180,14 +179,6 @@ public class MainGUI {
 			@Override
 			public void writeln(String str) {
 				textArea.append(str + "\n");			
-			}
-
-			/* (non-Javadoc)
-			 * @see command.InOutStream#close()
-			 */
-			@Override
-			public void close() {
-				textFieldCommands.setText("");
 			}
 		}
 
