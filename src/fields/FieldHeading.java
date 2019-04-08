@@ -35,7 +35,7 @@ public enum FieldHeading{
 	
 	//Campi FootballMatch
 	GENERE("Genere", "Genere (maschile o femminile) dei giocatori", true, false, ClassType.GENDER),
-	FASCIA_ETA("Fascia di età", "Estremo inferiore e superiore per l'età dei giocatori", true, false, ClassType.INTERVAL),
+	FASCIA_ETA("Fascia di eta", "Estremo inferiore e superiore per l'età dei giocatori", true, false, ClassType.INTERVAL),
 	
 	//Campi Concert
 	BACKSTAGE_PASS("Pass Backstage", "Prezzo del Pass Backstage per accedere dietro le quinte e salire sul palco", 
@@ -47,7 +47,7 @@ public enum FieldHeading{
 	//campi per il profilo
 	NOMIGNOLO("Nomignolo", "Nome di fantasia scelto dal fruitore, che identifica univocamente il fruitore stesso", 
 				true, false, ClassType.STRING),
-	FASCIA_ETA_UTENTE("Fascia di età utente", "Estremo inferiore e superiore di un intervallo di età entro cui cade quella del fruitore", 
+	FASCIA_ETA_UTENTE("Fascia di eta utente", "Estremo inferiore e superiore di un intervallo di età entro cui cade quella del fruitore", 
 						false, false, ClassType.INTERVAL),
 	CATEGORIE_INTERESSE("Categorie di interesse","Elenca le categorie di eventi a cui il fruitore è particolarmente interessato", 
 						false, false, ClassType.INTEREST_CATEGORIES);
