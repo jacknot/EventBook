@@ -2,7 +2,7 @@ package main.main;
 
 import java.io.IOException;
 
-import main.command.InOutAdapter.SimpleStreamAdapter;
+import main.InOutAdapter.SimpleStreamAdapter;
 import main.commands.*;
 import utility.StringConstant;
 
@@ -13,8 +13,6 @@ import utility.StringConstant;
  */
 public class Main {
 
-	
-	
 	private static CommandsHandler handler;
 	
 	/**
@@ -24,7 +22,7 @@ public class Main {
 	public static void main(String[] args) {
 		SimpleStreamAdapter ssa = new SimpleStreamAdapter();
 		
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> { //Intercetta chiusura 		
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {	
 			try {
 				handler.close();
 				ssa.writeln(StringConstant.EXITMSG);

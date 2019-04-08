@@ -1,4 +1,4 @@
-package main.command.InOutAdapter;
+package main.InOutAdapter;
 
 import java.io.IOException;
 import java.util.Scanner;
