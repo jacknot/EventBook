@@ -3,10 +3,10 @@ package main.commands;
 import java.io.Closeable;
 import java.io.IOException;
 
+import proposals.Proposal;
 import proposals.ProposalHandler;
 import users.UserRepository;
 import utility.FileHandler;
-import utility.Linker;
 import utility.Session;
 import utility.StringConstant;
 
@@ -64,7 +64,8 @@ public class Context implements Closeable{
 			inOut.writeln("Caricata nuova bacheca");
 			}
 		
-		Linker.getInstance().link(proposalHandler, database);
+		for(Proposal proposal : proposalHandler.getAll())
+			proposal.getSubscribers().forEach((sub)->sub.setUser(database.getUser(sub.getName())));
 		
 		inOut.writeln("Fine caricamento");
 		inOut.writeln("Pronto");
