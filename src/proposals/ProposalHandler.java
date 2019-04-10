@@ -112,6 +112,18 @@ public class ProposalHandler implements Serializable{
 		return false;
 
 	}
+	
+	/**
+	 * Controlla se la proposta di cui si è inseriti l'identificatore è al completo 
+	 * @param id l'identificatore
+	 * @return True - la proposta è al completo<br>False - la proposta non è al completo
+	 */
+	public boolean isFull(int id) {
+		if(bacheca.contains(id)) 
+			return bacheca.get(id).isFull();
+		return false;
+	}
+	
 	/**
 	 * Ritorna una stringa contenente tutte le proposte a cui è iscritto l'utente passato come parametro
 	 * @param user utente
@@ -199,7 +211,7 @@ public class ProposalHandler implements Serializable{
 			.map((p) -> p.getUsers())
 			.forEach((l) -> l.stream()
 								.forEach((u) -> {
-									if(!userList.contains(u))
+									if(!userList.contains(u) && !u.equals(owner))
 										userList.add(u);
 				}));
 		return userList;
@@ -237,4 +249,18 @@ public class ProposalHandler implements Serializable{
 		}
 		return false;
 	} 
+	
+	/**
+	 * restituisce tutte le proposte contenute nel gestore
+	 * @return le proposte contenute nel gestore di proposte
+	 */
+	public ArrayList<Proposal> getAll() {
+		ArrayList<Proposal> all = new ArrayList<Proposal>();
+		all.addAll(bacheca);
+		all.addAll(proposteChiuse);
+		all.addAll(proposteConcluse);
+		all.addAll(proposteFallite);
+		all.addAll(proposteRitirate);
+		return all;
+	}
 }

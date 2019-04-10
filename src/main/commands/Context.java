@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import proposals.ProposalHandler;
 import users.UserRepository;
 import utility.FileHandler;
+import utility.Linker;
 import utility.Session;
 import utility.StringConstant;
 
@@ -79,6 +80,9 @@ public class Context implements Closeable{
 			proposalHandler = new ProposalHandler();
 			inOut.writeln("Caricata nuova bacheca");
 			}
+		
+		Linker.getInstance().link(proposalHandler, database);
+		
 		inOut.writeln("Fine caricamento");
 		inOut.writeln("Pronto");
 		inOut.write(StringConstant.NEW_LINE + StringConstant.WAITING);

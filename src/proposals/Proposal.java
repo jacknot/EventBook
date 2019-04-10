@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import categories.Category;
 import dataTypes.Pair;
+import fields.FieldHeading;
 import users.Subscriber;
 import users.User;
 
@@ -31,6 +32,7 @@ public class Proposal implements Serializable{
 	 * Il proprietario della proposta
 	 */
 	private Subscriber owner;
+
 	/**
 	 * Gli iscritti alla proposta
 	 */
@@ -258,9 +260,10 @@ public class Proposal implements Serializable{
 	 * Restituisce lo stream di tutti gli iscritti, propositore compreso
 	 * @return lo stream di tutti gli iscritti
 	 */
-	private Stream<Subscriber> getSubscribers(){
+	public Stream<Subscriber> getSubscribers(){
 		return Stream.concat(subscribers.stream(), Stream.of(owner));
 	}
+
 	/**
 	 * Restituisce la lista di iscritti all proposta, compreso il creatore della proposta
 	 * @return La lista di utenti iscritti all proposta
@@ -292,6 +295,15 @@ public class Proposal implements Serializable{
 	 */
 	public User getOwner() {
 		return owner.getUser();
+	}
+	
+	/**
+	 * Controlla se la proposta è al completo 
+	 * @return True - la proposta è al completo<br>False - la proposta non è al completo
+	 */
+	public boolean isFull() {
+		return subscribers.size() == ((Integer)this.getValue(FieldHeading.NUMPARTECIPANTI.getName())) 
+							+ ((Integer)this.getValue(FieldHeading.TOLL_PARTECIPANTI.getName()));
 	}
 	
 	/**

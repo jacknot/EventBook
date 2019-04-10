@@ -80,7 +80,7 @@ public enum State implements Serializable{
 			int tol = (Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
 			int max = (Integer) p.getValue(FieldHeading.NUMPARTECIPANTI.getName());
 			
-			if((todayDate.compareTo(lastSubDate) == 0 && p.subNumber() - max <= tol && 0 <= p.subNumber() - max) || 
+			if((todayDate.compareTo(lastSubDate) >= 0 && p.subNumber() - max <= tol && 0 <= p.subNumber() - max) || 
 					(todayDate.compareTo(lastSubDate) < 0 && todayDate.compareTo(lastWithdrawalDay) > 0 && p.subNumber() - max == tol)) {
 				p.setState(CLOSED);
 				

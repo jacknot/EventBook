@@ -37,6 +37,11 @@ public class Subscriber implements Serializable{
 	public User getUser() {
 		return user;
 	}
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
 	/**
 	 * Ritorna le scelte fatte dall'utente
 	 * @return le scelte fatte dall'utente

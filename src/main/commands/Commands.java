@@ -145,8 +145,8 @@ public enum Commands {
 				if(obj!=null)
 					newValue = obj.toString();
 				String confirm = ctx.getIOStream()
-										.read("Proposta :" + id + ", Campo :" + field.getName() + ", nuovo valore: " + newValue 
-												+ " [y/n]");
+										.read("Proposta : " + id + ", Campo : " + field.getName() + ", nuovo valore: " + newValue 
+												+ " [y/n]>");
 				if(confirm.equalsIgnoreCase("n")) {
 					valid = true;
 					ctx.getIOStream().writeln("La modifica è stata annullata");
@@ -245,6 +245,7 @@ public enum Commands {
 		SHOW_NOTIFICATIONS("mostraNotifiche","Mostra le tue notifiche","mostraNotifiche", (ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
+			ctx.getProposalHandler().refresh();
 			if(ctx.getSession().noMessages()) 
 				ctx.getIOStream().writeln("Nessun messaggio.");
 			else
@@ -311,11 +312,16 @@ public enum Commands {
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca", "partecipa [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
+			ctx.getProposalHandler().refresh();
 			int id = -1;
 			try {
 				id = Integer.parseInt(args[0]);
 			}catch(NumberFormatException e) {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+				return false;
+			}
+			if(!ctx.getProposalHandler().contains(id)) {
+				ctx.getIOStream().writeln("Proposta non trovata");
 				return false;
 			}
 			if(ctx.getProposalHandler().isOwner(id, ctx.getSession().getOwner())) {
@@ -326,8 +332,8 @@ public enum Commands {
 				ctx.getIOStream().writeln("Sei già iscritto a questa proposta");
 				return false;
 			}
-			if(!ctx.getProposalHandler().contains(id)) {
-				ctx.getIOStream().writeln("Proposta non trovata");
+			if(ctx.getProposalHandler().isFull(id)) {
+				ctx.getIOStream().writeln("La proposta è al completo");
 				return false;
 			}
 			OptionsSet pref = ctx.getProposalHandler().getPreferenze(id);
@@ -348,6 +354,7 @@ public enum Commands {
 		UNSUBSCRIBE("disiscrivi", "Cancella l'iscrizione ad una proposta aperta","disiscrivi",(ctx, args)->{
 			if(!checkNoParameter(ctx, args))
 				return false;
+			ctx.getProposalHandler().refresh();
 			User actualUser = ctx.getSession().getOwner();
 			if(ctx.getProposalHandler().countUserSubscription(actualUser) == 0) {
 				ctx.getIOStream().writeln("Non sei iscritto a nessuna proposta");
@@ -426,6 +433,7 @@ public enum Commands {
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira[id]", (ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
+			ctx.getProposalHandler().refresh();
 			int id = -1;
 			try {
 				id = Integer.parseInt(args[0]);
@@ -461,6 +469,7 @@ public enum Commands {
 		INVITE("invita", "Invita utenti ad una proposta","invita [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
+			ctx.getProposalHandler().refresh();
 			int id = -1;
 			try {
 				id = Integer.parseInt(args[0]);
