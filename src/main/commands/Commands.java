@@ -497,7 +497,8 @@ public enum Commands {
 			}
 			ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
 			String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
-			ArrayList<User> receivers = userList;
+			ArrayList<User> receivers = new ArrayList<>();
+			receivers.addAll(userList);
 			if(confirm.equalsIgnoreCase("n")) {							
 				userList.stream()
 							.forEach(( u )->{
