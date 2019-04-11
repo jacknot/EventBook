@@ -497,25 +497,27 @@ public enum Commands {
 			}
 			ctx.getIOStream().writeln("Potenziali utenti da invitare: " + userList.toString());
 			String confirm = ctx.getIOStream().read("Vuoi mandare un invito a tutti?" + "\n[y|n]> ");
+			ArrayList<User> receivers = userList;
 			if(confirm.equalsIgnoreCase("n")) {							
-				ArrayList<User> receivers = new ArrayList<>();
 				userList.stream()
 							.forEach(( u )->{
 								String answer = ctx.getIOStream().read("Invitare " + u.getName() + " ? [y|n]> ");
-								if(answer.equalsIgnoreCase("y")) {
-									receivers.add(u);
+								if(answer.equalsIgnoreCase("y")) 
 									ctx.getIOStream().writeln("L'utente verrà notificato");
-								}else if(answer.equalsIgnoreCase("n"))
+								else if(answer.equalsIgnoreCase("n")) {
 									ctx.getIOStream().writeln(u.getName() + " non verrà invitato ");
-								else
+									receivers.remove(u);
+								}else {
 									ctx.getIOStream().writeln("Inserito valore non valido. L'utente non verrà notificato");
+									receivers.remove(u);
+								}
 							});
 			}else if(!confirm.equalsIgnoreCase("y")){
 				ctx.getIOStream().writeln("L'invio non verrà effettuato, non è stato inserito una conferma corretta");
 				return false;
 			}
-			if(ctx.getProposalHandler().inviteTo(id, userList)) {
-				ctx.getIOStream().writeln("Gli sono stati inviati con successo");
+			if(ctx.getProposalHandler().inviteTo(id, receivers)) {
+				ctx.getIOStream().writeln("Gli inviti sono stati inviati con successo");
 				return true;
 			}else {
 				ctx.getIOStream().writeln("Gli inviti non sono stati inviati");

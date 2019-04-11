@@ -198,7 +198,8 @@ public class ProposalHandler implements Serializable{
 	
 	/**
 	 * Restituisce una lista di utenti papabili per un invito in base a quelli che hanno partecipate a proposte
-	 * presentate dall'utente inserito
+	 * presentate dall'utente inserito.<br>
+	 * L'utente inserito non fa parte della lista restituita
 	 * @param owner utente proprietario di proposte
 	 * @param categoryName nome della Categoria
 	 * @return lista contente utenti da invitare
