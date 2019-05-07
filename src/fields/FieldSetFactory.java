@@ -53,6 +53,8 @@ public class FieldSetFactory {
 			return cc;
 		});
 	}
+	
+	@Deprecated
 	/**Metodo per ottenere un'istanza della factory di contenitori<br>
 	 * Necessario per l'implementazione del design pattern singleton
 	 * @return l'istanza della factory di contenitori
