@@ -23,10 +23,7 @@ public class CommandsHandler implements Closeable{
 	 * Espressione regolare per l'estrazione del comando
 	 */
 	private static final String REGEX_COMMAND = "^[a-z][A-Za-z]+( )?";
-	/**
-	 * Istanza per implementare il design pattern Singleton
-	 */
-	private static CommandsHandler instance;
+
 	/**
 	 * Contiene i comandi
 	 */
@@ -38,22 +35,12 @@ public class CommandsHandler implements Closeable{
 	/**
 	 * Costruttore
 	 */
-	private CommandsHandler(InOutStream IOStream) {
+	public CommandsHandler(InOutStream IOStream) {
 		cList = new ArrayList<Commands>();
 		this.context = new Context(IOStream);
 		cList = CommandsState.BASE.getCommandsList();
 	}
-	
-	/**
-	 * Restituisce una istanza della classe
-	 * @param IOStream lo stream di Input Output su cui si vuole operare
-	 * @return l'istanza della classe
-	 */
-	public static CommandsHandler getInstance(InOutStream IOStream) {
-		if(instance == null)
-			instance = new CommandsHandler(IOStream);
-		return instance;
-	}
+
 	
 	/**Restituisce il comando (se presente) che inizia con la stringa passata per parametro
 	 * @param initial Stringa iniziale di un comando

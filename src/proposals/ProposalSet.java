@@ -36,7 +36,7 @@ public class ProposalSet extends ArrayList<Proposal> implements Serializable{
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
-	protected ArrayList<Proposal> clean() {
+	public ArrayList<Proposal> clean() {
 		ArrayList<Proposal> toClean = new ArrayList<Proposal>();
 		this.stream()
 			.filter((p)->!p.hasState(state))

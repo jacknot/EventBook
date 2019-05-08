@@ -2,32 +2,11 @@ package fields;
 
 
 /**Implementazione Design Pattern Factory per generare diversi tipi di contenitore di campi a seconda delle esigenze.<br>
- * Implementa anche il Design Pattern Singleton per evitare di avere istanze inutili della classe. <br>
  * Da modificare in caso di introduzione di una nuova categoria.<br>
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public class FieldSetFactory {
-	
-
-	/**
-	 * Istanza della classe necessaria per il design pattern singleton
-	 */
-	private static FieldSetFactory instance= null;
-
-	
-	//Design Pattern Singleton
-
-	/**Metodo per ottenere un'istanza della factory di contenitori<br>
-	 * Necessario per l'implementazione del design pattern singleton
-	 * @return l'istanza della factory di contenitori
-	 */
-	public static FieldSetFactory getInstance() {
-		if(instance == null)
-			instance = new FieldSetFactory();
-		return instance;
-	}
-	//End Singleton
 	
 	//Design Pattern Factory
 	/**Semplifica la creazione di contenitori di campi contenenti campi standard
@@ -51,6 +30,17 @@ public class FieldSetFactory {
 		cc.add(new Field <>(FieldHeading.TERMINE_RITIRO));
 		return cc;
 	}
-
+	
+	/**Semplifica la creazione di contenitori di campi contenenti campi per il profilo
+	 * @return un contenitore con i campi per il profilo
+	 */
+	public FieldSet profile() {
+		FieldSet cc = new FieldSet();
+		cc.add(new Field<>(FieldHeading.NOMIGNOLO));
+		cc.add(new Field <>(FieldHeading.FASCIA_ETA_UTENTE));
+		cc.add(new Field <>(FieldHeading.CATEGORIE_INTERESSE));
+		return cc;
+	}
+	
 	//End Factory
 }

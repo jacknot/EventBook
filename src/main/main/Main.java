@@ -31,7 +31,7 @@ public class Main {
 			}
 		}));
 		System.out.println(StringConstant.WELCOME);
-		handler = CommandsHandler.getInstance(ssa);
+		handler = new CommandsHandler(ssa);
 		do {
 			String command = ssa.read(StringConstant.EMPTY_STRING);
 			handler.run(command.trim());

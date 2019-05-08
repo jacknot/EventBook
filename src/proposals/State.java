@@ -87,7 +87,7 @@ public enum State implements Serializable{
 				ArrayList<Pair<User, Double>> user_cost = new ArrayList<Pair<User, Double>>();
 				p.getUsers().stream()
 								.forEach((u)->user_cost.add(new Pair<User, Double>(u, p.additionalCostsOf(u))));
-				MessageHandler.getInstance().eventConfirmed(user_cost, 
+				new MessageHandler().eventConfirmed(user_cost, 
 															title, 
 															p.getValue(FieldHeading.DATA.getName()),
 															p.getValue(FieldHeading.ORA.getName()),
@@ -99,7 +99,7 @@ public enum State implements Serializable{
 			}else if(todayDate.compareTo(lastSubDate) >= 0 
 					&& p.subNumber() < (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())) {
 				p.setState(FAILED);
-				MessageHandler.getInstance().eventFailed(p.getUsers(), title);
+				new MessageHandler().eventFailed(p.getUsers(), title);
 				return true;
 			}
 			return false;
@@ -112,7 +112,7 @@ public enum State implements Serializable{
 				p.setState(WITHDRAWN);
 				String title = p.getValue(FieldHeading.TITOLO.getName())== null? StringConstant.UNKNOWN_TITLE:
 					(String)p.getValue(FieldHeading.TITOLO.getName());
-				MessageHandler.getInstance().eventWithdrawn(p.getUsers(), title);
+				new MessageHandler().eventWithdrawn(p.getUsers(), title);
 				return true;
 			}
 			return false;
@@ -121,7 +121,7 @@ public enum State implements Serializable{
 		 * @see proposals.State#invite(proposals.Proposal, java.util.ArrayList)
 		 */
 		public boolean invite(Proposal p, int id, ArrayList<User> invitedU) {
-			MessageHandler.getInstance().inviteUsers(invitedU, p.getOwner().getName(), id);
+			new MessageHandler().inviteUsers(invitedU, p.getOwner().getName(), id);
 			return true;
 		}
 	},

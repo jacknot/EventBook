@@ -14,7 +14,6 @@ import proposals.Proposal;
 import proposals.ProposalHandler;
 import proposals.State;
 import users.UserRepository;
-import users.Message;
 import users.User;
 import utility.MessageHandler;
 
@@ -22,7 +21,7 @@ class TestInviti {
 
 	@org.junit.jupiter.api.Test
 	void confrontoPreferenze() {
-		Proposal p1 = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName()));
+		Proposal p1 = new Proposal(new CategoryCache().getCategory(CategoryHeading.CONCERT.getName()));
 		OptionsSet pref = p1.getOptions();
 		assertTrue(p1.getOptions().hasSameChoices(pref));
 		assertTrue(pref.contains(FieldHeading.BACKSTAGE_PASS));
@@ -39,7 +38,7 @@ class TestInviti {
 		ProposalHandler noticeBoard = new ProposalHandler();
 		
 		//Creazione nuova categoria
-		Category c1 = CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName());
+		Category c1 = new CategoryCache().getCategory(CategoryHeading.CONCERT.getName());
 		c1.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
 		c1.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		c1.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -103,7 +102,7 @@ class TestInviti {
 		
 		ProposalHandler noticeBoard = new ProposalHandler(); //creazione bacheca
 		//Creazione nuova categoria
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -119,7 +118,7 @@ class TestInviti {
 		noticeBoard.add(proposal); //Proposta aggiunta in bacheca
 		ArrayList<User> receivers = database.searchBy(proposal.getCategoryName()); //Lista di utenti interessati in base alla categoria
 		receivers.remove(database.getUser("Mario")); //rimosso il proprietario proposta
-		MessageHandler.getInstance().notifyByInterest(receivers, proposal.getCategoryName()); //invio messaggio alla lista di utenti
+		new MessageHandler().notifyByInterest(receivers, proposal.getCategoryName()); //invio messaggio alla lista di utenti
 		assertFalse(database.getUser("pinco").noMessages()); //Pinco ha ricevuto il messaggio
 	}
 	
@@ -144,7 +143,7 @@ class TestInviti {
 		assertFalse(db.contains("pluto"));
 		
 		//creo proposta
-		Category c1 = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category c1 = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		c1.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
 		c1.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		c1.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -180,7 +179,7 @@ class TestInviti {
 		assertFalse(ph.contains(p1));
 		
 		//creo nuova proposta
-		Category c2 = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category c2 = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		c2.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
 		c2.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		c2.setValue(FieldHeading.LUOGO.getName(), "Lograto");

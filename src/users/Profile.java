@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import dataTypes.CategoriesOfInterest;
-import fields.Field;
 import fields.FieldHeading;
 import fields.FieldSet;
+import fields.FieldSetFactory;
 
 /**La classe Profile ha il compito di fornire una struttura adatta a gestire il profilo di un fruitore del social network.<br>
  * Ad ogni profilo è associato un nomignolo, una fascia d'età ed un insieme di categorie di interesse<br>
@@ -30,10 +30,7 @@ public class Profile implements Serializable{
 	 * @param name nome del profilo
 	 */
 	public Profile(String name) {
-		fields = new FieldSet();
-		fields.add(new Field<>(FieldHeading.NOMIGNOLO));
-		fields.add(new Field <>(FieldHeading.FASCIA_ETA_UTENTE));
-		fields.add(new Field <>(FieldHeading.CATEGORIE_INTERESSE));
+		fields = new FieldSetFactory().profile();
 		fields.setValue(FieldHeading.NOMIGNOLO.getName(), name);
 	}
 	/**

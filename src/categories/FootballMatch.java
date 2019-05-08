@@ -17,7 +17,9 @@ public class FootballMatch extends Category{
 	public FootballMatch() {
 		super();
 		heading = CategoryHeading.FOOTBALLMATCH;
+		//
 		fields.add(new Field<>(FieldHeading.GENERE));
 		fields.add(new Field <>(FieldHeading.FASCIA_ETA));
+		//
 	}
 }

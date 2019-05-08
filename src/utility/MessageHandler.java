@@ -9,31 +9,10 @@ import users.User;
 
 /**
  * Classe con il compito di gestire l'invio di messaggi a gruppi di utenti.<br>
- * Implementa il design pattern Singleton
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
 public class MessageHandler {
-
-	/**
-	 * L'istanza del gestore di messaggi
-	 */
-	private static MessageHandler instance;
-	
-	/**
-	 * Costruttore, privato per implementare Singleton
-	 */
-	private MessageHandler() {}
-	
-	/**
-	 * Metodo con il compito di restituire un'istanza del gestore di messaggi
-	 * @return l'istanza del gestore di messaggi
-	 */
-	public static MessageHandler getInstance() {
-		if(instance == null)
-			instance = new MessageHandler();
-		return instance;
-	}
 
 	/**
 	 * Notifica gli utenti che hanno la categoria identificata da categoryName tra le categorie di interesse

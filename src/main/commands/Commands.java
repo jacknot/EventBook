@@ -51,8 +51,7 @@ public enum Commands {
 		 		ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 		  		return false;
 		  	}else if(Stream.of(CategoryHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
-				Category event = CategoryCache.getInstance()
-						.getCategory(Stream.of(CategoryHeading.values())
+				Category event = new CategoryCache().getCategory(Stream.of(CategoryHeading.values())
 											.filter((ch)->ch.getName().equalsIgnoreCase(args[0]))
 											.findFirst().get().getName());
 		  		ctx.getIOStream().write(event.getFeatures());
@@ -176,8 +175,7 @@ public enum Commands {
 				ctx.getIOStream().writeln("Categoria non esistente");
 				return false;
 			}
-			Category event = CategoryCache.getInstance()
-											.getCategory(Stream.of(CategoryHeading.values())
+			Category event = new CategoryCache().getCategory(Stream.of(CategoryHeading.values())
 																.filter((ch)->ch.getName().equalsIgnoreCase(categoryName))
 																.findFirst().get().getName());
 			//campi facoltativi/obbligatori
@@ -301,7 +299,7 @@ public enum Commands {
 					ctx.getIOStream().writeln("Proposta aggiunta con successo");
 					ArrayList<User> receivers = ctx.getDatabase().searchBy(categoryName);
 					receivers.remove(ctx.getSession().getOwner());
-					MessageHandler.getInstance().notifyByInterest(receivers, categoryName);
+					new MessageHandler().notifyByInterest(receivers, categoryName);
 					return true;
 				}else {
 					ctx.getIOStream().writeln("La proposta inserita non è valida");

@@ -102,7 +102,7 @@ public class MainGUI {
 		
 		GUIStream guis = new GUIStream();
 		
-		handler = CommandsHandler.getInstance(guis);	
+		handler = new CommandsHandler(guis);	
 		
 		textFieldCommands.addActionListener(event -> sendCommand());
 		

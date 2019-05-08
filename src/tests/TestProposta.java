@@ -18,7 +18,7 @@ class TestProposta {
 	
 	@org.junit.jupiter.api.Test
 	void propostaInvalidaTermineIscrizione() {
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -36,7 +36,7 @@ class TestProposta {
 	
 	@org.junit.jupiter.api.Test
 	void propostaInvalidaObbligatoriNonCompilati() {
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		//event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20); // Campo obbligatorio non compilato
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(),  LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -52,7 +52,7 @@ class TestProposta {
 	
 	@org.junit.jupiter.api.Test
 	void propostaValida() { 
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -69,7 +69,7 @@ class TestProposta {
 	
 	@org.junit.jupiter.api.Test
 	void propostaValidaPubblicata() { 
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -89,7 +89,7 @@ class TestProposta {
 	@org.junit.jupiter.api.Test
 	void propostaValidaRitirata() { 
 		User owner =  new User("Mario");
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -112,7 +112,7 @@ class TestProposta {
 		User owner =  new User("Mario");
 		User user =  new User("Pinco");
 
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -135,7 +135,7 @@ class TestProposta {
 		User owner =  new User("Mario");
 		User user =  new User("Pinco");
 
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.CONCERT.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.CONCERT.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -167,7 +167,7 @@ class TestProposta {
 		User owner =  new User("Mario");
 		User user =  new User("Pinco");
 
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -204,7 +204,7 @@ class TestProposta {
 	
 	@org.junit.jupiter.api.Test
 	void ugualianazaPreferenze() { 
-		Proposal p = new Proposal(CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName()));
+		Proposal p = new Proposal(new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName()));
 		assertTrue(p.getOptions().hasSameChoices(p.getOptions()));
 	}
 	
@@ -213,7 +213,7 @@ class TestProposta {
 		User owner =  new User("Mario");
 		User pinco = new User("pinco");
 		
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -247,7 +247,7 @@ class TestProposta {
 		User owner =  new User("Mario");
 		User pinco = new User("pinco");
 		
-		Category event = CategoryCache.getInstance().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 1);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
