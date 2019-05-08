@@ -41,9 +41,7 @@ public class CommandsHandler implements Closeable{
 	private CommandsHandler(InOutStream IOStream) {
 		cList = new ArrayList<Commands>();
 		this.context = new Context(IOStream);
-		cList.add(Commands.EXIT);
-		cList.add(Commands.REGISTRATION);
-		cList.add(Commands.LOGIN);
+		cList = CommandsState.BASE.getCommandsList();
 	}
 	
 	/**
@@ -56,97 +54,6 @@ public class CommandsHandler implements Closeable{
 			instance = new CommandsHandler(IOStream);
 		return instance;
 	}
-	/**
-	 * Operazioni sulla lista di comandi a seguito di un logIn
-	 */
-	private void logIn() {
-		cList.add(Commands.SHOW_CATEGORIES);
-		cList.add(Commands.CATEGORY);
-		cList.add(Commands.DESCRIPTION);
-		cList.add(Commands.LOGOUT);
-		cList.add(Commands.MODIFY);
-		cList.add(Commands.NEW_EVENT);
-		cList.add(Commands.SHOW_WORKINPROGRESS);
-		cList.add(Commands.SHOW_NOTICEBOARD);
-		cList.add(Commands.PUBLISH);
-		cList.add(Commands.PARTICIPATE);
-		cList.add(Commands.UNSUBSCRIBE); //Comando aggiunto nella V3
-		cList.add(Commands.WITHDRAW_PROPOSAL);
-		cList.add(Commands.INVITE);
-		cList.add(Commands.PRIVATE_SPACE_IN); //Accesso al private space
-		cList.remove(Commands.REGISTRATION);
-		cList.remove(Commands.LOGIN);	
-	}
-	/**
-	 * Operazioni sulla lista di comandi a seguito di un logOut
-	 */
-	private void logOut() {
-		cList.add(Commands.REGISTRATION);
-		cList.add(Commands.LOGIN);
-		cList.remove(Commands.SHOW_CATEGORIES);
-		cList.remove(Commands.CATEGORY);
-		cList.remove(Commands.DESCRIPTION);
-		cList.remove(Commands.LOGOUT);
-		cList.remove(Commands.MODIFY);
-		cList.remove(Commands.NEW_EVENT);
-		cList.remove(Commands.SHOW_WORKINPROGRESS);
-		cList.remove(Commands.SHOW_NOTICEBOARD);
-		cList.remove(Commands.PUBLISH);
-		cList.remove(Commands.PARTICIPATE);
-		cList.remove(Commands.UNSUBSCRIBE);
-		cList.remove(Commands.WITHDRAW_PROPOSAL);
-		cList.remove(Commands.INVITE);
-		cList.remove(Commands.PRIVATE_SPACE_IN); //Accesso al private space
-	}
-	
-	/**
-	 * Operazioni sulla lista di comandi a seguito della richiesta di accesso allo spazio personale
-	 */
-	private void privateSpaceIn() {
-		cList.add(Commands.SHOW_NOTIFICATIONS);
-		cList.add(Commands.REMOVE_NOTIFICATION);
-		cList.add(Commands.PRIVATE_SPACE_OUT); //Uscita dallo spazio personale
-		cList.add(Commands.SHOW_PROFILE);
-		cList.add(Commands.MODIFY_PROFILE);
-		cList.remove(Commands.SHOW_CATEGORIES);
-		cList.remove(Commands.CATEGORY);
-		cList.remove(Commands.DESCRIPTION);
-		cList.remove(Commands.LOGOUT);
-		cList.remove(Commands.MODIFY);
-		cList.remove(Commands.NEW_EVENT);
-		cList.remove(Commands.SHOW_WORKINPROGRESS);
-		cList.remove(Commands.SHOW_NOTICEBOARD);
-		cList.remove(Commands.PUBLISH);
-		cList.remove(Commands.PARTICIPATE);
-		cList.remove(Commands.UNSUBSCRIBE);
-		cList.remove(Commands.WITHDRAW_PROPOSAL);
-		cList.remove(Commands.INVITE);
-		cList.remove(Commands.PRIVATE_SPACE_IN); //Accesso allo spazio personale
-	}
-	/**
-	 * Operazioni sulla lista di comandi a seguito della richiesta di uscita dallo spazio personale
-	 */
-	private void privateSpaceOut() {
-		cList.add(Commands.SHOW_CATEGORIES);
-		cList.add(Commands.CATEGORY);
-		cList.add(Commands.DESCRIPTION);
-		cList.add(Commands.LOGOUT);
-		cList.add(Commands.MODIFY);
-		cList.add(Commands.NEW_EVENT);
-		cList.add(Commands.SHOW_WORKINPROGRESS);
-		cList.add(Commands.SHOW_NOTICEBOARD);
-		cList.add(Commands.PUBLISH);
-		cList.add(Commands.PARTICIPATE);
-		cList.add(Commands.UNSUBSCRIBE); //Comando aggiunto nella V3
-		cList.add(Commands.WITHDRAW_PROPOSAL);
-		cList.add(Commands.INVITE);
-		cList.add(Commands.PRIVATE_SPACE_IN); //Accesso al private space
-		cList.remove(Commands.SHOW_NOTIFICATIONS);
-		cList.remove(Commands.REMOVE_NOTIFICATION);
-		cList.remove(Commands.SHOW_PROFILE);
-		cList.remove(Commands.MODIFY_PROFILE);
-		cList.remove(Commands.PRIVATE_SPACE_OUT); //Accesso al private space
-	}
 	
 	/**Restituisce il comando (se presente) che inizia con la stringa passata per parametro
 	 * @param initial Stringa iniziale di un comando
@@ -158,8 +65,7 @@ public class CommandsHandler implements Closeable{
 				return command.getName() + " ";
 		}
 		return initial;
-	}
-	
+	}	
 	
 	/**
 	 * Estrae dall'input dell'utente il comando, separandolo dagli eventuali parametri
@@ -207,13 +113,13 @@ public class CommandsHandler implements Closeable{
 			.findFirst().get()
 			.run(context, args)) {
 				if(Commands.LOGIN.hasName(command))
-					logIn();
+					cList = CommandsState.LOGIN.getCommandsList();
 				else if(Commands.LOGOUT.hasName(command))
-					logOut();
+					cList = CommandsState.BASE.getCommandsList();
 				else if(Commands.PRIVATE_SPACE_IN.hasName(command))
-					privateSpaceIn();
+					cList = CommandsState.PRIVATESPACE.getCommandsList();
 				else if(Commands.PRIVATE_SPACE_OUT.hasName(command))
-					privateSpaceOut();	
+					cList = CommandsState.LOGIN.getCommandsList();
 		}
 		context.getIOStream().write(StringConstant.NEW_LINE + StringConstant.WAITING);
 	}

@@ -1,6 +1,7 @@
 package categories;
 
-import fields.FieldSetFactory;
+import fields.Field;
+import fields.FieldHeading;
 
 /**Classe con il compito di istanziare eventi legati ad una partita di calcio
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
@@ -16,6 +17,7 @@ public class FootballMatch extends Category{
 	public FootballMatch() {
 		super();
 		heading = CategoryHeading.FOOTBALLMATCH;
-		fields = FieldSetFactory.getInstance().getSet(CategoryHeading.FOOTBALLMATCH.getName());
+		fields.add(new Field<>(FieldHeading.GENERE));
+		fields.add(new Field <>(FieldHeading.FASCIA_ETA));
 	}
 }

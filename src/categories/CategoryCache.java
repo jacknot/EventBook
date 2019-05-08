@@ -19,7 +19,6 @@ public class CategoryCache {
 	 */
 	private static ArrayList<Category> set = new ArrayList<Category>();
 	
-	@Deprecated
 	/**Metodo per ottenere l'istanza della classe<br>
 	 * Necessaria per il Design Pattern Singleton
 	 * @return l'istanza della classe

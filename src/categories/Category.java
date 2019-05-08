@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import fields.FieldHeading;
 import fields.FieldSet;
+import fields.FieldSetFactory;
 import proposals.OptionsSet;
 
 /**
@@ -29,10 +30,16 @@ public abstract class Category implements Cloneable,Serializable{
 	/**
 	 * Contiene l'intestazione della categoria
 	 */
-	protected CategoryHeading heading;
+	protected CategoryHeading heading;	
+	
+	/**
+	 * Costruttore che istanzia la lista di campi 'fields' con i campi comuni
+	 */
+	Category(){
+		fields = FieldSetFactory.getInstance().commonSet();
+	}
 	
 	//Metodi
-	
 	/**
 	 * Visualizza la struttura della categoria e di quello che può contenere (in forma testuale).<br>
 	 * Non visualizza un loro eventuale contenuto.
