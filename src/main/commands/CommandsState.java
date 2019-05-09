@@ -2,10 +2,18 @@ package main.commands;
 
 import java.util.ArrayList;
 
+/**
+ * Classe con il compito di rappresentare i vari stati in cui una lista di comandi si può trovare durante l'esecuzione del programma
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ */
 public enum CommandsState implements InitCommandsList{
 
 	BASE(){		
 		
+		/*
+		 * (non-Javadoc)
+		 * @see main.commands.InitCommandsList#getCommandsList()
+		 */
 		@Override
 		public ArrayList<Commands> getCommandsList(){
 			ArrayList<Commands> commandsList = new ArrayList<Commands>();
@@ -17,6 +25,10 @@ public enum CommandsState implements InitCommandsList{
 	},
 	LOGIN(){
 		
+		/*
+		 * (non-Javadoc)
+		 * @see main.commands.InitCommandsList#getCommandsList()
+		 */
 		@Override
 		public ArrayList<Commands> getCommandsList(){
 			ArrayList<Commands> commandsList = new ArrayList<Commands>();
@@ -39,7 +51,10 @@ public enum CommandsState implements InitCommandsList{
 		}
 	},
 	PRIVATESPACE(){
-
+		/*
+		 * (non-Javadoc)
+		 * @see main.commands.InitCommandsList#getCommandsList()
+		 */
 		@Override
 		public ArrayList<Commands> getCommandsList() {
 			ArrayList<Commands> commandsList = new ArrayList<Commands>();
@@ -57,6 +72,16 @@ public enum CommandsState implements InitCommandsList{
 
 }
 
-interface InitCommandsList {		
+/**
+ * Interfaccia con il compito di restituire una lista di comandi
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
+interface InitCommandsList {	
+	
+	/**
+	 * Restituisce una lista contenente comandi
+	 * @return Lista di comandi
+	 */
 	public ArrayList<Commands> getCommandsList();
 }

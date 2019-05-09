@@ -137,6 +137,11 @@ public abstract class Category implements Cloneable,Serializable{
 	}
 	
 	/**
+	 * Aggiunge i campi specifici all'insieme di campi comuni della Categoria
+	 */
+	public abstract void addSpecificFields();
+	
+	/**
 	 * Controlla se le due categorie sono uguali
 	 * @param c categoria da confrontare
 	 * @return True se uguali<br>False altrimenti
