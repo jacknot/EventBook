@@ -26,9 +26,7 @@ public class Concert extends Category{
 	 */
 	public Category reset() {
 		fields = new FieldSetFactory().commonSet();
-		fields.add(new Field<>(FieldHeading.BACKSTAGE_PASS));
-		fields.add(new Field <>(FieldHeading.MEET_AND_GREET));
-		fields.add(new Field <>(FieldHeading.MERCHANDISE));
+		addSpecificFields();
 		super.reset();
 		return this;
 	}
