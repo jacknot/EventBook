@@ -1,0 +1,18 @@
+GRASP
+polimorfismo
+	
+demetra
+	setValue:Proposal->..->Field
+SOLID
+Liskov
+	ProposalSet
+	FieldSet
+DIP
+	interfacce:
+		Categoria
+		Proposta
+GoF
+	State
+	Repository
+	Observer(?)
+	
