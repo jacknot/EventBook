@@ -46,7 +46,7 @@ public class FileHandler{
 	public boolean save(String path, Object obj) {
 		File f = new File(path);
 		if(!f.exists()) {
-			f.getParentFile().mkdirs();
+			f.getParentFile().mkdirs(); //DA NULLPOINTER SE VIENE PASSATO UN PATH SENZA PARENTFILE
 			try {
 				f.createNewFile();
 			} catch (IOException e) {
