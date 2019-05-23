@@ -3,7 +3,6 @@ package tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import users.UserRepository;
-import utility.MessageHandler;
 import users.Message;
 
 class TestUser {

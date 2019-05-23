@@ -18,7 +18,7 @@ import proposals.OptionsSet;
  *
  */
 public abstract class Category implements Cloneable,Serializable{
-	
+
 	//Attributi
 	
 	private static final long serialVersionUID = 1L;
