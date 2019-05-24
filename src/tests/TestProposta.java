@@ -62,7 +62,6 @@ class TestProposta {
 		event.setValue(FieldHeading.GENERE.getName(), FieldHeading.GENERE.getClassType().parse("M"));
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event);
-		assertFalse(proposal.isValid()); //deve essere valida
 		proposal.setOwner(new User("Mario"), proposal.getOptions());
 		assertTrue(proposal.isValid()); //deve essere valida
 	}
