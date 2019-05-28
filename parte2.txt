@@ -1,18 +1,21 @@
 GRASP
-polimorfismo
-	
-demetra
-	setValue:Proposal->..->Field
+	polimorfismo
+	demetra
+		setValue:Proposal->..->Field
 SOLID
-Liskov
-	ProposalSet
-	FieldSet
-DIP
-	interfacce:
-		Categoria
-		Proposta
+	Liskov
+		ProposalSet
+		FieldSet
+	DIP
+		interfacce:
+			Categoria
+			Proposta
 GoF
 	State
 	Repository
 	Observer(?)
+Testing
+	 Category:isValid()
+Refactoring
+	Commands:MODIFY contains(id) -> raggruppa metodi/rimuovi commenti
 	

@@ -31,7 +31,9 @@ class TestProposta {
 		Proposal proposal = new Proposal(event);
 		assertFalse(proposal.isValid()); //deve essere invalida
 		proposal.setOwner(new User("Mario"), proposal.getOptions());
-		assertFalse(proposal.isValid() && proposal.hasState(State.INVALID));
+		assertFalse(proposal.isValid());
+		assertTrue(proposal.hasState(State.INVALID));
+		assertFalse(proposal.hasState(State.VALID));
 	}
 	
 	@org.junit.jupiter.api.Test
