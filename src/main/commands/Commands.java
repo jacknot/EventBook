@@ -648,13 +648,18 @@ public enum Commands {
 		 * @return l'id della proposta, -1 se non trovata.
 		 */
 		private static int sessionContainsID(Context ctx, String[] args) {
+			int id = getID(ctx, args);
+			if(!ctx.getSession().contains(id)) {
+				ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo identificatore");
+				id = -1;
+			}
+			return id;
+		}
+		
+		private static int getID(Context ctx, String[] args) {
 			int id = -1;
 			try {
 				id = Integer.parseInt(args[0]);
-				if(!ctx.getSession().contains(id)) {
-					ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo identificatore");
-					id = -1;
-				}
 			}catch(NumberFormatException e) {
 				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
 				id = -1;
@@ -663,15 +668,9 @@ public enum Commands {
 		}
 		
 		private static int proposalHandlerContainsID(Context ctx, String[] args) {
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-				if(!ctx.getProposalHandler().contains(id)) {
-					ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
-					id = -1;
-				}
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+			int id = getID(ctx, args);
+			if(!ctx.getProposalHandler().contains(id)) {
+				ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
 				id = -1;
 			}
 			return id;

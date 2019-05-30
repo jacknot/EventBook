@@ -8,17 +8,31 @@ import java.util.stream.Collectors;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class FieldSet extends ArrayList<Field<?>> implements Serializable{
+public class FieldSet implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private static final String INTERLINE = "%n--------------------------------%n";
 	
+	private ArrayList<Field<?>> set;
+	
+	public FieldSet() {
+		set = new ArrayList<>();
+	}
+
+	/**
+	 * Aggiunge un campo al set
+	 * @param f il campo da aggiungere
+	 * @return True - se il campo è aggiunto con successo<br>False - il campo non è stato aggiunto
+	 */
+	public boolean add(Field<?> f) {
+		return set.add(f);
+	}
 	/**
 	 * Controlla se il contenitore contiene un campo
 	 * @param name Il nome del campo da cercare
 	 * @return True - se il contenitore contiene almeno un campo chiamo in questo modo <br>False - se il contenitore non contiene il campo
 	 */
 	public boolean contains(String name) {
-		if( this.stream()
+		if( set.stream()
 				.anyMatch((f)->f.getName().equalsIgnoreCase(name)))
 			return true;
 		return false;
@@ -28,7 +42,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * @return Il campo con il nome inserito, null altrimenti
 	 */
 	private Field<?> getField(String name) {
-		Field<?> ris = this.stream()
+		Field<?> ris = set.stream()
 				.filter((c)->c.getName().equals(name))
 				.findFirst()
 				.get();
@@ -63,7 +77,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * @return  True - se il set è valido<br>False - se il set non è valido
 	 */
 	public boolean isValid() {
-		return this.stream()
+		return set.stream()
 				.filter((c)->c.isBinding())
 				.allMatch((c)->!c.isEmpty());
 	}
@@ -76,7 +90,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	public String getFeatures() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Contiene:\n");
-		this.stream()
+		set.stream()
 			.forEachOrdered((f)->sb.append(f.getFeatures()).append(String.format(INTERLINE)));
 		return sb.toString();
 	}
@@ -87,7 +101,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * @return True se tutti i valori sono uguali<br>False altrimenti
 	 */
 	public boolean equals(FieldSet set) {
-		return ((this.isValid() && set.isValid()) && this.stream()
+		return ((this.isValid() && set.isValid()) && this.set.stream()
 														.filter((f) -> f.isBinding())
 														.allMatch((f) -> f.getValue().equals(set.getValue(f.getName()))));
 	}
@@ -97,7 +111,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		this.stream()
+		set.stream()
 			.forEachOrdered((f)->sb.append(f.toString() + "\n"));
 		return sb.toString();
 	}
@@ -106,7 +120,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 * Imposta il valore dei campi contenuti nel FieldSet ad un valore di default
 	 */
 	public void reset() {
-		this.stream().forEach((f)->f.reset());
+		set.stream().forEach((f)->f.reset());
 	}
 	/**
 	 * Rimuove dal set il campo di cui si è inserito il nome, sempre che questo sia contenuto
@@ -115,7 +129,7 @@ public class FieldSet extends ArrayList<Field<?>> implements Serializable{
 	 */
 	public boolean remove(String fieldName) {
 		if(contains(fieldName))
-			return this.removeAll(this.stream()
+			return set.removeAll(set.stream()
 										.filter((f)->f.getName().equalsIgnoreCase(fieldName))
 										.collect(Collectors.toCollection(ArrayList::new))
 								);
