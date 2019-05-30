@@ -113,7 +113,9 @@ public enum Commands {
 				return false;
 			//inserisci id proposta
 			boolean valid = false;
-			int id = -1;
+			int id = sessionContainsID(ctx, args);
+			if(id<0)
+				return false;
 			try {
 				id = Integer.parseInt(args[0]);
 				if(!ctx.getSession().contains(id)) {
@@ -285,45 +287,31 @@ public enum Commands {
 		PUBLISH("pubblica", "Pubblica un evento creato", "pubblica [id]", (ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+
+			int id = sessionContainsID(ctx, args);
+			if(id<0)
 				return false;
-			}
-			if(ctx.getSession().contains(id)) {
-				if(ctx.getProposalHandler().add(ctx.getSession().getProposal(id))) {
-					String categoryName = ctx.getSession().getProposal(id).getCategoryName();
-					ctx.getSession().removeProposal(id);
-					ctx.getIOStream().writeln("Proposta aggiunta con successo");
-					ArrayList<User> receivers = ctx.getDatabase().searchBy(categoryName);
-					receivers.remove(ctx.getSession().getOwner());
-					new MessageHandler().notifyByInterest(receivers, categoryName);
-					return true;
-				}else {
-					ctx.getIOStream().writeln("La proposta inserita non è valida");
-					return false;
-				}
+
+			if(ctx.getProposalHandler().add(ctx.getSession().getProposal(id))) {
+				String categoryName = ctx.getSession().getProposal(id).getCategoryName();
+				ctx.getSession().removeProposal(id);
+				ctx.getIOStream().writeln("Proposta aggiunta con successo");
+				ArrayList<User> receivers = ctx.getDatabase().searchBy(categoryName);
+				receivers.remove(ctx.getSession().getOwner());
+				new MessageHandler().notifyByInterest(receivers, categoryName);
+				return true;
 			}else {
-				ctx.getIOStream().writeln("La proposta inserita non esiste");
+				ctx.getIOStream().writeln("La proposta inserita non è valida");
 				return false;
-			}		
+			}	
 		}),
 		PARTICIPATE("partecipa","Partecipa ad una proposta in bacheca", "partecipa [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+			int id = proposalHandlerContainsID(ctx, args);
+			if(id<0)
 				return false;
-			}
-			if(!ctx.getProposalHandler().contains(id)) {
-				ctx.getIOStream().writeln("Proposta non trovata");
-				return false;
-			}
+				
 			if(ctx.getProposalHandler().isOwner(id, ctx.getSession().getOwner())) {
 				ctx.getIOStream().writeln("E' il proprietario della proposta, è automaticamente iscritto");
 				return false;
@@ -438,13 +426,9 @@ public enum Commands {
 		WITHDRAW_PROPOSAL("ritira", "Ritira una proposta in bacheca","ritira[id]", (ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+			int id = proposalHandlerContainsID(ctx, args);
+			if(id<0)
 				return false;
-			}
 			User owner = ctx.getSession().getOwner();
 			if(!ctx.getProposalHandler().isOwner(id, owner)) {
 				ctx.getIOStream().writeln("La proposta non è di sua proprietà");
@@ -473,18 +457,10 @@ public enum Commands {
 		INVITE("invita", "Invita utenti ad una proposta","invita [id]",(ctx, args)->{
 			if(!checkOneParameter(ctx, args))
 				return false;
-			int id = -1;
-			try {
-				id = Integer.parseInt(args[0]);
-			}catch(NumberFormatException e) {
-				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+			int id = proposalHandlerContainsID(ctx, args);
+			if(id<0)
 				return false;
-			}
 			User owner = ctx.getSession().getOwner();
-			if(!ctx.getProposalHandler().contains(id)) {
-				ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
-				return false;
-			}
 			if(!ctx.getProposalHandler().isOwner(id, owner)) {
 				ctx.getIOStream().writeln("La proposta non è di sua proprietà");
 				return false;
@@ -662,6 +638,43 @@ public enum Commands {
 				return false;
 			}
 			return true;
+		}
+		
+		/**
+		 * Controlla se la Sessione corrente contiene una proposta con l'id specificato,
+		 * in caso affermativo lo ritorna
+		 * @param ctx Contesto
+		 * @param args Argomenti
+		 * @return l'id della proposta, -1 se non trovata.
+		 */
+		private static int sessionContainsID(Context ctx, String[] args) {
+			int id = -1;
+			try {
+				id = Integer.parseInt(args[0]);
+				if(!ctx.getSession().contains(id)) {
+					ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo identificatore");
+					id = -1;
+				}
+			}catch(NumberFormatException e) {
+				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+				id = -1;
+			}
+			return id;
+		}
+		
+		private static int proposalHandlerContainsID(Context ctx, String[] args) {
+			int id = -1;
+			try {
+				id = Integer.parseInt(args[0]);
+				if(!ctx.getProposalHandler().contains(id)) {
+					ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
+					id = -1;
+				}
+			}catch(NumberFormatException e) {
+				ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
+				id = -1;
+			}
+			return id;
 		}
 		
 		/**
