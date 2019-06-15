@@ -16,7 +16,7 @@ public class FootballMatch extends Category{
 	 */
 	public FootballMatch() {
 		super();
-		heading = CategoryHeading.FOOTBALLMATCH;
+		super.setHeading(CategoryHeading.FOOTBALLMATCH);
 		addSpecificFields();
 	}
 
@@ -26,7 +26,7 @@ public class FootballMatch extends Category{
 	 */
 	@Override
 	public void addSpecificFields() {
-		fields.add(new Field<>(FieldHeading.GENERE));
-		fields.add(new Field <>(FieldHeading.FASCIA_ETA));
+		super.addField(FieldHeading.GENERE);
+		super.addField(FieldHeading.FASCIA_ETA);
 	}
 }

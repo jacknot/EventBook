@@ -1,5 +1,5 @@
 GRASP
-	polimorfismo
+	polimorfismo --> FATTO
 	demetra
 		setValue:Proposal->..->Field
 SOLID
@@ -19,3 +19,11 @@ Testing
 Refactoring
 	Commands:MODIFY contains(id) -> raggruppa metodi/rimuovi commenti
 	
+	
+	
+FORMATO SLIDE
+
+- Descrizione breve pattern
+- Descrizione breve nostro utilizzo
+- Eventuale grafico
+- Vantaggi e svantaggi

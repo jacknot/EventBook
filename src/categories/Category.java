@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import fields.Field;
 import fields.FieldHeading;
 import fields.FieldSet;
 import fields.FieldSetFactory;
@@ -26,11 +27,11 @@ public abstract class Category implements Cloneable,Serializable{
 	/**
 	 * Contiene i campi
 	 */
-	protected FieldSet fields;
+	private FieldSet fields;
 	/**
 	 * Contiene l'intestazione della categoria
 	 */
-	protected CategoryHeading heading;	
+	private CategoryHeading heading;	
 	
 	/**
 	 * Costruttore che istanzia la lista di campi 'fields' con i campi comuni
@@ -141,6 +142,28 @@ public abstract class Category implements Cloneable,Serializable{
 	 */
 	public abstract void addSpecificFields();
 	
+	/**
+	 * Aggiunge un nuovo campo alla categoria
+	 * @param newField Intestazione del nuovo campo da aggiungere
+	 */
+	public void addField(FieldHeading newField) {
+		fields.add(new Field <> (newField));
+	}
+	
+	/**
+	 * Imposta l'intestazione della categoria
+	 * @param newHeading Intestazione della categoria
+	 */
+	public void setHeading(CategoryHeading newHeading) {
+		heading = newHeading;
+	}
+	
+	/**
+	 * Reimposta l'insieme di campi ad un insieme di default
+	 */
+	public void resetSet() {
+		fields = new FieldSetFactory().commonSet();
+	}
 	/**
 	 * Controlla se le due categorie sono uguali
 	 * @param c categoria da confrontare

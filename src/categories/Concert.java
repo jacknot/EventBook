@@ -18,14 +18,14 @@ public class Concert extends Category{
 	 */
 	public Concert() {
 		super();
-		heading = CategoryHeading.CONCERT;
+		super.setHeading(CategoryHeading.CONCERT);
 		addSpecificFields();
 	}
 	/* (non-Javadoc)
 	 * @see categories.Category#reset()
 	 */
 	public Category reset() {
-		fields = new FieldSetFactory().commonSet();
+		super.resetSet();
 		addSpecificFields();
 		super.reset();
 		return this;
@@ -36,8 +36,8 @@ public class Concert extends Category{
 	 */
 	@Override
 	public void addSpecificFields() {
-		fields.add(new Field<>(FieldHeading.BACKSTAGE_PASS));
-		fields.add(new Field <>(FieldHeading.MEET_AND_GREET));
-		fields.add(new Field <>(FieldHeading.MERCHANDISE));
+		super.addField(FieldHeading.BACKSTAGE_PASS);
+		super.addField(FieldHeading.MEET_AND_GREET);
+		super.addField(FieldHeading.MERCHANDISE);
 	}
 }
