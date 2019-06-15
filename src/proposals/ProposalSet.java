@@ -28,7 +28,7 @@ public class ProposalSet implements Serializable{
 	/**
 	 * 
 	 */
-	private ArrayList<Proposal> set;
+	private ArrayList<ProposalInterface> set;
 	/**
 	 * Costruttore
 	 * @param nState lo stato in cui devono essere tutte le proposte inserite
@@ -40,8 +40,8 @@ public class ProposalSet implements Serializable{
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
 	 */
-	public ArrayList<Proposal> clean() {
-		ArrayList<Proposal> toClean = new ArrayList<Proposal>();
+	public ArrayList<ProposalInterface> clean() {
+		ArrayList<ProposalInterface> toClean = new ArrayList<ProposalInterface>();
 		this.set.stream()
 			.filter((p)->!p.hasState(state))
 			.forEach((p)->toClean.add(p));
@@ -52,7 +52,7 @@ public class ProposalSet implements Serializable{
 	 * Effettua un refresh delle proposte nel set
 	 * @return lista di proposte rimaste in bacheca
 	 */
-	public ArrayList<Proposal> refresh() {
+	public ArrayList<ProposalInterface> refresh() {
 		this.set.stream()
 				.forEach(( p ) -> p.update());
 		return clean();
@@ -79,7 +79,7 @@ public class ProposalSet implements Serializable{
 	 * Restituisce il contenuto del Set sotto forma di ArrayList
 	 * @return Contenuto del Set
 	 */
-	public ArrayList<Proposal> getSet() {
+	public ArrayList<ProposalInterface> getSet() {
 		return set;
 	}
 	/**
@@ -87,7 +87,7 @@ public class ProposalSet implements Serializable{
 	 * @param p il titolo della proposta
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
-	public boolean contains(Proposal p) {
+	public boolean contains(ProposalInterface p) {
 		return this.set.stream()
 					.anyMatch(( sp ) -> sp.equals(p));
 	}
@@ -147,7 +147,7 @@ public class ProposalSet implements Serializable{
 	 * @param p la proposta da aggiungere
 	 * @return True - se la proposta è stata aggiunta con successo<br>False - se la proposta non è stata aggiunta
 	 */
-	public boolean add(Proposal p) {
+	public boolean add(ProposalInterface p) {
 		return this.set.add(p);
 	}
 	
@@ -155,7 +155,7 @@ public class ProposalSet implements Serializable{
 	 * Restituisce uno stream sequenziale usando il set come risorsa
 	 * @return lo stream sequenziale
 	 */
-	public Stream<Proposal> stream() {
+	public Stream<ProposalInterface> stream() {
 		return set.stream();
 	}
 	
@@ -165,7 +165,7 @@ public class ProposalSet implements Serializable{
 	 * @return La proposta di cui si è inserito l'identificatore.
 	 * 			<br>Restituisce null se l'identificatore non è valido
 	 */
-	public Proposal get(int id) {
+	public ProposalInterface get(int id) {
 		return this.set.get(id);
 	}
 	/**

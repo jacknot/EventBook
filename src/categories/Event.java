@@ -18,7 +18,7 @@ import proposals.OptionsSet;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-private abstract class Event implements Category,Cloneable,Serializable{
+public abstract class Event implements Category,Cloneable,Serializable{
 
 	//Attributi
 	

@@ -3,7 +3,7 @@ package utility;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import proposals.Proposal;
+import proposals.ProposalInterface;
 import users.User;
 
 
@@ -20,14 +20,14 @@ public class Session {
 	/**
 	 * Elenco di proposte che il proprietario ha in sospeso nella sessione corrente
 	 */
-	private ArrayList<Proposal> proposalsSet;
+	private ArrayList<ProposalInterface> proposalsSet;
 	/**
 	 * Costruttore
 	 * @param owner Il nome del fruitore proprietario della sessione
 	 */
 	public Session(User owner) {
 		this.owner = owner;
-		proposalsSet = new ArrayList<Proposal>();
+		proposalsSet = new ArrayList<ProposalInterface>();
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class Session {
 	 * @param id l'identificatore della proposta
 	 * @return la proposta identificata dall'identificatore, null se non è valida
 	 */
-	public Proposal getProposal(int id) {
+	public ProposalInterface getProposal(int id) {
 		if(contains(id)) {
 			return proposalsSet.get(id);
 		}
@@ -66,7 +66,7 @@ public class Session {
 	 * @param proposal Proposta da aggiungere all'elenco
 	 * @return L'esito dell'operazione
 	 */
-	public boolean addProposal(Proposal proposal) {
+	public boolean addProposal(ProposalInterface proposal) {
 		return proposalsSet.add(proposal);
 	}
 	/**

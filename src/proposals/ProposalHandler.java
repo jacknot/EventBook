@@ -49,7 +49,7 @@ public class ProposalHandler implements Serializable{
 	/* (non-Javadoc)
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
-	public boolean add(Proposal p) {
+	public boolean add(ProposalInterface p) {
 		if(!bacheca.contains(p)) {
 			p.publish();
 			if(p.hasState(bacheca.getState())) {
@@ -145,7 +145,7 @@ public class ProposalHandler implements Serializable{
 	 * @param p il titolo della proposta
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo
 	 */
-	public boolean contains(Proposal p) {
+	public boolean contains(ProposalInterface p) {
 		return bacheca.contains(p);
 	}
 	/**
@@ -255,8 +255,8 @@ public class ProposalHandler implements Serializable{
 	 * restituisce tutte le proposte contenute nel gestore
 	 * @return le proposte contenute nel gestore di proposte
 	 */
-	public ArrayList<Proposal> getAll() {
-		ArrayList<Proposal> all = new ArrayList<Proposal>();
+	public ArrayList<ProposalInterface> getAll() {
+		ArrayList<ProposalInterface> all = new ArrayList<ProposalInterface>();
 		all.addAll(bacheca.getSet());
 		all.addAll(proposteChiuse.getSet());
 		all.addAll(proposteConcluse.getSet());

@@ -17,7 +17,7 @@ import users.User;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class Proposal implements Serializable{
+private class Proposal implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	/**
