@@ -6,8 +6,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import categories.Category;
-import categories.CategoryCache;
-import categories.CategoryHeading;
+import categories.EventCache;
+import categories.EventHeading;
 import fields.FieldHeading;
 import proposals.OptionsSet;
 import proposals.Proposal;
@@ -21,7 +21,7 @@ class TestInviti {
 
 	@org.junit.jupiter.api.Test
 	void confrontoPreferenze() {
-		Proposal p1 = new Proposal(new CategoryCache().getCategory(CategoryHeading.CONCERT.getName()));
+		Proposal p1 = new Proposal(new EventCache().getCategory(EventHeading.CONCERT.getName()));
 		OptionsSet pref = p1.getOptions();
 		assertTrue(p1.getOptions().hasSameChoices(pref));
 		assertTrue(pref.contains(FieldHeading.BACKSTAGE_PASS));
@@ -38,7 +38,7 @@ class TestInviti {
 		ProposalHandler noticeBoard = new ProposalHandler();
 		
 		//Creazione nuova categoria
-		Category c1 = new CategoryCache().getCategory(CategoryHeading.CONCERT.getName());
+		Category c1 = new EventCache().getCategory(EventHeading.CONCERT.getName());
 		c1.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
 		c1.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		c1.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -102,7 +102,7 @@ class TestInviti {
 		
 		ProposalHandler noticeBoard = new ProposalHandler(); //creazione bacheca
 		//Creazione nuova categoria
-		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new EventCache().getCategory(EventHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -143,7 +143,7 @@ class TestInviti {
 		assertFalse(db.contains("pluto"));
 		
 		//creo proposta
-		Category c1 = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category c1 = new EventCache().getCategory(EventHeading.FOOTBALLMATCH.getName());
 		c1.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
 		c1.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		c1.setValue(FieldHeading.LUOGO.getName(), "Brescia");
@@ -179,7 +179,7 @@ class TestInviti {
 		assertFalse(ph.contains(p1));
 		
 		//creo nuova proposta
-		Category c2 = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category c2 = new EventCache().getCategory(EventHeading.FOOTBALLMATCH.getName());
 		c2.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 2);
 		c2.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().plusDays(1));
 		c2.setValue(FieldHeading.LUOGO.getName(), "Lograto");

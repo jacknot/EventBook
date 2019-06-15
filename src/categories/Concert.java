@@ -9,7 +9,7 @@ import fields.FieldSetFactory;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class Concert extends Category{
+public class Concert extends Event{
 
 	private static final long serialVersionUID = 1L;
 
@@ -18,13 +18,13 @@ public class Concert extends Category{
 	 */
 	public Concert() {
 		super();
-		super.setHeading(CategoryHeading.CONCERT);
+		super.setHeading(EventHeading.CONCERT);
 		addSpecificFields();
 	}
 	/* (non-Javadoc)
 	 * @see categories.Category#reset()
 	 */
-	public Category reset() {
+	public Event reset() {
 		super.resetSet();
 		addSpecificFields();
 		super.reset();

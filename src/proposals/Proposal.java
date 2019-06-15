@@ -23,7 +23,7 @@ public class Proposal implements Serializable{
 	/**
 	 * La categoria a cui la proposta fa riferimento
 	 */
-	private Category event;
+	private Category category;
 	/**
 	 * Lo stato attuale della proposta
 	 */
@@ -49,8 +49,8 @@ public class Proposal implements Serializable{
 	 * Costruttore di una proposta
 	 * @param event L'evento a cui farà riferimento la proposta
 	 */
-	public Proposal(Category event) {
-		this.event = event;
+	public Proposal(Category category) {
+		this.category = category;
 		this.owner = null;
 		this.subscribers = new ArrayList<Subscriber>();
 		this.aState = State.INVALID;
@@ -106,7 +106,7 @@ public class Proposal implements Serializable{
 	 * @return True - sono uguali<br>False - sono diverse
 	 */
 	public boolean equals (Proposal p) {
-		return (this.owner.equals(p.owner) && this.event.equals(p.event));
+		return (this.owner.equals(p.owner) && this.category.equals(p.category));
 	}
 	/**
 	 * Modifica il campo della proposta di cui si � inserito il nome, se esiste
@@ -116,7 +116,7 @@ public class Proposal implements Serializable{
 	 */
 	public boolean setValue(String name, Object value) {
 		if(aState.canSet()) {
-			boolean outcome = event.setValue(name, value);
+			boolean outcome = category.setValue(name, value);
 			update();
 			return outcome;
 		}
@@ -128,7 +128,7 @@ public class Proposal implements Serializable{
 	 * @return il contenuto del campo
 	 */
 	public Object getValue(String name) {
-		return event.getValue(name);
+		return category.getValue(name);
 	}
 	/**
 	 * Iscrive un fruitore alla proposta 
@@ -217,7 +217,7 @@ public class Proposal implements Serializable{
 	 */
 	public boolean isValid() {
 		return hasOwner() 
-				&& event.isValid();
+				&& category.isValid();
 	}
 	
 	/**
@@ -243,7 +243,7 @@ public class Proposal implements Serializable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return event.toString() + "\n" + "Proposto da : " + owner.getName() + "\n"
+		return category.toString() + "\n" + "Proposto da : " + owner.getName() + "\n"
 					+ "\tIscritti: " + subNumber()
 					+ "\n\t" + getSubscribers().collect(Collectors.toCollection(ArrayList::new)).toString();
 	}
@@ -254,7 +254,7 @@ public class Proposal implements Serializable{
 	 * @return True - la proposta è relativa alla categoria<br>False - la proposta non è legata alla categoria
 	 */
 	public boolean hasCategory(String name) {
-		return event.hasName(name);
+		return category.hasName(name);
 	}
 	/**
 	 * Restituisce lo stream di tutti gli iscritti, propositore compreso
@@ -279,14 +279,14 @@ public class Proposal implements Serializable{
 	 * @return il nome della categoria a cui la proposta fa riferimento
 	 */
 	public String getCategoryName() {
-		return event.getName();
+		return category.getName();
 	}
 	/**
 	 * Restituisce l'insieme delle varie opzioni disponibili sulla proposta
 	 * @return il set delle varie opzioni
 	 */
 	public OptionsSet getOptions() {
-		return event.getOptions();
+		return category.getOptions();
 	}
 	
 	/**

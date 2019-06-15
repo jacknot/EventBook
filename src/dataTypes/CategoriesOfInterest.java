@@ -3,7 +3,7 @@ package dataTypes;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
-import categories.CategoryHeading;
+import categories.EventHeading;
 
 /**La classe ha il compito di gestire un elenco contenente nomi di categorie.<br>
  * Nell'elenco ogni nome di cateogoria può comparire al più una volta.
@@ -19,9 +19,9 @@ public class CategoriesOfInterest extends ArrayList<String>{
 	 * @return True se aggiunto correttamente <br> False altrimenti
 	 */
 	public boolean add(String categoryName) {	
-		if(!contains(categoryName) && Stream.of(CategoryHeading.values())
+		if(!contains(categoryName) && Stream.of(EventHeading.values())
 												.anyMatch((ch)->ch.getName().equalsIgnoreCase(categoryName))) {
-			return super.add(Stream.of(CategoryHeading.values())
+			return super.add(Stream.of(EventHeading.values())
 									.filter((ch)->ch.getName().equalsIgnoreCase(categoryName))
 									.findFirst().get().getName());
 		}

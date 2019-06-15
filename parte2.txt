@@ -1,29 +1,33 @@
+ARGOMENTI:
 GRASP
 	polimorfismo --> FATTO
 	demetra
-		setValue:Proposal->..->Field
+		setValue:Proposal->..->Field -->FATTO
+		
 SOLID
-	Liskov
+	Liskov --> FATTO
 		ProposalSet
 		FieldSet
 	DIP
 		interfacce:
 			Categoria
 			Proposta
+			
 GoF
 	State
 	Repository
 	Observer(?)
+	
 Testing
 	 Category:isValid()
+	 
 Refactoring
 	Commands:MODIFY contains(id) -> raggruppa metodi/rimuovi commenti
 	
 	
 	
-FORMATO SLIDE
-
-- Descrizione breve pattern
-- Descrizione breve nostro utilizzo
-- Eventuale grafico
-- Vantaggi e svantaggi
+FORMATO SLIDE:
+	- Descrizione breve pattern
+	- Descrizione breve nostro utilizzo
+	- Eventuale grafico
+	- Vantaggi e svantaggi

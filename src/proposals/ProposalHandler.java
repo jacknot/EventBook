@@ -257,11 +257,11 @@ public class ProposalHandler implements Serializable{
 	 */
 	public ArrayList<Proposal> getAll() {
 		ArrayList<Proposal> all = new ArrayList<Proposal>();
-		all.addAll(bacheca);
-		all.addAll(proposteChiuse);
-		all.addAll(proposteConcluse);
-		all.addAll(proposteFallite);
-		all.addAll(proposteRitirate);
+		all.addAll(bacheca.getSet());
+		all.addAll(proposteChiuse.getSet());
+		all.addAll(proposteConcluse.getSet());
+		all.addAll(proposteFallite.getSet());
+		all.addAll(proposteRitirate.getSet());
 		return all;
 	}
 }

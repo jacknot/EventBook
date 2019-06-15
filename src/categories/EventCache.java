@@ -7,17 +7,17 @@ import java.util.ArrayList;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class CategoryCache {
+public class EventCache {
 
 	/**
 	 * array contenente le istanze delle categorie da clonare
 	 */
-	private static ArrayList<Category> set = new ArrayList<Category>();
+	private static ArrayList<Event> set = new ArrayList<Event>();
 
 	/**
 	 * Costruttore
 	 */
-	public CategoryCache() {
+	public EventCache() {
 		loadCache();
 	}
 	/**
@@ -32,10 +32,10 @@ public class CategoryCache {
 	 * @param type l'intestazione della categoria di cui si vuole l'istanza
 	 * @return l'istanza della categoria di cui si è inserito il nome, null se si è inserito un tipo sbagliato
 	 */
-	public Category getCategory(String type) {
+	public Event getCategory(String type) {
 		if(!contains(type))
 			return null;
-		return ((Category) set.stream()
+		return ((Event) set.stream()
 								.filter((c)->c.hasName(type))
 								.findFirst().get().clone()
 				).reset();

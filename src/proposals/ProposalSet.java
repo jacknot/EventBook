@@ -76,6 +76,13 @@ public class ProposalSet implements Serializable{
 		return state;
 	}
 	/**
+	 * Restituisce il contenuto del Set sotto forma di ArrayList
+	 * @return Contenuto del Set
+	 */
+	public ArrayList<Proposal> getSet() {
+		return set;
+	}
+	/**
 	 * Controlla che il set contenga almeno una proposta con il titolo inserito
 	 * @param p il titolo della proposta
 	 * @return True - contiene almeno una proposta con quel titolo<br>False - non ci sono proposte con quel titolo

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import categories.Category;
-import categories.CategoryCache;
-import categories.CategoryHeading;
+import categories.EventCache;
+import categories.EventHeading;
 import fields.FieldHeading;
 import proposals.OptionsSet;
 import proposals.Proposal;
@@ -28,16 +28,16 @@ public enum Commands {
 			if(!checkNoParameter(ctx, args))
 				return false;
 			ctx.getIOStream().writeln("Le categorie disponibili: ");
-			Stream.of(CategoryHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
+			Stream.of(EventHeading.values()).forEach((ch)->ctx.getIOStream().writeln("\t" + ch.getName()));
 			return true;
 		}),
 		CATEGORY("descrizione", "Mostra la categoria specificata", "descrizione [categoryName]", (ctx, args)->{
 			if(args.length == 0){
 			 	ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 			  	return false;
-			}else if(Stream.of(CategoryHeading.values())
+			}else if(Stream.of(EventHeading.values())
 			  					.anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
-			  	ctx.getIOStream().write(Stream.of(CategoryHeading.values())
+			  	ctx.getIOStream().write(Stream.of(EventHeading.values())
 			  								.filter((fh)->fh.getName().equalsIgnoreCase(args[0]))
 			  								.findFirst().get().toString());
 			  	return true;
@@ -50,8 +50,8 @@ public enum Commands {
 			if(args.length == 0){
 		 		ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
 		  		return false;
-		  	}else if(Stream.of(CategoryHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
-				Category event = new CategoryCache().getCategory(Stream.of(CategoryHeading.values())
+		  	}else if(Stream.of(EventHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
+				Category event = new EventCache().getCategory(Stream.of(EventHeading.values())
 											.filter((ch)->ch.getName().equalsIgnoreCase(args[0]))
 											.findFirst().get().getName());
 		  		ctx.getIOStream().write(event.getFeatures());
@@ -173,11 +173,11 @@ public enum Commands {
 				return false;
 			}
 			String categoryName = args[0];
-			if(!Stream.of(CategoryHeading.values()).anyMatch((ch)->ch.getName().equalsIgnoreCase(categoryName))) {
+			if(!Stream.of(EventHeading.values()).anyMatch((ch)->ch.getName().equalsIgnoreCase(categoryName))) {
 				ctx.getIOStream().writeln("Categoria non esistente");
 				return false;
 			}
-			Category event = new CategoryCache().getCategory(Stream.of(CategoryHeading.values())
+			Category event = new EventCache().getCategory(Stream.of(EventHeading.values())
 																.filter((ch)->ch.getName().equalsIgnoreCase(categoryName))
 																.findFirst().get().getName());
 			//campi facoltativi/obbligatori
@@ -396,11 +396,11 @@ public enum Commands {
 					return false;
 				}
 				String categoryName = ctx.getIOStream().read("Inserisca il nome della categoria da " + (add?"aggiungere":"rimuovere") + "> ");
-				if(!Stream.of(CategoryHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
+				if(!Stream.of(EventHeading.values()).anyMatch((fh) -> fh.getName().equalsIgnoreCase(categoryName))) {
 					ctx.getIOStream().writeln("Il nome inserito non appartiene ad una categoria");
 					return false;
 				}
-				String cat = Stream.of(CategoryHeading.values())
+				String cat = Stream.of(EventHeading.values())
 									.filter((fh) -> fh.getName().equalsIgnoreCase(categoryName))
 									.findFirst().get()
 									.getName();

@@ -7,7 +7,7 @@ import fields.FieldHeading;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-public class FootballMatch extends Category{
+public class FootballMatch extends Event{
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,7 +16,7 @@ public class FootballMatch extends Category{
 	 */
 	public FootballMatch() {
 		super();
-		super.setHeading(CategoryHeading.FOOTBALLMATCH);
+		super.setHeading(EventHeading.FOOTBALLMATCH);
 		addSpecificFields();
 	}
 

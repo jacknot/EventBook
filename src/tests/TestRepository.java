@@ -8,8 +8,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import categories.Category;
-import categories.CategoryCache;
-import categories.CategoryHeading;
+import categories.EventCache;
+import categories.EventHeading;
 import fields.FieldHeading;
 import proposals.Proposal;
 import proposals.State;
@@ -30,7 +30,7 @@ class TestRepository {
 		user = new User("Mario");
 		ur = new UserRepository();
 		ur.register("Mario");
-		Category event = new CategoryCache().getCategory(CategoryHeading.FOOTBALLMATCH.getName());
+		Category event = new EventCache().getCategory(EventHeading.FOOTBALLMATCH.getName());
 		event.setValue(FieldHeading.NUMPARTECIPANTI.getName(), 20);
 		event.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now());
 		event.setValue(FieldHeading.LUOGO.getName(), "Brescia");
