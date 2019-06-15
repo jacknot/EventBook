@@ -11,6 +11,8 @@ import dataTypes.Pair;
 import fields.FieldHeading;
 import users.Subscriber;
 import users.User;
+import proposals.states.Invalid;
+import proposals.states.State;
 
 /**
  * Una proposta fa riferimento ad un particolare evento e consente di potersi iscrivere ad essa
@@ -52,7 +54,7 @@ public class Proposal implements ProposalInterface,Serializable{
 		this.category = category;
 		this.owner = null;
 		this.subscribers = new ArrayList<Subscriber>();
-		this.aState = State.INVALID;
+		this.aState = new Invalid();
 		statePassages = new ArrayList<Pair<State, LocalDate>>();
 		invitations = new ArrayList<Pair<User, LocalDate>>();
 		update();

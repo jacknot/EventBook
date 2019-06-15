@@ -16,7 +16,7 @@ SOLID
 GoF
 	State
 	Repository <-- TOLTO
-	Observer(?) <-- SOSTITUIRE CON STRATEGY
+	Observer(?) <-- SOSTITUIRE CON STRATEGY (COMMAND)
 	
 Testing
 	 Category:isValid()

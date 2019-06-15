@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import users.Subscriber;
 import users.User;
+import proposals.states.State;
 
 /**
  * Interfaccia che definisce il comportamento delle Proposte. 
