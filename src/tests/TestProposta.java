@@ -10,7 +10,7 @@ import categories.EventHeading;
 import fields.FieldHeading;
 import proposals.OptionsSet;
 import proposals.Proposal;
-import proposals.ProposalHandler;
+import proposalUsers.ProposalHandler;
 import proposals.State;
 import users.User;
 

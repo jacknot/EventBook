@@ -3,7 +3,7 @@ package main.commands;
 import java.io.Closeable;
 import java.io.IOException;
 
-import proposals.ProposalHandler;
+import proposalUsers.ProposalHandler;
 import users.UserRepository;
 import utility.FileHandler;
 import utility.Session;

@@ -8,6 +8,7 @@ import categories.EventCache;
 import categories.EventHeading;
 import fields.FieldHeading;
 import proposals.OptionsSet;
+import proposals.ProposalFactory;
 import proposals.ProposalInterface;
 import users.User;
 import utility.MessageHandler;
@@ -222,7 +223,7 @@ public enum Commands {
 						}
 					});
 			//iscrizione proprietario
-			ProposalInterface p = new Proposal(event);
+			ProposalInterface p = ProposalFactory.newProposal(event);
 			OptionsSet pref = p.getOptions();
 			pref = makeChoices(pref, ctx);
 			ctx.getIOStream().writeln(StringConstant.EMPTY_STRING);

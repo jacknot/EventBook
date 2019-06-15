@@ -17,8 +17,7 @@ import users.User;
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
-private class Proposal implements Serializable{
-	
+public class Proposal implements ProposalInterface,Serializable{
 	private static final long serialVersionUID = 1L;
 	/**
 	 * La categoria a cui la proposta fa riferimento
@@ -58,12 +57,9 @@ private class Proposal implements Serializable{
 		invitations = new ArrayList<Pair<User, LocalDate>>();
 		update();
 	}
-	
-	/**
-	 * Imposta il proprietario della proposta
-	 * @param nOwner il nuovo proprietario della proposta
-	 * @param pref le preferenze espresse dal proprietario
-	 * @return True - l'utente inserito è stato impostato come proprietario<br>False - l'utente inserito non è stato inserito come proprietario
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#setOwner(users.User, proposals.OptionsSet)
 	 */
 	public boolean setOwner(User nOwner, OptionsSet pref) {
 		if(getOptions().hasSameChoices(pref) && this.owner == null) {
@@ -80,8 +76,9 @@ private class Proposal implements Serializable{
 	public boolean hasOwner() {
 		return (owner == null)?false:true;
 	}
-	/**
-	 * Fa cambiare stato alla proposta
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#update()
 	 */
 	public void update() {
 		State oldState = aState;
@@ -108,11 +105,9 @@ private class Proposal implements Serializable{
 	public boolean equals (Proposal p) {
 		return (this.owner.equals(p.owner) && this.category.equals(p.category));
 	}
-	/**
-	 * Modifica il campo della proposta di cui si � inserito il nome, se esiste
-	 * @param name il nome del campo da modificare
-	 * @param value il nuovo valore del campo
-	 * @return l'esito della modifica
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#setValue(java.lang.String, java.lang.Object)
 	 */
 	public boolean setValue(String name, Object value) {
 		if(aState.canSet()) {
@@ -122,19 +117,16 @@ private class Proposal implements Serializable{
 		}
 		return false;
 	}
-	/**
-	 * Restituisce il contenuto del campo di cui si è inserito il nome
-	 * @param name il nome del campo 
-	 * @return il contenuto del campo
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#getValue(java.lang.String)
 	 */
 	public Object getValue(String name) {
 		return category.getValue(name);
 	}
-	/**
-	 * Iscrive un fruitore alla proposta 
-	 * @param user il fruitore da iscrivere
-	 * @param choices le scelte effettuate dall'utente
-	 * @return True - l'utente è stato correttamente iscritto alla proposta<br>False - l'utente non è stato iscritto alla proposta
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#signUp(users.User, proposals.OptionsSet)
 	 */
 	public boolean signUp(User user, OptionsSet choices) {
 		if(aState.canSignUp(this)){
@@ -147,11 +139,9 @@ private class Proposal implements Serializable{
 		}
 		return false; 
 	}
-	
-	/**
-	 * Disiscrive un fruitore alla proposta 
-	 * @param user il fruitore da iscrivere
-	 * @return True - l'utente è stato correttamente disiscritto dalla proposta<br>False - l'utente non è stato disiscritto dalla proposta
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#unsubscribe(users.User)
 	 */
 	public boolean unsubscribe(User user) {
 		if(aState.canSignUp(this)){
@@ -165,23 +155,23 @@ private class Proposal implements Serializable{
 		}
 		return false; 
 	}
-	/**
-	 * Verifica se la proposta è nello stato inserito
-	 * @param s lo stato da controllare
-	 * @return True - la proposta è nello stato inserito<br>False - la proposta è in uno stato differente
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#hasState(proposals.State)
 	 */
 	public boolean hasState(State s) {
 		return aState.equals(s);
 	}
-	/**
-	 * Avvisa la proposta che è stata resa pubblica
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#publish()
 	 */
 	public void publish() {
 		aState.publish(this);
 	}
-	/**
-	 * Comunica che la proposta sta per essere ritirata.
-	 * @return True - la proposta è pronta ad essere ritirata<br>False - la proposta non può essere ritirata
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#withdraw()
 	 */
 	public boolean withdraw() {
 		return aState.withdraw(this);
@@ -219,20 +209,16 @@ private class Proposal implements Serializable{
 		return hasOwner() 
 				&& category.isValid();
 	}
-	
-	/**
-	 * Verifica se l'utente è il proprietario della proposta
-	 * @param user utente
-	 * @return True se proprietario<br> False altrimenti
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#isOwner(users.User)
 	 */
 	public boolean isOwner(User user) {
 		return this.owner.getUser().equals(user);
 	}
 	
-	/**
-	 * Verifica se l'utente è iscritto alla proposta
-	 * @param user utente
-	 * @return True se iscritto<br> False altrimenti
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#isSignedUp(users.User)
 	 */
 	public boolean isSignedUp(User user) {
 		return isOwner(user) || subscribers.stream()
@@ -247,26 +233,23 @@ private class Proposal implements Serializable{
 					+ "\tIscritti: " + subNumber()
 					+ "\n\t" + getSubscribers().collect(Collectors.toCollection(ArrayList::new)).toString();
 	}
-	
-	/**
-	 * Controlla se la proposta è legata al tipo di evento di cui si è inserito il nome della categoria
-	 * @param name il nome della categoria di evento
-	 * @return True - la proposta è relativa alla categoria<br>False - la proposta non è legata alla categoria
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#hasCategory(java.lang.String)
 	 */
 	public boolean hasCategory(String name) {
 		return category.hasName(name);
 	}
-	/**
-	 * Restituisce lo stream di tutti gli iscritti, propositore compreso
-	 * @return lo stream di tutti gli iscritti
+
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#getSubscribers()
 	 */
 	public Stream<Subscriber> getSubscribers(){
 		return Stream.concat(Stream.of(owner), subscribers.stream());
 	}
 
-	/**
-	 * Restituisce la lista di iscritti all proposta, compreso il creatore della proposta
-	 * @return La lista di utenti iscritti all proposta
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#getUsers()
 	 */
 	public ArrayList<User> getUsers(){
 		return getSubscribers()
@@ -274,16 +257,15 @@ private class Proposal implements Serializable{
 					.collect(Collectors.toCollection(ArrayList :: new));
 	}
 	
-	/**
-	 * Restituisce il nome della categoria a cui la proposta fa riferimento
-	 * @return il nome della categoria a cui la proposta fa riferimento
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#getCategoryName()
 	 */
 	public String getCategoryName() {
 		return category.getName();
 	}
-	/**
-	 * Restituisce l'insieme delle varie opzioni disponibili sulla proposta
-	 * @return il set delle varie opzioni
+	
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#getOptions()
 	 */
 	public OptionsSet getOptions() {
 		return category.getOptions();
@@ -297,20 +279,16 @@ private class Proposal implements Serializable{
 		return owner.getUser();
 	}
 	
-	/**
-	 * Controlla se la proposta è al completo 
-	 * @return True - la proposta è al completo<br>False - la proposta non è al completo
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#isFull()
 	 */
 	public boolean isFull() {
 		return subscribers.size() == ((Integer)this.getValue(FieldHeading.NUMPARTECIPANTI.getName())) 
 							+ ((Integer)this.getValue(FieldHeading.TOLL_PARTECIPANTI.getName()));
 	}
 	
-	/**
-	 * Invita un gruppo di utenti alla proposta
-	 * @param id l'identificativo della proposta
-	 * @param invitedUsers gli utenti da invitare
-	 * @return True - se gli inviti vengono inviati correttamente<br>False - se gli inviti non vengono inviati
+	/* (non-Javadoc)
+	 * @see proposals.ProposalInterface#invite(int, java.util.ArrayList)
 	 */
 	public boolean invite(int id, ArrayList<User> invitedUsers) {
 		if(aState.invite(this, id, invitedUsers)) {

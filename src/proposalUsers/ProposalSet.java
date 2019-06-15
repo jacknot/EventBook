@@ -1,10 +1,12 @@
-package proposals;
+package proposalUsers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import proposals.ProposalInterface;
+import proposals.State;
 import users.User;
 
 /**
