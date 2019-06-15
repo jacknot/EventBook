@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import proposals.OptionsSet;
 import proposals.ProposalInterface;
-import proposals.State;
+import proposals.states.*;
 import users.User;
 
 /**
@@ -42,11 +42,11 @@ public class ProposalHandler implements Serializable{
 	 * Costruttore
 	 */
 	public ProposalHandler() {
-		proposteConcluse = new ProposalSet(State.ENDED);
-		proposteFallite = new ProposalSet(State.FAILED);
-		proposteRitirate = new ProposalSet(State.WITHDRAWN);
-		proposteChiuse = new ProposalSet(State.CLOSED);
-		bacheca = new ProposalSet(State.OPEN);
+		proposteConcluse = new ProposalSet(new Ended());
+		proposteFallite = new ProposalSet(new Failed());
+		proposteRitirate = new ProposalSet(new Withdrawn());
+		proposteChiuse = new ProposalSet(new Closed());
+		bacheca = new ProposalSet(new Open());
 	}
 	
 	/* (non-Javadoc)

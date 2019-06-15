@@ -12,16 +12,18 @@ import utility.MessageHandler;
 import utility.StringConstant;
 
 public class Open implements State, Serializable{
+
 	/* (non-Javadoc)
-	 * @see EventBook.versione2.fruitore.Stato#canSubscribe(EventBook.versione2.Proposta)
+	 * @see proposals.states.State#canSignUp(proposals.Proposal)
 	 */
 	public boolean canSignUp(Proposal p) {
 		int tol = p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName())== null? 0:
 			(Integer)p.getValue(FieldHeading.TOLL_PARTECIPANTI.getName());
 		return p.subNumber() - (Integer)p.getValue(FieldHeading.NUMPARTECIPANTI.getName())	<  tol; 
 	}
+
 	/* (non-Javadoc)
-	 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
+	 * @see proposals.states.State#transition(proposals.Proposal)
 	 */
 	public boolean transition(Proposal p) {
 		LocalDate todayDate = LocalDate.now();
@@ -56,8 +58,9 @@ public class Open implements State, Serializable{
 		}
 		return false;
 	}
+
 	/* (non-Javadoc)
-	 * @see proposals.State#withdrawal(proposals.Proposal)
+	 * @see proposals.states.State#withdraw(proposals.Proposal)
 	 */
 	public boolean withdraw(Proposal p) {
 		if(LocalDate.now().compareTo((LocalDate) p.getValue(FieldHeading.TERMINE_RITIRO.getName())) <= 0) {
@@ -69,8 +72,9 @@ public class Open implements State, Serializable{
 		}
 		return false;
 	}
+
 	/* (non-Javadoc)
-	 * @see proposals.State#invite(proposals.Proposal, java.util.ArrayList)
+	 * @see proposals.states.State#invite(proposals.Proposal, int, java.util.ArrayList)
 	 */
 	public boolean invite(Proposal p, int id, ArrayList<User> invitedU) {
 		new MessageHandler().inviteUsers(invitedU, p.getOwner().getName(), id);

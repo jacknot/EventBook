@@ -11,7 +11,7 @@ import fields.FieldHeading;
 import proposals.OptionsSet;
 import proposals.Proposal;
 import proposalUsers.ProposalHandler;
-import proposals.State;
+import proposals.states.*;
 import users.User;
 
 class TestProposta {
@@ -32,8 +32,8 @@ class TestProposta {
 		assertFalse(proposal.isValid()); //deve essere invalida
 		proposal.setOwner(new User("Mario"), proposal.getOptions());
 		assertFalse(proposal.isValid());
-		assertTrue(proposal.hasState(State.INVALID));
-		assertFalse(proposal.hasState(State.VALID));
+		assertTrue(proposal.hasState(new Invalid()));
+		assertFalse(proposal.hasState(new Valid()));
 	}
 	
 	@org.junit.jupiter.api.Test
@@ -187,17 +187,17 @@ class TestProposta {
 		
 		ProposalHandler bacheca = new ProposalHandler(); //creata bacheca
 		assertTrue(bacheca.add(proposal));
-		assertTrue(proposal.hasState(State.OPEN));
-		proposal.setState(State.VALID);
+		assertTrue(proposal.hasState(new Open()));
+		proposal.setState(new Valid());
 		proposal.setValue(FieldHeading.TERMINEISCRIZIONE.getName(), LocalDate.now().minusDays(1));
-		proposal.setState(State.OPEN);
+		proposal.setState(new Open());
 		proposal.update();
 		
 		//la proposta inoltre mantiene il suo stato -> non posso iscrivermi direttamente ad essa
 		assertFalse(proposal.signUp(user, proposal.getOptions()));
 		bacheca.refresh(); //La bacheca si aggiorna e cambia stato alla proposta -> passa a Fallita
 		assertFalse(bacheca.contains(proposal));
-		assertTrue(proposal.hasState(State.FAILED));
+		assertTrue(proposal.hasState(new Failed()));
 		//La proposta, avendo superato la data ultima di termine iscrizione, viene rimossa dalla bacheca
 		//La bacheca ora è vuota -> non posso iscrivermi
 		assertFalse(bacheca.signUp(0, user, proposal.getOptions())); 
@@ -228,7 +228,7 @@ class TestProposta {
 		
 		Proposal p = new Proposal(event);
 		p.setOwner(owner, p.getOptions());
-		assertTrue(p.hasState(State.VALID));
+		assertTrue(p.hasState(new Valid()));
 		
 		ProposalHandler ph = new ProposalHandler();
 		assertTrue(ph.add(p));
@@ -237,7 +237,7 @@ class TestProposta {
 		assertTrue(ph.signUp(0, pinco, ph.getPreferenze(0)));
 		ph.refresh();
 		//subNumber == max && tDate == termine_ritiro == termine_iscrizione -> do precedenza al termine_ iscrizione -> proposta è CLOSED
-		assertTrue(p.hasState(State.CLOSED));
+		assertTrue(p.hasState(new Closed()));
 		assertFalse(ph.contains(0));
 		//ho inviato messaggi relativi alla conferma dell'evento
 		assertFalse(pinco.noMessages());
@@ -261,7 +261,7 @@ class TestProposta {
 		
 		Proposal p = new Proposal(event);
 		p.setOwner(owner, p.getOptions());
-		assertTrue(p.hasState(State.INVALID));
+		assertTrue(p.hasState(new Invalid()));
 		assertFalse(p.signUp(pinco, p.getOptions()));
 		
 		ProposalHandler ph = new ProposalHandler();

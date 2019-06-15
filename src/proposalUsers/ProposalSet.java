@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import proposals.ProposalInterface;
-import proposals.State;
+import proposals.states.State;
 import users.User;
 
 /**

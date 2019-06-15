@@ -7,8 +7,9 @@ import fields.FieldHeading;
 import proposals.Proposal;
 
 public class Closed implements State, Serializable{
+
 	/* (non-Javadoc)
-	 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
+	 * @see proposals.states.State#transition(proposals.Proposal)
 	 */
 	public boolean transition(Proposal p) {
 		LocalDate tDate = LocalDate.now();

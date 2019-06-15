@@ -5,8 +5,9 @@ import java.io.Serializable;
 import proposals.Proposal;
 
 public class Ended implements State, Serializable{
+
 	/* (non-Javadoc)
-	 * @see EventBook.versione2.fruitore.Stato#transiziona(EventBook.versione2.Proposta)
+	 * @see proposals.states.State#transition(proposals.Proposal)
 	 */
 	public boolean transition(Proposal p) {
 		return false;

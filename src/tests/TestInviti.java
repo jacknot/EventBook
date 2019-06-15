@@ -13,7 +13,7 @@ import proposals.OptionsSet;
 import proposals.Proposal;
 import proposals.ProposalInterface;
 import proposalUsers.ProposalHandler;
-import proposals.State;
+import proposals.states.*;
 import users.UserRepository;
 import users.User;
 import utility.MessageHandler;
@@ -61,14 +61,14 @@ class TestInviti {
 		//proposta aggiunta in bacheca
 		Proposal proposal = new Proposal(c1);
 		assertTrue(proposal.setOwner(database.getUser("Mario"), proposal.getOptions()));
-		assertTrue(proposal.hasState(State.VALID));
+		assertTrue(proposal.hasState(new Valid()));
 		noticeBoard.add(proposal);
 		
 		//la proposta può chiudersi solo quando ho abbastanza utenti e la data attuale è > data termine ultimo ritiro
 		//devo impostare la data termine < data attuale
-		proposal.setState(State.VALID);
+		proposal.setState(new Valid());
 		assertTrue(c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1)));
-		proposal.setState(State.OPEN);
+		proposal.setState(new Open());
 		assertTrue(((LocalDate)proposal.getValue(FieldHeading.TERMINE_RITIRO.getName())).compareTo(LocalDate.now().minusDays(1)) == 0);
 		
 		//effettuo iscrizione
@@ -83,7 +83,7 @@ class TestInviti {
 		assertTrue(noticeBoard.signUp(0, database.getUser("pinco"), pref));
 		
 		//check iscrizione -> capienza MAX -> proposta CHIUSA -> eventi legati al passaggio di stato
-		assertTrue(proposal.hasState(State.CLOSED));
+		assertTrue(proposal.hasState(new Closed()));
 		assertFalse(database.getUser("Mario").noMessages());
 		assertFalse(database.getUser("pinco").noMessages());
 		System.out.println("--------------------------------------------------------------------------- \n"
@@ -114,7 +114,7 @@ class TestInviti {
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		Proposal proposal = new Proposal(event);
 		proposal.setOwner(database.getUser("Mario"), proposal.getOptions());
-		assertTrue(proposal.isValid() && proposal.hasState(State.VALID));
+		assertTrue(proposal.isValid() && proposal.hasState(new Valid()));
 		
 		noticeBoard.add(proposal); //Proposta aggiunta in bacheca
 		ArrayList<User> receivers = database.searchBy(proposal.getCategoryName()); //Lista di utenti interessati in base alla categoria
@@ -162,21 +162,21 @@ class TestInviti {
 		Proposal p1 = new Proposal(c1);
 		p1.setOwner(db.getUser("mario"), p1.getOptions());
 		
-		assertTrue(p1.hasState(State.VALID));
+		assertTrue(p1.hasState(new Valid()));
 		//aggiungo la proposta al gestore
 		assertTrue(ph.add(p1));
-		assertTrue(p1.hasState(State.OPEN));
+		assertTrue(p1.hasState(new Open()));
 		assertTrue(ph.contains(p1));
 		assertTrue(ph.isSignedUp(0, db.getUser("mario")));
 		//la proposta può chiudersi solo quando ho abbastanza utenti e la data attuale è > data termine ultimo ritiro
 		//devo impostare la data termine < data attuale
-		p1.setState(State.VALID);
+		p1.setState(new Valid());
 		assertTrue(c1.setValue(FieldHeading.TERMINE_RITIRO.getName(), LocalDate.now().minusDays(1)));
-		p1.setState(State.OPEN);
+		p1.setState(new Open());
 		assertTrue(((LocalDate)p1.getValue(FieldHeading.TERMINE_RITIRO.getName())).compareTo(LocalDate.now().minusDays(1)) == 0);
 		//ho iscritto gente fino a far riempire la proposta (APERTA -> CHIUSA)
 		ph.signUp(0, db.getUser("carlo"), ph.getPreferenze(0));
-		assertTrue(p1.hasState(State.CLOSED));
+		assertTrue(p1.hasState(new Closed()));
 		assertFalse(ph.contains(p1));
 		
 		//creo nuova proposta
@@ -194,11 +194,11 @@ class TestInviti {
 		
 		Proposal p2 = new Proposal(c2);
 		p2.setOwner(db.getUser("mario"), p2.getOptions());
-		assertTrue(p2.hasState(State.VALID));
+		assertTrue(p2.hasState(new Valid()));
 		
 		//aggiungo la proposta al gestore
 		assertTrue(ph.add(p2));
-		assertTrue(p2.hasState(State.OPEN));
+		assertTrue(p2.hasState(new Open()));
 		assertTrue(ph.contains(p2));
 		assertTrue(ph.isSignedUp(0, db.getUser("mario")));
 		

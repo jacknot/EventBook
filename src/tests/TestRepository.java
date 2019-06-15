@@ -12,7 +12,7 @@ import categories.EventCache;
 import categories.EventHeading;
 import fields.FieldHeading;
 import proposals.Proposal;
-import proposals.State;
+import proposals.states.*;
 import users.User;
 import users.UserRepository;
 import utility.FileHandler;
@@ -41,7 +41,7 @@ class TestRepository {
 		event.setValue(FieldHeading.FASCIA_ETA.getName(), FieldHeading.FASCIA_ETA.getClassType().parse("10-50"));
 		proposal = new Proposal(event);	
 		proposal.setOwner(new User("Owner"), proposal.getOptions());
-		proposal.setState(State.OPEN);
+		proposal.setState(new Open());
 		proposal.signUp(user, proposal.getOptions());
 		FileHandler file = new FileHandler();
 		file.save("tests/provaRepository.ser", ur); //Salvataggio Database
