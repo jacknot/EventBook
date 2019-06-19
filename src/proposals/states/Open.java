@@ -13,6 +13,11 @@ import utility.StringConstant;
 
 public class Open implements State, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/* (non-Javadoc)
 	 * @see proposals.states.State#canSignUp(proposals.Proposal)
 	 */

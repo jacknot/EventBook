@@ -1,8 +1,6 @@
 package categories;
 
-import fields.Field;
 import fields.FieldHeading;
-import fields.FieldSetFactory;
 
 /**
  * Classe con il compito di gestire informazioni legate ad un Concerto Live

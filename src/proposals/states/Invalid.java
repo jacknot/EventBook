@@ -6,6 +6,11 @@ import proposals.Proposal;
 
 public class Invalid implements State,Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/* (non-Javadoc)
 	 * @see proposals.states.State#transition(proposals.Proposal)
 	 */

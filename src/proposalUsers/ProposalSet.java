@@ -15,6 +15,7 @@ import users.User;
  *
  */
 public class ProposalSet implements Serializable{
+	
 	/**
 	 * 
 	 */

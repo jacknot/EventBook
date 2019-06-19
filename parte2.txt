@@ -8,13 +8,13 @@ SOLID
 	Liskov --> FATTO
 		ProposalSet
 		FieldSet
-	DIP
+	DIP --> FATTO
 		interfacce:
 			Categoria
 			Proposta
 			
 GoF
-	State
+	State --> FATTO
 	Repository <-- TOLTO
 	Observer(?) <-- SOSTITUIRE CON STRATEGY (COMMAND)
 	
