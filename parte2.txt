@@ -22,9 +22,7 @@ Testing
 	 Category:isValid()
 	 
 Refactoring
-	Commands:MODIFY contains(id) -> raggruppa metodi/rimuovi commenti
-	
-	
+	Commands:MODIFY -> raggruppa metodi/rimuovi commenti
 	
 FORMATO SLIDE:
 	- Descrizione breve pattern

@@ -29,16 +29,7 @@ public class Modify extends Commands{
 		int id = sessionContainsID(ctx, args);
 		if(id<0)
 			return false;
-		try {
-			id = Integer.parseInt(args[0]);
-			if(!ctx.getSession().contains(id)) {
-				ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo identificatore");
-				return false;
-			}
-		}catch(NumberFormatException e) {
-			ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
-			return false;
-		}
+		
 		//inserisci nome del campo da modificare
 		FieldHeading field = FieldHeading.TITOLO;
 		String newField = ctx.getIOStream().read("Inserisca il nome del campo da modificare : ");
