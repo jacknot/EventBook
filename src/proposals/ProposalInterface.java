@@ -3,6 +3,7 @@ package proposals;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+import categories.Category;
 import users.Subscriber;
 import users.User;
 import proposals.states.State;
@@ -116,4 +117,21 @@ public interface ProposalInterface {
 	 * @return lo stream di tutti gli iscritti
 	 */
 	public Stream<Subscriber> getSubscribers();
+	
+	/**
+	 * Restituisce il proprietario della proposta
+	 * @return il proprietario della proposta
+	 */
+	public User getOwner();
+	
+	/**
+	 * Restituisce la categoria della proposta
+	 * @return categoria della proposta
+	 */
+	public Category getCategory();
+	
+	
+	public default boolean equals(ProposalInterface pi) {
+		return (this.getOwner().equals(pi.getOwner()) && this.getCategory().equals(pi.getCategory()));
+	}
 }

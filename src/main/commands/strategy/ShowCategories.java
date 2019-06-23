@@ -6,15 +6,8 @@ import categories.EventHeading;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class ShowCategories extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public ShowCategories(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class ShowCategories implements CommandInterface{
+
 
 	/*
 	 * (non-Javadoc)

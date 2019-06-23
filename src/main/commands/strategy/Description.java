@@ -8,15 +8,7 @@ import categories.EventHeading;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class Description extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Description(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class Description implements CommandInterface{
 
 	/*
 	 * (non-Javadoc)

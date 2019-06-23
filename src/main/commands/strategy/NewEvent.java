@@ -12,15 +12,7 @@ import proposals.ProposalFactory;
 import proposals.ProposalInterface;
 import utility.StringConstant;
 
-public class NewEvent extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public NewEvent(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class NewEvent implements CommandInterface{
 
 	/*
 	 * (non-Javadoc)

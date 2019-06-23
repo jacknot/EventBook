@@ -2,15 +2,7 @@ package main.commands.strategy;
 
 import main.commands.Context;
 
-public class Login extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Login(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class Login implements CommandInterface{
 
 	/*
 	 * (non-Javadoc)

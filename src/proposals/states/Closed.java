@@ -34,5 +34,10 @@ public class Closed implements State, Serializable{
 			}
 			return false;
 		}
+	}
+
+	@Override
+	public int getID() {
+		return 0;
 	}	
 }

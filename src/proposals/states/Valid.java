@@ -36,4 +36,9 @@ public class Valid implements State, Serializable{
 		p.setState(new Open());
 		return true;
 	}
+	
+	@Override
+	public int getID() {
+		return 5;
+	}	
 }

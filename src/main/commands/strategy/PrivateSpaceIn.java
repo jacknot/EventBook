@@ -3,15 +3,8 @@ package main.commands.strategy;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class PrivateSpaceIn extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public PrivateSpaceIn(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class PrivateSpaceIn implements CommandInterface{
+
 
 	/*
 	 * (non-Javadoc)

@@ -1,6 +1,7 @@
 package categories;
 
 import fields.FieldHeading;
+import fields.FieldSet;
 import proposals.OptionsSet;
 
 /**
@@ -62,4 +63,11 @@ public interface Category {
 	 * @return True - contiene il campo<br>False - non contiene il campo
 	 */
 	public boolean containsField(String field);
+	
+	public default boolean equals(Category otherCategory) {
+		return this.hasName(otherCategory.getName()) && this.getFieldSet().equals(otherCategory.getFieldSet());
+	}
+	
+	public FieldSet getFieldSet();
+	
 }

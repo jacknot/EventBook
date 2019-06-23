@@ -1,16 +1,19 @@
-package main.commands;
+package main.commands.strategy;
+
+import main.commands.Context;
 
 /**
  * Interfaccia funzionale con il compito di definire il comportamento dei comandi attraverso l'utilizzo di parametri
- * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]a
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  */
-public interface Shell {
-
+public interface CommandInterface {
+	
 	/**
 	 * Il metodo che deve essere completato per eseguire un comando specificato dall'utente, dati eventuali parametri
 	 * @param args parametri del comando
 	 * @param context il contesto nel quale deve agire il comando
 	 * @return l'esito del comando
 	 */
-	public boolean run(Context context, String[] args);
+	public boolean run(String[] args, Context context);
+	
 }

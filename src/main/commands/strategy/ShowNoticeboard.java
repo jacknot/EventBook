@@ -3,15 +3,7 @@ package main.commands.strategy;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class ShowNoticeboard extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public ShowNoticeboard(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class ShowNoticeboard implements CommandInterface{
 
 	/*
 	 * (non-Javadoc)

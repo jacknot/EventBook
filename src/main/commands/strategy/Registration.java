@@ -7,15 +7,8 @@ import main.commands.Context;
 import users.User;
 import utility.StringConstant;
 
-public class Registration extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Registration(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class Registration implements CommandInterface{
+
 
 	/*
 	 * (non-Javadoc)

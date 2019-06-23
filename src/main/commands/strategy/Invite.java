@@ -6,15 +6,7 @@ import main.commands.Context;
 import users.User;
 import utility.StringConstant;
 
-public class Invite extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Invite(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class Invite implements CommandInterface{
 
 	/*
 	 * (non-Javadoc)

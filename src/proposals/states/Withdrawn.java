@@ -16,5 +16,10 @@ public class Withdrawn implements State, Serializable{
 	 */
 	public boolean transition(Proposal p) {
 		return false;
-	}		
+	}	
+	
+	@Override
+	public int getID() {
+		return 6;
+	}	
 }

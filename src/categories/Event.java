@@ -218,4 +218,8 @@ public abstract class Event implements Category,Cloneable,Serializable{
 							);
 	}
 	
+	public FieldSet getFieldSet() {
+		return fields;
+	}
+	
 }

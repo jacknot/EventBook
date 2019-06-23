@@ -28,4 +28,9 @@ public class Invalid implements State,Serializable{
 	public boolean canSet() {
 		return true;
 	}
+	
+	@Override
+	public int getID() {
+		return 3;
+	}	
 }

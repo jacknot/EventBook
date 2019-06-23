@@ -3,15 +3,7 @@ package main.commands.strategy;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class ShowWorkInProgress extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public ShowWorkInProgress(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class ShowWorkInProgress implements CommandInterface{
 
 	/*
 	 * (non-Javadoc)

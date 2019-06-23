@@ -4,15 +4,8 @@ import main.commands.Context;
 import users.User;
 import utility.StringConstant;
 
-public class WithdrawProposal extends Commands{
+public class WithdrawProposal implements CommandInterface{
 	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public WithdrawProposal(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
 
 	/*
 	 * (non-Javadoc)

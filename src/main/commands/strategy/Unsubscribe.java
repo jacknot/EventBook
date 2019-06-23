@@ -4,15 +4,8 @@ import main.commands.Context;
 import users.User;
 import utility.StringConstant;
 
-public class Unsubscribe extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Unsubscribe(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class Unsubscribe implements CommandInterface{
+
 
 	/*
 	 * (non-Javadoc)

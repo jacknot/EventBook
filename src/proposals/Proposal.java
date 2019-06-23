@@ -104,7 +104,7 @@ public class Proposal implements ProposalInterface,Serializable{
 	 * @param p la proposta con cui fare il confronto
 	 * @return True - sono uguali<br>False - sono diverse
 	 */
-	public boolean equals (Proposal p) {
+	public boolean equals(Proposal p) {
 		return (this.owner.equals(p.owner) && this.category.equals(p.category));
 	}
 
@@ -273,9 +273,9 @@ public class Proposal implements ProposalInterface,Serializable{
 		return category.getOptions();
 	}
 	
-	/**
-	 * Restituisce il proprietario della proposta
-	 * @return il proprietario della proposta
+	/*
+	 * (non-Javadoc)
+	 * @see proposals.ProposalInterface#getOwner()
 	 */
 	public User getOwner() {
 		return owner.getUser();
@@ -299,5 +299,13 @@ public class Proposal implements ProposalInterface,Serializable{
 			return true;
 		}
 		return false;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see proposals.ProposalInterface#getCategory()
+	 */
+	public Category getCategory() {
+		return category;
 	}
 }

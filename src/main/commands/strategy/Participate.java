@@ -7,15 +7,8 @@ import main.commands.Context;
 import proposals.OptionsSet;
 import utility.StringConstant;
 
-public class Participate extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Participate(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class Participate implements CommandInterface{
+
 
 	/*
 	 * (non-Javadoc)

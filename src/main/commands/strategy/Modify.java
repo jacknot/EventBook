@@ -6,16 +6,8 @@ import fields.FieldHeading;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class Modify extends Commands{
+public class Modify implements CommandInterface{
 	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Modify(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see main.commands.strategy.Commands#run(java.lang.String[], main.commands.Context)

@@ -3,15 +3,8 @@ package main.commands.strategy;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class RemoveNotifications extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public RemoveNotifications(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class RemoveNotifications implements CommandInterface{
+
 
 	/*
 	 * (non-Javadoc)

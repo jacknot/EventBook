@@ -56,4 +56,10 @@ public interface State {
 	public default boolean invite(Proposal p, int id, ArrayList<User> invitedU) {
 		return false;
 	}
+	
+	public default boolean equals(State otherState) {
+		return this.getID() == otherState.getID();
+	}
+	
+	public int getID();
 }

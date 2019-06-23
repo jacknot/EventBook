@@ -3,15 +3,7 @@ package main.commands.strategy;
 import main.commands.Context;
 import utility.StringConstant;
 
-public class ShowProfile extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public ShowProfile(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class ShowProfile implements CommandInterface{
 
 	/*
 	 * (non-Javadoc)

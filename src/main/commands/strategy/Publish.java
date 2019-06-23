@@ -7,15 +7,8 @@ import users.User;
 import utility.MessageHandler;
 import utility.StringConstant;
 
-public class Publish extends Commands{
-	
-	/*
-	 * (non-Javadoc)
-	 * @see main.commands.strategy.Commands#Commands(String, String, String)
-	 */
-	public Publish(String name, String description, String syntax) {
-		super(name, description, syntax);
-	}
+public class Publish implements CommandInterface{
+
 
 	/*
 	 * (non-Javadoc)

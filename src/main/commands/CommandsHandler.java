@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import main.commands.strategy.Command;
+import main.commands.strategy.CommandFactory;
 import utility.StringConstant;
 
 /**
@@ -27,7 +29,7 @@ public class CommandsHandler implements Closeable{
 	/**
 	 * Contiene i comandi
 	 */
-	private ArrayList<Commands> cList;
+	private ArrayList<Command> cList;
 	/**
 	 * Il contesto sul quale devono operare i comandi
 	 */
@@ -36,7 +38,7 @@ public class CommandsHandler implements Closeable{
 	 * Costruttore
 	 */
 	public CommandsHandler(InOutStream IOStream) {
-		cList = new ArrayList<Commands>();
+		cList = new ArrayList<Command>();
 		this.context = new Context(IOStream);
 		cList = CommandsState.BASE.getCommandsList();
 	}
@@ -47,7 +49,7 @@ public class CommandsHandler implements Closeable{
 	 * @return Nome del comando se trovato <br> la stringa iniziale altrimenti
 	 */
 	public String hint(String initial) {
-		for(Commands command: cList) {
+		for(Command command: cList) {
 			if(command.getName().startsWith(initial))
 				return command.getName() + " ";
 		}
@@ -98,14 +100,14 @@ public class CommandsHandler implements Closeable{
 		else if(cList.stream()
 			.filter((c)->c.hasName(command))
 			.findFirst().get()
-			.run(context, args)) {
-				if(Commands.LOGIN.hasName(command))
+			.run(args, context)) {
+				if(new CommandFactory().login().hasName(command))
 					cList = CommandsState.LOGIN.getCommandsList();
-				else if(Commands.LOGOUT.hasName(command))
+				else if(new CommandFactory().logout().hasName(command))
 					cList = CommandsState.BASE.getCommandsList();
-				else if(Commands.PRIVATE_SPACE_IN.hasName(command))
+				else if(new CommandFactory().privateSpaceIn().hasName(command))
 					cList = CommandsState.PRIVATESPACE.getCommandsList();
-				else if(Commands.PRIVATE_SPACE_OUT.hasName(command))
+				else if(new CommandFactory().privateSpaceOut().hasName(command))
 					cList = CommandsState.LOGIN.getCommandsList();
 		}
 		context.getIOStream().write(StringConstant.NEW_LINE + StringConstant.WAITING);

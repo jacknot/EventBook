@@ -85,4 +85,9 @@ public class Open implements State, Serializable{
 		new MessageHandler().inviteUsers(invitedU, p.getOwner().getName(), id);
 		return true;
 	}
+	
+	@Override
+	public int getID() {
+		return 4;
+	}	
 }

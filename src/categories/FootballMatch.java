@@ -1,6 +1,5 @@
 package categories;
 
-import fields.Field;
 import fields.FieldHeading;
 
 /**Classe con il compito di istanziare eventi legati ad una partita di calcio
