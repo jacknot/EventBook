@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 import commandHandling.Context;
 import users.User;
-import utility.StringConstant;
 
 
-public class Invite implements CommandInterface, OneParameter, InsertID{
+public class Invite implements CommandInterface, OneParameter, ProposalHandlerContainsID{
 
 	/*
 	 * (non-Javadoc)
@@ -59,14 +58,5 @@ public class Invite implements CommandInterface, OneParameter, InsertID{
 			ctx.getIOStream().writeln("Impossibile spedire gli inviti");
 			return false;
 		}
-	}
-	
-	private int proposalHandlerContainsID(Context ctx, String[] args) {
-		int id = getID(ctx, args, StringConstant.INSERT_NUMBER);
-		if(!ctx.getProposalHandler().contains(id)) {
-			ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
-			id = -1;
-		}
-		return id;
 	}
 }

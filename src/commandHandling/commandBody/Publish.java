@@ -7,7 +7,7 @@ import users.User;
 import utility.MessageHandler;
 import utility.StringConstant;
 
-public class Publish implements CommandInterface, OneParameter, InsertID{
+public class Publish implements CommandInterface, OneParameter, SessionContainsID{
 
 
 	/*
@@ -35,21 +35,5 @@ public class Publish implements CommandInterface, OneParameter, InsertID{
 			ctx.getIOStream().writeln("La proposta inserita non è valida");
 			return false;
 		}	
-	}
-	
-	/**
-	 * Controlla se la Sessione corrente contiene una proposta con l'id specificato,
-	 * in caso affermativo lo ritorna
-	 * @param ctx Contesto
-	 * @param args Argomenti
-	 * @return l'id della proposta, -1 se non trovata.
-	 */
-	private int sessionContainsID(Context ctx, String[] args) {
-		int id = getID(ctx, args, StringConstant.INSERT_NUMBER);
-		if(!ctx.getSession().contains(id)) {
-			ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo identificatore");
-			id = -1;
-		}
-		return id;
 	}
 }

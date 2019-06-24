@@ -4,9 +4,8 @@ import java.util.stream.Stream;
 
 import commandHandling.Context;
 import fields.FieldHeading;
-import utility.StringConstant;
 
-public class Modify implements CommandInterface, OneParameter, ValueRequired, InsertID{
+public class Modify implements CommandInterface, OneParameter, ValueRequired, SessionContainsID{
 	
 	/*
 	 * (non-Javadoc)
@@ -60,22 +59,6 @@ public class Modify implements CommandInterface, OneParameter, ValueRequired, In
 			ctx.getIOStream().writeln("La modifica non ha avuto successo");
 			return false;
 		}
-	}
-	
-	/**
-	 * Controlla se la Sessione corrente contiene una proposta con l'id specificato,
-	 * in caso affermativo lo ritorna
-	 * @param ctx Contesto
-	 * @param args Argomenti
-	 * @return l'id della proposta, -1 se non trovata.
-	 */
-	private int sessionContainsID(Context ctx, String[] args) {
-		int id = getID(ctx, args, StringConstant.INSERT_NUMBER);
-		if(!ctx.getSession().contains(id)) {
-			ctx.getIOStream().writeln("Nessuna proposta in lavorazione con questo identificatore");
-			id = -1;
-		}
-		return id;
 	}
 
 }

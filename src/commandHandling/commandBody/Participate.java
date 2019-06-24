@@ -7,7 +7,7 @@ import fields.FieldHeading;
 import proposals.OptionsSet;
 import utility.StringConstant;
 
-public class Participate implements CommandInterface, OneParameter, InsertID{
+public class Participate implements CommandInterface, OneParameter, ProposalHandlerContainsID{
 
 
 	/*
@@ -48,15 +48,6 @@ public class Participate implements CommandInterface, OneParameter, InsertID{
 			ctx.getIOStream().writeln("L'iscrizione è andata a buon fine");
 			return true;
 		}
-	}
-	
-	private int proposalHandlerContainsID(Context ctx, String[] args) {
-		int id = getID(ctx, args, StringConstant.INSERT_NUMBER);
-		if(!ctx.getProposalHandler().contains(id)) {
-			ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
-			id = -1;
-		}
-		return id;
 	}
 	
 	/**
