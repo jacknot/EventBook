@@ -3,8 +3,7 @@ package commandHandling.commandBody;
 import commandHandling.Context;
 import utility.StringConstant;
 
-public class RemoveNotifications implements CommandInterface{
-
+public class RemoveNotifications implements CommandInterface, OneParameter{
 
 	/*
 	 * (non-Javadoc)
@@ -12,7 +11,7 @@ public class RemoveNotifications implements CommandInterface{
 	 */
 	@Override
 	public boolean run(String[] args, Context ctx) {
-		if(!checkOneParameter(ctx, args))
+		if(!check(args, ctx, "Inserisca un parametro", "Inserisca un solo parametro"))
 			return false;
 		int id = -1;
 		try {
@@ -28,23 +27,6 @@ public class RemoveNotifications implements CommandInterface{
 			ctx.getIOStream().writeln("Rimossa correttamente");
 			return true;
 		}
-	}
-	
-	/**
-	 * Controlla se nella chiamata di un comando è stato passato un parametro
-	 * @param ctx Contesto su cui operare
-	 * @param args Parametri passati al comando
-	 * @return True - Se è stato passato un unico parametro <br> False - altrimenti
-	 */
-	private static boolean checkOneParameter(Context ctx, String args[]) {
-		if(args.length == 0) {
-			ctx.getIOStream().writeln("Inserisca un parametro");
-			return false;
-		} else if(args.length > 1) {
-			ctx.getIOStream().writeln("Inserisca un solo parametro");
-			return false;
-		}
-		return true;
 	}
 
 }

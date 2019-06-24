@@ -8,7 +8,7 @@ import categories.EventHeading;
 import commandHandling.Context;
 import utility.StringConstant;
 
-public class Description implements CommandInterface{
+public class Description implements CommandInterface, OneParameter{
 
 	/*
 	 * (non-Javadoc)
@@ -16,10 +16,9 @@ public class Description implements CommandInterface{
 	 */
 	@Override
 	public boolean run(String[] args, Context ctx) {
-		if(args.length == 0){
-	 		ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
-	  		return false;
-	  	}else if(Stream.of(EventHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
+		if(!check(args, ctx, StringConstant.SPECIFY_CATEGORY_NAME, "Inserisca una sola categoria"))
+			return false;
+		if(Stream.of(EventHeading.values()).anyMatch((fh)->fh.getName().equalsIgnoreCase(args[0]))){
 			Category event = new EventCache().getCategory(Stream.of(EventHeading.values())
 										.filter((ch)->ch.getName().equalsIgnoreCase(args[0]))
 										.findFirst().get().getName());
@@ -30,5 +29,4 @@ public class Description implements CommandInterface{
 	  		return false;
 	  	}
 	}
-
 }

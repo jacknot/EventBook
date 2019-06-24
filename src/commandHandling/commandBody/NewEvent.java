@@ -12,7 +12,7 @@ import proposals.ProposalFactory;
 import proposals.ProposalInterface;
 import utility.StringConstant;
 
-public class NewEvent implements CommandInterface{
+public class NewEvent implements CommandInterface, OneParameter, ValueRequired{
 
 	/*
 	 * (non-Javadoc)
@@ -20,10 +20,9 @@ public class NewEvent implements CommandInterface{
 	 */
 	@Override
 	public boolean run(String[] args, Context ctx) {
-		if(args.length == 0) {
-			ctx.getIOStream().writeln(StringConstant.SPECIFY_CATEGORY_NAME);
+		if(!check(args, ctx, StringConstant.SPECIFY_CATEGORY_NAME, "Inserisca una sola categoria"))
 			return false;
-		}
+		
 		String categoryName = args[0];
 		if(!Stream.of(EventHeading.values()).anyMatch((ch)->ch.getName().equalsIgnoreCase(categoryName))) {
 			ctx.getIOStream().writeln("Categoria non esistente");
@@ -49,37 +48,12 @@ public class NewEvent implements CommandInterface{
 	}
 	
 	/**
-	 * Richiede all'utente di inserire un valore e ne verifica la validità in base al campo
-	 * @param ctx il contesto su cui si deve operare
-	 * @param field campo su cui verificare la validità del dato
-	 * @param message richiesta all'utente di inserire il dato
-	 * @return Oggetto correttamente elaborato in base al campo
-	 */
-	private static Object acceptValue(Context ctx, FieldHeading field, String message) {
-		boolean valid = false;
-		Object obj = null;
-		do {
-			String value = ctx.getIOStream().read("\t" + message);
-			if(!field.isBinding() && !field.isOptional() && value.isEmpty())
-				valid = true;
-			ctx.getIOStream().write(StringConstant.NEW_LINE);
-			if(field.getClassType().isValidType(value)) {
-				obj = field.getClassType().parse(value);
-				valid = true;
-			}
-			if(!valid)
-				ctx.getIOStream().writeln("\tIl valore inserito non è corretto.\n\tInserisca qualcosa del tipo: " + field.getClassType().getSyntax());
-		}while(!valid);
-		return obj;
-	}
-	
-	/**
 	 * Chiede all'utente di quali campi opzionali vuole usufruire
 	 * @param pref Preferenza da impostare
 	 * @param ctx Contesto su cui operare
 	 * @return le scelte dell'utente
 	 */
-	private static OptionsSet makeChoices(OptionsSet pref, Context ctx) {
+	private OptionsSet makeChoices(OptionsSet pref, Context ctx) {
 		Stream.of(pref.getOptions())
 				.forEach((fh)->{
 					boolean confirm = false;

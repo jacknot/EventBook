@@ -7,7 +7,7 @@ import fields.FieldHeading;
 import proposals.OptionsSet;
 import utility.StringConstant;
 
-public class Participate implements CommandInterface{
+public class Participate implements CommandInterface, OneParameter, InsertID{
 
 
 	/*
@@ -16,7 +16,7 @@ public class Participate implements CommandInterface{
 	 */
 	@Override
 	public boolean run(String[] args, Context ctx) {
-		if(!checkOneParameter(ctx, args))
+		if(!check(args, ctx, "Inserisca un parametro", "Inserisca un solo parametro"))
 			return false;
 		int id = proposalHandlerContainsID(ctx, args);
 		if(id<0)
@@ -50,36 +50,8 @@ public class Participate implements CommandInterface{
 		}
 	}
 	
-	/**
-	 * Controlla se nella chiamata di un comando è stato passato un parametro
-	 * @param ctx Contesto su cui operare
-	 * @param args Parametri passati al comando
-	 * @return True - Se è stato passato un unico parametro <br> False - altrimenti
-	 */
-	private static boolean checkOneParameter(Context ctx, String args[]) {
-		if(args.length == 0) {
-			ctx.getIOStream().writeln("Inserisca un parametro");
-			return false;
-		} else if(args.length > 1) {
-			ctx.getIOStream().writeln("Inserisca un solo parametro");
-			return false;
-		}
-		return true;
-	}
-	
-	private static int getID(Context ctx, String[] args) {
-		int id = -1;
-		try {
-			id = Integer.parseInt(args[0]);
-		}catch(NumberFormatException e) {
-			ctx.getIOStream().writeln(StringConstant.INSERT_NUMBER);
-			id = -1;
-		}
-		return id;
-	}
-	
-	private static int proposalHandlerContainsID(Context ctx, String[] args) {
-		int id = getID(ctx, args);
+	private int proposalHandlerContainsID(Context ctx, String[] args) {
+		int id = getID(ctx, args, StringConstant.INSERT_NUMBER);
 		if(!ctx.getProposalHandler().contains(id)) {
 			ctx.getIOStream().writeln("La proposta di cui si è inserito l'identificatore non è presente");
 			id = -1;
@@ -93,7 +65,7 @@ public class Participate implements CommandInterface{
 	 * @param ctx Contesto su cui operare
 	 * @return le scelte dell'utente
 	 */
-	private static OptionsSet makeChoices(OptionsSet pref, Context ctx) {
+	private OptionsSet makeChoices(OptionsSet pref, Context ctx) {
 		Stream.of(pref.getOptions())
 				.forEach((fh)->{
 					boolean confirm = false;

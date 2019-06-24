@@ -2,7 +2,7 @@ package commandHandling.commandBody;
 
 import commandHandling.Context;
 
-public class Login implements CommandInterface{
+public class Login implements CommandInterface, OneParameter{
 
 	/*
 	 * (non-Javadoc)
@@ -10,10 +10,9 @@ public class Login implements CommandInterface{
 	 */
 	@Override
 	public boolean run(String[] args, Context ctx) {
-		if(args.length == 0){
-	 		ctx.getIOStream().writeln("Inserisca il nomignolo di un utente già registrato");
-	  		return false;
-	  	}else if(ctx.getDatabase().contains(args[0])){
+		if(!check(args, ctx, "Inserisca il nomignolo di un utente già registrato", "Inserisca un solo nomignolo"))
+			return false;
+		if(ctx.getDatabase().contains(args[0])){
 	  		ctx.newSession(args[0]);
 	  		ctx.getIOStream().writeln("Accesso eseguito come: " + args[0]);
 	  		return true;
@@ -22,5 +21,4 @@ public class Login implements CommandInterface{
 	  		return false;
 	  	}
 	}
-
 }

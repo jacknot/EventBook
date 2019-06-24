@@ -3,12 +3,7 @@ package commandHandling.commandBody;
 import commandHandling.Context;
 import utility.StringConstant;
 
-/**
- * 
- * @author Matteo
- *
- */
-public class Exit implements CommandInterface{
+public class Exit implements CommandInterface, NoParameters{
 
 	/*
 	 * (non-Javadoc)
@@ -16,23 +11,9 @@ public class Exit implements CommandInterface{
 	 */
 	@Override
 	public boolean run(String[] args, Context ctx) {
-		if(!checkNoParameter(ctx, args))
+		if(!check(args, ctx, StringConstant.TOO_PARAMETERS))
 			return false;
 		System.exit(0);
-		return true;
-	}
-	
-	/**
-	 * Controlla se nella chiamata di un comando non è stato passato nessun parametro
-	 * @param ctx Contesto su cui operare
-	 * @param args Parametri passati al comando
-	 * @return True - Se non è stato passato nessun parametro <br> False - altrimenti
-	 */
-	private static boolean checkNoParameter(Context ctx, String args[]) {
-		if(args.length != 0) {
-			ctx.getIOStream().writeln(StringConstant.TOO_PARAMETERS);
-			return false;
-		}
 		return true;
 	}
 }
