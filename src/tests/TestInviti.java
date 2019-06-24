@@ -11,7 +11,6 @@ import categories.EventHeading;
 import fields.FieldHeading;
 import proposals.OptionsSet;
 import proposals.Proposal;
-import proposals.ProposalInterface;
 import proposalUsers.ProposalHandler;
 import proposals.states.*;
 import users.UserRepository;
