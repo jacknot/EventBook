@@ -97,5 +97,4 @@ public class Invite implements CommandInterface{
 		}
 		return true;
 	}
-
 }
