@@ -86,6 +86,10 @@ public class Open implements State, Serializable{
 		return true;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see proposals.states.State#getID()
+	 */
 	@Override
 	public int getID() {
 		return 4;

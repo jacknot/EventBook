@@ -131,6 +131,11 @@ public interface ProposalInterface {
 	public Category getCategory();
 	
 	
+	/**
+	 * Verifica che la proposta sia uguale alla proposta passata per parametro
+	 * @param pi Altra Proposta
+	 * @return True - se uguali <br> False - altrimenti
+	 */
 	public default boolean equals(ProposalInterface pi) {
 		return (this.getOwner().equals(pi.getOwner()) && this.getCategory().equals(pi.getCategory()));
 	}

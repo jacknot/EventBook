@@ -36,6 +36,10 @@ public class Closed implements State, Serializable{
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see proposals.states.State#getID()
+	 */
 	@Override
 	public int getID() {
 		return 0;

@@ -64,10 +64,19 @@ public interface Category {
 	 */
 	public boolean containsField(String field);
 	
+	/**
+	 * Verifica che la categoria sia uguale alla categoria passata per parametro
+	 * @param otherCategory categoria da confrontare
+	 * @return True - se uguali <br> False - altrimenti
+	 */
 	public default boolean equals(Category otherCategory) {
 		return this.hasName(otherCategory.getName()) && this.getFieldSet().equals(otherCategory.getFieldSet());
 	}
 	
+	/**
+	 * Restituisce il FieldSet della categoria
+	 * @return FieldSet della categoria
+	 */
 	public FieldSet getFieldSet();
 	
 }

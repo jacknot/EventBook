@@ -18,6 +18,10 @@ public class Failed implements State, Serializable{
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see proposals.states.State#getID()
+	 */
 	@Override
 	public int getID() {
 		return 2;

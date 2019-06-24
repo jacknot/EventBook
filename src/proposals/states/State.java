@@ -57,9 +57,18 @@ public interface State {
 		return false;
 	}
 	
+	/**
+	 * Verifica che lo stato sia uguale allo stato passato per parametro
+	 * @param otherState Statto da confrontare
+	 * @return True - se uguali <br> False - altrimenti
+	 */
 	public default boolean equals(State otherState) {
 		return this.getID() == otherState.getID();
 	}
 	
+	/**
+	 * Restituisce l'identificatore associato allo Stato
+	 * @return identificatore numerico
+	 */
 	public int getID();
 }

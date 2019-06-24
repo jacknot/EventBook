@@ -1,6 +1,6 @@
 package main.commands.strategy;
 /**
- * Classe astratta rappresentante un comando disponibile all'utente compreso di funzionalità
+ * Classe enum rappresentante la descrizione di un comando disponibile all'utente
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
  *
  */
