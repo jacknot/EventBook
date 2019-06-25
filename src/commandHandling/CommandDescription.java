@@ -48,7 +48,6 @@ public enum CommandDescription{
 	 * @param name il nome del comando
 	 * @param description la descrizione del comando
 	 * @param syntax la sintassi del comando
-	 * @param runnable ciò che il comando deve fare
 	 */
 	private CommandDescription(String name, String description, String syntax) {
 		this.name = name;

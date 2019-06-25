@@ -15,5 +15,4 @@ public interface CommandInterface {
 	 * @return l'esito del comando
 	 */
 	public boolean run(String[] args, Context context);
-
 }

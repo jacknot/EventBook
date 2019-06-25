@@ -48,7 +48,7 @@ public class Proposal implements ProposalInterface,Serializable{
 	private ArrayList<Pair<User, LocalDate>> invitations;
 	/**
 	 * Costruttore di una proposta
-	 * @param event L'evento a cui farà riferimento la proposta
+	 * @param category L'evento a cui farà riferimento la proposta
 	 */
 	public Proposal(Category category) {
 		this.category = category;

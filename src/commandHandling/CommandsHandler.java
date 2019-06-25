@@ -35,6 +35,7 @@ public class CommandsHandler implements Closeable{
 	private Context context;
 	/**
 	 * Costruttore
+	 * @param IOStream il canale di comunicazione con l'esterno
 	 */
 	public CommandsHandler(InOutStream IOStream) {
 		cList = new ArrayList<Command>();

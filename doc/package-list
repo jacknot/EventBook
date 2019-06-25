@@ -1,10 +1,13 @@
 categories
+commandHandling
+commandHandling.InOutAdapter
+commandHandling.commandBody
 dataTypes
 fields
-main.InOutAdapter
-main.commands
-main.main
+main
+proposalUsers
 proposals
+proposals.states
 tests
 users
 utility

@@ -2,8 +2,6 @@ package commandHandling;
 
 import java.util.ArrayList;
 
-
-
 /**
  * Classe con il compito di rappresentare i vari stati in cui una lista di comandi si può trovare durante l'esecuzione del programma
  * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]

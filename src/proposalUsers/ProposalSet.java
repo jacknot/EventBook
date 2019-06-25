@@ -42,6 +42,7 @@ public class ProposalSet implements Serializable{
 	}
 	/**
 	 * Consente di rimuovere tutte le proposte con stato diverso da quello atteso
+	 * @return l'insieme di proposte rimosse
 	 */
 	public ArrayList<ProposalInterface> clean() {
 		ArrayList<ProposalInterface> toClean = new ArrayList<ProposalInterface>();

@@ -6,6 +6,11 @@ import java.time.LocalDate;
 import fields.FieldHeading;
 import proposals.Proposal;
 
+/**
+ * Rappresenta lo stato di una proposta chiusa
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
 public class Closed implements State, Serializable{
 
 	/**

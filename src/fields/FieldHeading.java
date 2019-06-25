@@ -83,7 +83,7 @@ public enum FieldHeading{
 	 * @param nome Il nome
 	 * @param descrizione La descrizione
 	 * @param obbligatorio Se obbligatorio
-	 * @param opzionale
+	 * @param opzionale Se opzionale
 	 * @param type il tipo di dato associato alla descrizione
 	 */
 	private FieldHeading(String nome, String descrizione, boolean obbligatorio, boolean opzionale, ClassType type) {

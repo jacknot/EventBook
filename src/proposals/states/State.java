@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import proposals.Proposal;
 import users.User;
 
+/**
+ * Interfaccia con il compito di definire il comportamento dei vari stati in cui una proposta si può trovare
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
 public interface State {
 	/**
 	 * Modifica lo stato della proposta in modo da poterla rendere adatta al pubblico

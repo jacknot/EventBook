@@ -11,6 +11,11 @@ import users.User;
 import utility.MessageHandler;
 import utility.StringConstant;
 
+/**
+ * Rappresenta lo stato di una proposta aperta
+ * @author Matteo Salvalai [715827], Lorenzo Maestrini[715780], Jacopo Mora [715149]
+ *
+ */
 public class Open implements State, Serializable{
 
 	/**
